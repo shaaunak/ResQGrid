@@ -75,7 +75,7 @@ export const EvidencePage: React.FC = () => {
               <FileCheck2 className="w-5 h-5 text-rq-brand" />
               <span>Project Evidence & Faculty Compliance Dossier</span>
             </h1>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200">
+            <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200">
               Evaluator Proofs
             </span>
           </div>
@@ -135,46 +135,46 @@ export const EvidencePage: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-sans">
           <div className="p-3 bg-rq-surface2 border border-rq-border rounded-lg space-y-1">
-            <div className="text-[10px] uppercase font-mono text-rq-muted">Open Emergencies</div>
+            <div className="text-xs uppercase font-mono text-rq-muted">Open Emergencies</div>
             <div className="text-2xl font-bold font-mono text-rq-ink">{brief?.total_active_incidents || 0}</div>
-            <div className="text-[10px] text-rq-muted font-mono">
+            <div className="text-xs text-rq-muted font-mono">
               Critical: <strong className="text-[#C8201B]">{brief?.open_incidents_by_severity?.CRITICAL || 0}</strong> &bull; High: {brief?.open_incidents_by_severity?.HIGH || 0}
             </div>
           </div>
 
           <div className="p-3 bg-rq-surface2 border border-rq-border rounded-lg space-y-1">
-            <div className="text-[10px] uppercase font-mono text-rq-muted">Tactical Units Free</div>
+            <div className="text-xs uppercase font-mono text-rq-muted">Tactical Units Free</div>
             <div className="text-2xl font-bold font-mono text-emerald-800">
               {brief?.units_free_count || 0} / {brief?.units_total_count || 0}
             </div>
-            <div className="text-[10px] text-emerald-700 font-mono">Squads available for immediate dispatch</div>
+            <div className="text-xs text-emerald-700 font-mono">Squads available for immediate dispatch</div>
           </div>
 
           <div className="p-3 bg-rq-surface2 border border-rq-border rounded-lg space-y-1">
-            <div className="text-[10px] uppercase font-mono text-rq-muted">Supply Shortage Alerts</div>
+            <div className="text-xs uppercase font-mono text-rq-muted">Supply Shortage Alerts</div>
             <div className="text-2xl font-bold font-mono text-amber-800">
               {brief?.stock_at_risk_alerts?.length || 0}
             </div>
-            <div className="text-[10px] text-rq-muted font-mono">Items at or below safety threshold</div>
+            <div className="text-xs text-rq-muted font-mono">Items at or below safety threshold</div>
           </div>
         </div>
 
         {/* Top 3 Recommended Actions */}
         <div className="space-y-2 pt-1">
-          <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-rq-muted">
+          <span className="text-xs font-mono font-semibold uppercase tracking-wider text-rq-muted">
             Top Recommended Priority Actions
           </span>
           <div className="space-y-2">
             {brief?.top_actions_recommended?.map((action: any, idx: number) => (
               <div key={idx} className="p-3 bg-slate-50 border border-rq-border rounded-lg flex items-start space-x-3 text-xs">
-                <span className="w-5 h-5 rounded-full bg-[#14284B] text-white flex items-center justify-center font-mono text-[10px] font-bold shrink-0 mt-0.5">
+                <span className="w-5 h-5 rounded-full bg-[#14284B] text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 mt-0.5">
                   {action.action_rank}
                 </span>
                 <div>
                   <div className="font-semibold text-rq-ink">
                     {action.incident_tracking_id}: {action.title}
                   </div>
-                  <div className="text-[11px] text-rq-muted mt-0.5">{action.recommended_action}</div>
+                  <div className="text-xs text-rq-muted mt-0.5">{action.recommended_action}</div>
                 </div>
               </div>
             ))}
@@ -188,20 +188,20 @@ export const EvidencePage: React.FC = () => {
           <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
             Cloud Infrastructure Parameters & AWS Resource Identifiers
           </span>
-          <span className="text-[11px] font-mono text-emerald-700 font-bold">100% Verified</span>
+          <span className="text-xs font-mono text-emerald-700 font-bold">100% Verified</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-sans">
             <thead>
-              <tr className="border-b border-rq-border text-[11px] font-mono uppercase text-rq-muted">
+              <tr className="border-b border-rq-border text-xs font-mono uppercase text-rq-muted">
                 <th className="py-2 px-3">Service</th>
                 <th className="py-2 px-3">Parameter / Component</th>
                 <th className="py-2 px-3">Live Resource Identifier</th>
                 <th className="py-2 px-3">Operational Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-rq-border font-mono text-[11px]">
+            <tbody className="divide-y divide-rq-border font-mono text-xs">
               <tr>
                 <td className="py-2.5 px-3 font-semibold text-rq-ink">Amazon EC2</td>
                 <td className="py-2.5 px-3 text-rq-muted">Compute Instance ID</td>
@@ -251,14 +251,14 @@ export const EvidencePage: React.FC = () => {
             <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
               CloudWatch Alarm Transition History
             </span>
-            <span className="text-[11px] font-mono text-rq-muted">HighSQSQueueDepthAlarm</span>
+            <span className="text-xs font-mono text-rq-muted">HighSQSQueueDepthAlarm</span>
           </div>
           <div className="space-y-2">
             {alarmTimeline.map((item: any, idx: number) => (
               <div key={idx} className="flex justify-between items-center p-2.5 bg-rq-surface2 border border-rq-border rounded-lg text-xs font-mono">
                 <div>
                   <span className="font-semibold text-rq-ink">{item.alarm_name}</span>
-                  <div className="text-[10px] text-rq-muted">Time: {item.timestamp} &bull; Depth: {item.metric_value} (Limit &gt; {item.threshold})</div>
+                  <div className="text-xs text-rq-muted">Time: {item.timestamp} &bull; Depth: {item.metric_value} (Limit &gt; {item.threshold})</div>
                 </div>
                 <span className={`px-2 py-0.5 rounded font-bold ${
                   item.state === 'OK' ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-[#C8201B]'
@@ -276,13 +276,13 @@ export const EvidencePage: React.FC = () => {
             <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
               Asynchronous Worker Resilience Evaluation
             </span>
-            <span className="text-[11px] font-mono text-rq-muted">Fault-Tolerant Outbox</span>
+            <span className="text-xs font-mono text-rq-muted">Fault-Tolerant Outbox</span>
           </div>
 
           <div className="space-y-3 text-xs leading-relaxed text-rq-muted font-sans">
             <div className="p-3 bg-slate-50 border border-rq-border rounded-lg">
               <strong className="text-rq-ink font-semibold block mb-1">Evaluator Verification Procedure:</strong>
-              <ol className="list-decimal list-inside space-y-1 text-[11px]">
+              <ol className="list-decimal list-inside space-y-1 text-xs">
                 <li>Background worker consumer paused via administrative API.</li>
                 <li>Simulated citizen reports submitted, accumulating in PostgreSQL outbox table.</li>
                 <li>CloudWatch metric reflects backlog growth past the 5-message threshold.</li>
@@ -290,13 +290,13 @@ export const EvidencePage: React.FC = () => {
               </ol>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 font-mono text-[11px]">
+            <div className="grid grid-cols-2 gap-3 font-mono text-xs">
               <div className="p-2.5 bg-rq-surface2 border border-rq-border rounded-lg">
-                <span className="text-rq-muted block text-[10px]">CURRENT QUEUE BACKLOG</span>
+                <span className="text-rq-muted block text-xs">CURRENT QUEUE BACKLOG</span>
                 <span className="text-lg font-bold text-rq-ink">{workerStatus?.queue_depth || 0} msgs</span>
               </div>
               <div className="p-2.5 bg-rq-surface2 border border-rq-border rounded-lg">
-                <span className="text-rq-muted block text-[10px]">TOTAL PROCESSED EVENTS</span>
+                <span className="text-rq-muted block text-xs">TOTAL PROCESSED EVENTS</span>
                 <span className="text-lg font-bold text-rq-ink">{workerStatus?.processed_events || 0} events</span>
               </div>
             </div>
@@ -306,3 +306,4 @@ export const EvidencePage: React.FC = () => {
     </div>
   );
 };
+

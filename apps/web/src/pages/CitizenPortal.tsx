@@ -115,7 +115,7 @@ export const CitizenPortal: React.FC = () => {
             <div className="font-mono text-2xl font-bold text-rq-navy tracking-widest">
               {submittedIncident.tracking_id}
             </div>
-            <p className="text-[11px] text-rq-muted">
+            <p className="text-xs text-rq-muted">
               Keep this code handy to track live rescue squad status and ETA.
             </p>
           </div>
@@ -126,11 +126,11 @@ export const CitizenPortal: React.FC = () => {
             <div className="space-y-2 pl-2 border-l-2 border-rq-navy">
               <div className="text-xs">
                 <span className="font-semibold text-rq-ink">Report Registered</span>
-                <p className="text-[11px] text-rq-muted">Intake complete, explainable priority assigned</p>
+                <p className="text-xs text-rq-muted">Intake complete, explainable priority assigned</p>
               </div>
               <div className="text-xs opacity-60">
                 <span className="font-medium text-rq-muted">Command Room Triage</span>
-                <p className="text-[11px] text-rq-muted">Operator verifying incident attributes</p>
+                <p className="text-xs text-rq-muted">Operator verifying incident attributes</p>
               </div>
               <div className="text-xs opacity-40">
                 <span className="font-medium text-rq-muted">Rescue Squad Dispatched</span>
@@ -180,7 +180,7 @@ export const CitizenPortal: React.FC = () => {
           ))}
         </div>
 
-        <div className="flex items-center space-x-1.5 text-rq-muted text-[11px] font-mono">
+        <div className="flex items-center space-x-1.5 text-rq-muted text-xs font-mono">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>OFFLINE CACHE READY</span>
         </div>
@@ -248,7 +248,7 @@ export const CitizenPortal: React.FC = () => {
                   }`}
                 >
                   <span className="font-semibold text-xs text-rq-ink block mb-0.5">{item.label}</span>
-                  <span className="text-[10px] text-rq-muted font-mono">{item.cat}</span>
+                  <span className="text-xs text-rq-muted font-mono">{item.cat}</span>
                 </button>
               ))}
             </div>

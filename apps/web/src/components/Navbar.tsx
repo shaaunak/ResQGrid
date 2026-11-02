@@ -71,11 +71,11 @@ export const Navbar: React.FC = () => {
           <div>
             <div className="flex items-center space-x-1.5">
               <span className="font-semibold text-sm tracking-tight text-rq-ink">ResQGrid</span>
-              <span className="px-1.5 py-0.2 rounded-pill bg-rq-surface-2 text-[10px] font-mono text-rq-muted border border-rq-border">
+              <span className="px-1.5 py-0.2 rounded-pill bg-rq-surface-2 text-xs font-mono text-rq-muted border border-rq-border">
                 MUMBAI
               </span>
             </div>
-            <p className="text-[10px] text-rq-muted tracking-tight hidden sm:block">
+            <p className="text-xs text-rq-muted tracking-tight hidden sm:block">
               Disaster Response & Coordination
             </p>
           </div>
@@ -98,7 +98,7 @@ export const Navbar: React.FC = () => {
             <Search className="w-3.5 h-3.5" />
             <span>Search incidents, squads, depots, or actions...</span>
           </div>
-          <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-rq-surface border border-rq-border rounded shadow-subtle">
+          <kbd className="px-1.5 py-0.5 text-xs font-mono bg-rq-surface border border-rq-border rounded shadow-subtle">
             ⌘K
           </kbd>
         </button>
@@ -108,7 +108,7 @@ export const Navbar: React.FC = () => {
       <div className="flex items-center space-x-2 sm:space-x-3 text-xs" ref={dropdownRef}>
         {/* Real Live WebSocket Indicator */}
         <div
-          className="hidden sm:flex items-center space-x-1.5 px-2 py-1 rounded bg-rq-surface-2 border border-rq-border text-[11px] font-mono"
+          className="hidden sm:flex items-center space-x-1.5 px-2 py-1 rounded bg-rq-surface-2 border border-rq-border text-xs font-mono"
           title={`Real-time WebSocket telemetry: ${wsStatus}`}
         >
           <span
@@ -159,7 +159,7 @@ export const Navbar: React.FC = () => {
                 <span className="font-semibold text-rq-ink">Notifications</span>
                 <button
                   onClick={() => setUnreadNotifications(0)}
-                  className="text-[11px] text-rq-navy hover:underline"
+                  className="text-xs text-rq-navy hover:underline"
                 >
                   Mark all as read
                 </button>
@@ -168,27 +168,27 @@ export const Navbar: React.FC = () => {
                 <div className="py-2 space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-rq-ink">Flash Flood Warning</span>
-                    <span className="text-[10px] font-mono text-rq-muted">2m ago</span>
+                    <span className="text-xs font-mono text-rq-muted">2m ago</span>
                   </div>
-                  <p className="text-rq-muted text-[11px]">
+                  <p className="text-rq-muted text-xs">
                     Mithi River water levels nearing threshold near Kurla transit camp.
                   </p>
                 </div>
                 <div className="py-2 space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-rq-ink">Low Stock Alert</span>
-                    <span className="text-[10px] font-mono text-rq-muted">14m ago</span>
+                    <span className="text-xs font-mono text-rq-muted">14m ago</span>
                   </div>
-                  <p className="text-rq-muted text-[11px]">
+                  <p className="text-rq-muted text-xs">
                     Kurla West depot low on thermal emergency blankets.
                   </p>
                 </div>
                 <div className="py-2 space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-rq-ink">Squad Dispatched</span>
-                    <span className="text-[10px] font-mono text-rq-muted">28m ago</span>
+                    <span className="text-xs font-mono text-rq-muted">28m ago</span>
                   </div>
-                  <p className="text-rq-muted text-[11px]">
+                  <p className="text-rq-muted text-xs">
                     Bandra Water Rescue Alpha en route to incident INC-1042.
                   </p>
                 </div>
@@ -203,14 +203,14 @@ export const Navbar: React.FC = () => {
             onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
             className="flex items-center space-x-2 px-2.5 py-1.5 rounded-md hover:bg-rq-surface-2 border border-rq-border transition text-left"
           >
-            <div className="w-5 h-5 rounded-full bg-rq-navy text-white flex items-center justify-center text-[10px] font-bold">
+            <div className="w-5 h-5 rounded-full bg-rq-navy text-white flex items-center justify-center text-xs font-bold">
               {user ? user.full_name[0] : 'G'}
             </div>
             <div className="hidden sm:block">
               <div className="font-semibold text-xs leading-none text-rq-ink">
                 {user ? user.full_name.split(' ')[0] : 'Guest'}
               </div>
-              <div className="text-[10px] text-rq-muted leading-tight">
+              <div className="text-xs text-rq-muted leading-tight">
                 {user ? user.role : 'Observer'}
               </div>
             </div>
@@ -220,10 +220,10 @@ export const Navbar: React.FC = () => {
           {profileDropdownOpen && (
             <div className="absolute right-0 mt-2 w-64 bg-rq-surface border border-rq-border rounded-card shadow-floating py-2 z-50 animate-fade-in">
               <div className="px-3 py-1.5 border-b border-rq-border mb-1">
-                <p className="text-[11px] font-semibold text-rq-muted uppercase tracking-wider">
+                <p className="text-xs font-semibold text-rq-muted uppercase tracking-wider">
                   Switch Operational Persona
                 </p>
-                <p className="text-[10px] text-rq-muted">Instant live RBAC evaluation role</p>
+                <p className="text-xs text-rq-muted">Instant live RBAC evaluation role</p>
               </div>
 
               <div className="space-y-0.5 px-1">
@@ -245,7 +245,7 @@ export const Navbar: React.FC = () => {
                     >
                       <div className="text-left">
                         <div className="font-medium text-xs">{creds.title}</div>
-                        <div className="text-[10px] font-mono text-rq-muted">{creds.email}</div>
+                        <div className="text-xs font-mono text-rq-muted">{creds.email}</div>
                       </div>
                       {isActive && <Check className="w-3.5 h-3.5 text-rq-navy flex-shrink-0" />}
                     </button>

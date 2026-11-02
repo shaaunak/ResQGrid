@@ -42,7 +42,7 @@ export const TimelineReplay: React.FC<TimelineReplayProps> = ({
 
       {/* Label & Scrubber */}
       <div className="flex-1 flex flex-col justify-center space-y-1">
-        <div className="flex justify-between items-center text-[11px] font-mono">
+        <div className="flex justify-between items-center text-xs font-mono">
           <span className="font-semibold text-rq-ink flex items-center space-x-1">
             <Clock className="w-3.5 h-3.5 text-rq-brand" />
             <span>Operational Timeline Replay</span>
@@ -60,9 +60,10 @@ export const TimelineReplay: React.FC<TimelineReplayProps> = ({
       </div>
 
       {/* Step counter */}
-      <div className="text-[11px] font-mono font-bold text-rq-muted shrink-0">
+      <div className="text-xs font-mono font-bold text-rq-muted shrink-0">
         Step {currentStep} / {totalSteps}
       </div>
     </div>
   );
 };
+

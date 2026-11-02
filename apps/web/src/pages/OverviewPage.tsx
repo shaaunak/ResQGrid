@@ -103,7 +103,7 @@ export const OverviewPage: React.FC = () => {
                 <div className="font-mono text-2xl font-bold tabular-nums text-rq-ink">
                   {criticalDisplay}
                 </div>
-                <div className="mt-1 flex items-center text-[10px] text-rq-muted">
+                <div className="mt-1 flex items-center text-xs text-rq-muted">
                   <span className="text-[#C8201B] font-semibold mr-1">Immediate</span> triage required
                 </div>
               </div>
@@ -116,7 +116,7 @@ export const OverviewPage: React.FC = () => {
                 <div className="font-mono text-2xl font-bold tabular-nums text-rq-ink">
                   {dispatchesDisplay}
                 </div>
-                <div className="mt-1 flex items-center text-[10px] text-rq-muted">
+                <div className="mt-1 flex items-center text-xs text-rq-muted">
                   <span>Across 3 operational hubs</span>
                 </div>
               </div>
@@ -129,7 +129,7 @@ export const OverviewPage: React.FC = () => {
                 <div className="font-mono text-2xl font-bold tabular-nums text-rq-ink">
                   {squadsDisplay}
                 </div>
-                <div className="mt-1 flex items-center text-[10px] text-rq-muted">
+                <div className="mt-1 flex items-center text-xs text-rq-muted">
                   <span>100% capacity ready</span>
                 </div>
               </div>
@@ -142,7 +142,7 @@ export const OverviewPage: React.FC = () => {
                 <div className="font-mono text-2xl font-bold tabular-nums text-rq-ink">
                   18.5m
                 </div>
-                <div className="mt-1 flex items-center text-[10px] text-emerald-600 font-medium">
+                <div className="mt-1 flex items-center text-xs text-emerald-600 font-medium">
                   <span>-2.1m vs baseline</span>
                 </div>
               </div>
@@ -175,13 +175,13 @@ export const OverviewPage: React.FC = () => {
               autoRotate={true}
               cameraPreset="overview"
             />
-            <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded text-[10px] font-mono text-white flex items-center space-x-1.5 border border-white/10">
+            <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded text-xs font-mono text-white flex items-center space-x-1.5 border border-white/10">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>3D MUMBAI DIGITAL TWIN</span>
             </div>
             <Link
               to="/scenarios"
-              className="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 hover:bg-white text-slate-900 rounded text-[11px] font-medium shadow-subtle flex items-center space-x-1 transition"
+              className="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 hover:bg-white text-slate-900 rounded text-xs font-medium shadow-subtle flex items-center space-x-1 transition"
             >
               <span>Explore Scenarios</span>
               <ExternalLink className="w-3 h-3" />
@@ -220,7 +220,7 @@ export const OverviewPage: React.FC = () => {
                 </p>
               </div>
               <div className="pt-2 border-t border-rq-border flex items-center justify-between text-xs">
-                <span className="font-mono text-[11px] text-rq-muted">2 reports merged</span>
+                <span className="font-mono text-xs text-rq-muted">2 reports merged</span>
                 <Link
                   to="/command"
                   className="px-3 py-1 bg-rq-navy hover:bg-[#0E1D36] text-white rounded text-xs font-medium transition"
@@ -235,7 +235,7 @@ export const OverviewPage: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs font-bold text-[#E27D14]">KUR-DEPOT</span>
-                  <span className="px-2 py-0.5 rounded-pill text-[11px] font-medium bg-amber-50 text-[#E27D14] border border-amber-200">
+                  <span className="px-2 py-0.5 rounded-pill text-xs font-medium bg-amber-50 text-[#E27D14] border border-amber-200">
                     Low Stock Alert
                   </span>
                 </div>
@@ -247,7 +247,7 @@ export const OverviewPage: React.FC = () => {
                 </p>
               </div>
               <div className="pt-2 border-t border-rq-border flex items-center justify-between text-xs">
-                <span className="font-mono text-[11px] text-rq-muted">Kurla West Station</span>
+                <span className="font-mono text-xs text-rq-muted">Kurla West Station</span>
                 <Link
                   to="/inventory"
                   className="px-3 py-1 bg-rq-surface-2 hover:bg-rq-border text-rq-ink border border-rq-border rounded text-xs font-medium transition"
@@ -262,7 +262,7 @@ export const OverviewPage: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs font-bold text-rq-navy">INC-2041</span>
-                  <span className="px-2 py-0.5 rounded-pill text-[11px] font-medium bg-red-50 text-[#C8201B] border border-red-200">
+                  <span className="px-2 py-0.5 rounded-pill text-xs font-medium bg-red-50 text-[#C8201B] border border-red-200">
                     SLA Warning
                   </span>
                 </div>
@@ -274,7 +274,7 @@ export const OverviewPage: React.FC = () => {
                 </p>
               </div>
               <div className="pt-2 border-t border-rq-border flex items-center justify-between text-xs">
-                <span className="font-mono text-[11px] text-rq-muted">Hindmata Junction</span>
+                <span className="font-mono text-xs text-rq-muted">Hindmata Junction</span>
                 <Link
                   to="/command"
                   className="px-3 py-1 bg-rq-navy hover:bg-[#0E1D36] text-white rounded text-xs font-medium transition"
@@ -353,7 +353,7 @@ export const OverviewPage: React.FC = () => {
                 <div className="space-y-0.5">
                   <div className="flex items-center space-x-2">
                     <span className="font-mono font-semibold text-rq-navy">INC-1042</span>
-                    <span className="text-rq-muted text-[11px]">2m ago</span>
+                    <span className="text-rq-muted text-xs">2m ago</span>
                   </div>
                   <p className="text-rq-ink text-xs">
                     Corroborating citizen report merged (Report #2, tracking INC-75740).
@@ -366,7 +366,7 @@ export const OverviewPage: React.FC = () => {
                 <div className="space-y-0.5">
                   <div className="flex items-center space-x-2">
                     <span className="font-semibold text-rq-ink">Operator Deshmukh</span>
-                    <span className="text-rq-muted text-[11px]">8m ago</span>
+                    <span className="text-rq-muted text-xs">8m ago</span>
                   </div>
                   <p className="text-rq-ink text-xs">
                     Verified incident INC-2041 with Critical severity override.
@@ -379,7 +379,7 @@ export const OverviewPage: React.FC = () => {
                 <div className="space-y-0.5">
                   <div className="flex items-center space-x-2">
                     <span className="font-mono font-semibold text-rq-navy">Dadar Central</span>
-                    <span className="text-rq-muted text-[11px]">15m ago</span>
+                    <span className="text-rq-muted text-xs">15m ago</span>
                   </div>
                   <p className="text-rq-ink text-xs">
                     Reserved 15 trauma first aid kits for impending deployment.

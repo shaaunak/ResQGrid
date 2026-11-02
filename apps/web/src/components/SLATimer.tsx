@@ -32,7 +32,7 @@ export const SLATimer: React.FC<SLATimerProps> = ({ severity, createdAt }) => {
 
   return (
     <div
-      className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold border ${
+      className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs font-mono font-semibold border ${
         isBreached
           ? 'bg-red-100 text-[#C8201B] border-red-300 animate-pulse'
           : isWarning
@@ -48,3 +48,4 @@ export const SLATimer: React.FC<SLATimerProps> = ({ severity, createdAt }) => {
     </div>
   );
 };
+

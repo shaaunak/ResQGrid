@@ -55,7 +55,7 @@ export const AuditLogPage: React.FC = () => {
               <ScrollText className="w-5 h-5 text-rq-brand" />
               <span>Immutable Audit Trail & Transition Log</span>
             </h1>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200">
+            <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200">
               ACID Compliant
             </span>
           </div>
@@ -88,11 +88,11 @@ export const AuditLogPage: React.FC = () => {
       <div className="bg-white border border-rq-border rounded-xl p-4 shadow-sm flex flex-wrap items-center gap-4 text-xs font-sans">
         <div className="flex items-center space-x-2">
           <Filter className="w-4 h-4 text-rq-muted" />
-          <span className="font-semibold text-rq-ink font-mono uppercase text-[11px]">Filters:</span>
+          <span className="font-semibold text-rq-ink font-mono uppercase text-xs">Filters:</span>
         </div>
 
         <div className="flex items-center space-x-2">
-          <label className="text-[11px] font-mono text-rq-muted">Entity Type:</label>
+          <label className="text-xs font-mono text-rq-muted">Entity Type:</label>
           <select
             value={resourceFilter}
             onChange={(e) => setResourceFilter(e.target.value)}
@@ -108,7 +108,7 @@ export const AuditLogPage: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-2">
-          <label className="text-[11px] font-mono text-rq-muted">Actor / User ID:</label>
+          <label className="text-xs font-mono text-rq-muted">Actor / User ID:</label>
           <input
             type="text"
             placeholder="Filter by Actor UUID..."
@@ -124,7 +124,7 @@ export const AuditLogPage: React.FC = () => {
               setResourceFilter('');
               setActorFilter('');
             }}
-            className="text-[11px] font-mono text-rq-brand hover:underline"
+            className="text-xs font-mono text-rq-brand hover:underline"
           >
             Clear Filters
           </button>
@@ -137,7 +137,7 @@ export const AuditLogPage: React.FC = () => {
           <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
             Audit Records Stream
           </span>
-          <span className="text-[11px] font-mono text-rq-muted">
+          <span className="text-xs font-mono text-rq-muted">
             Showing {logs?.length || 0} entries
           </span>
         </div>
@@ -154,7 +154,7 @@ export const AuditLogPage: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-sans">
               <thead>
-                <tr className="border-b border-rq-border text-[11px] font-mono uppercase text-rq-muted">
+                <tr className="border-b border-rq-border text-xs font-mono uppercase text-rq-muted">
                   <th className="py-2 px-3">Timestamp</th>
                   <th className="py-2 px-3">Action</th>
                   <th className="py-2 px-3">Entity Type</th>
@@ -163,7 +163,7 @@ export const AuditLogPage: React.FC = () => {
                   <th className="py-2 px-3">Audit Details</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-rq-border font-mono text-[11px]">
+              <tbody className="divide-y divide-rq-border font-mono text-xs">
                 {logs.map((log: any) => (
                   <tr key={log.id} className="hover:bg-rq-surface2 transition">
                     <td className="py-2.5 px-3 text-rq-muted whitespace-nowrap">
@@ -194,3 +194,4 @@ export const AuditLogPage: React.FC = () => {
     </div>
   );
 };
+

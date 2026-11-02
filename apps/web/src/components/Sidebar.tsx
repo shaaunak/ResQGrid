@@ -55,7 +55,7 @@ export const Sidebar: React.FC = () => {
       <div className="p-3 space-y-1 overflow-y-auto">
         {!collapsed && (
           <div className="flex items-center justify-between px-2.5 py-1.5">
-            <span className="text-[10px] font-semibold text-rq-muted tracking-wider uppercase font-mono">
+            <span className="text-xs font-semibold text-rq-muted tracking-wider uppercase font-mono">
               {currentRole} WORKSPACE
             </span>
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Live WS Connected" />
@@ -87,7 +87,7 @@ export const Sidebar: React.FC = () => {
       {/* Collapse / Expand rail toggle */}
       <div className="p-3 border-t border-rq-border bg-rq-surface-2 flex items-center justify-between">
         {!collapsed && (
-          <div className="text-[10px] text-rq-muted font-mono leading-tight">
+          <div className="text-xs text-rq-muted font-mono leading-tight">
             <span>Role: <strong>{currentRole}</strong></span>
           </div>
         )}

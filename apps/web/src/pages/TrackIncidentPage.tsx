@@ -138,11 +138,11 @@ export const TrackIncidentPage: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-center space-x-1.5">
-                        <span className="font-mono text-[10px] font-bold">0{idx + 1}</span>
+                        <span className="font-mono text-xs font-bold">0{idx + 1}</span>
                         {state === 'completed' && <CheckCircle className="w-3.5 h-3.5" />}
                       </div>
-                      <div className="font-medium text-[11px] leading-tight text-rq-ink">{st.title}</div>
-                      <p className="text-[10px] text-rq-muted leading-tight hidden sm:block">{st.desc}</p>
+                      <div className="font-medium text-xs leading-tight text-rq-ink">{st.title}</div>
+                      <p className="text-xs text-rq-muted leading-tight hidden sm:block">{st.desc}</p>
                     </div>
                   );
                 })}
@@ -157,7 +157,7 @@ export const TrackIncidentPage: React.FC = () => {
                   <span>Assigned Tactical Squad</span>
                 </span>
                 <div className="font-semibold text-sm text-rq-ink">Bandra Water Rescue Alpha</div>
-                <div className="text-[11px] text-rq-muted font-mono">Boat Unit • Swiftwater Qualified</div>
+                <div className="text-xs text-rq-muted font-mono">Boat Unit • Swiftwater Qualified</div>
                 <div className="flex items-center space-x-2 text-xs text-rq-muted pt-1">
                   <Phone className="w-3.5 h-3.5 text-rq-navy" />
                   <span>Emergency Dispatch Line: +91 22 2640 1111</span>
@@ -170,7 +170,7 @@ export const TrackIncidentPage: React.FC = () => {
                   <span>Estimated Response Time</span>
                 </span>
                 <div className="font-mono text-2xl font-bold text-rq-ink tabular-nums">~8 mins</div>
-                <p className="text-[11px] text-rq-muted">
+                <p className="text-xs text-rq-muted">
                   Unit is in transit. Stay on higher ground and avoid wading in rapid flood waters.
                 </p>
               </div>
@@ -182,18 +182,18 @@ export const TrackIncidentPage: React.FC = () => {
               <div className="space-y-3 pl-3 border-l-2 border-rq-navy">
                 <div className="text-xs">
                   <div className="font-semibold text-rq-ink">Squad En Route</div>
-                  <p className="text-[11px] text-rq-muted">Rescue unit has cleared Kurla West depot and is navigating via S.V. Road bypass.</p>
-                  <span className="text-[10px] font-mono text-rq-muted">5 minutes ago</span>
+                  <p className="text-xs text-rq-muted">Rescue unit has cleared Kurla West depot and is navigating via S.V. Road bypass.</p>
+                  <span className="text-xs font-mono text-rq-muted">5 minutes ago</span>
                 </div>
                 <div className="text-xs">
                   <div className="font-semibold text-rq-ink">Relief Supplies Reserved</div>
-                  <p className="text-[11px] text-rq-muted">18 swiftwater lifejackets and 40 drinking water jerrycans loaded.</p>
-                  <span className="text-[10px] font-mono text-rq-muted">14 minutes ago</span>
+                  <p className="text-xs text-rq-muted">18 swiftwater lifejackets and 40 drinking water jerrycans loaded.</p>
+                  <span className="text-xs font-mono text-rq-muted">14 minutes ago</span>
                 </div>
                 <div className="text-xs">
                   <div className="font-semibold text-rq-ink">Triage Approved by Command Room</div>
-                  <p className="text-[11px] text-rq-muted">Incident confirmed as high-priority urban waterlogging.</p>
-                  <span className="text-[10px] font-mono text-rq-muted">22 minutes ago</span>
+                  <p className="text-xs text-rq-muted">Incident confirmed as high-priority urban waterlogging.</p>
+                  <span className="text-xs font-mono text-rq-muted">22 minutes ago</span>
                 </div>
               </div>
             </div>

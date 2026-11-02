@@ -58,7 +58,7 @@ export const LoginPage: React.FC = () => {
           <h2 className="text-base font-bold text-app-text uppercase tracking-wider font-mono">
             Sign In to ResQGrid
           </h2>
-          <p className="text-[11px] text-app-text-secondary">
+          <p className="text-xs text-app-text-secondary">
             Emergency Operations & Multi-Role Authorization
           </p>
         </div>
@@ -112,37 +112,37 @@ export const LoginPage: React.FC = () => {
 
         {/* Quick Demo Access Bar */}
         <div className="pt-4 border-t border-app-border space-y-2">
-          <span className="text-[10px] text-app-text-secondary uppercase tracking-wider block font-semibold text-center font-mono">
+          <span className="text-xs text-app-text-secondary uppercase tracking-wider block font-semibold text-center font-mono">
             Evaluator 1-Click Fast Login
           </span>
-          <div className="grid grid-cols-2 gap-2 text-[11px] font-sans">
+          <div className="grid grid-cols-2 gap-2 text-xs font-sans">
             <button
               onClick={() => handleQuickPersona('OPERATOR')}
               className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-app-text border border-app-border transition text-left shadow-sm"
             >
               <div className="font-semibold text-app-text">Operator</div>
-              <div className="text-[10px] text-app-primary font-mono font-medium">Command Center</div>
+              <div className="text-xs text-app-primary font-mono font-medium">Command Center</div>
             </button>
             <button
               onClick={() => handleQuickPersona('RESPONDER')}
               className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-app-text border border-app-border transition text-left shadow-sm"
             >
               <div className="font-semibold text-app-text">Responder</div>
-              <div className="text-[10px] text-sky-700 font-mono font-medium">Field Missions</div>
+              <div className="text-xs text-sky-700 font-mono font-medium">Field Missions</div>
             </button>
             <button
               onClick={() => handleQuickPersona('COORDINATOR')}
               className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-app-text border border-app-border transition text-left shadow-sm"
             >
               <div className="font-semibold text-app-text">Coordinator</div>
-              <div className="text-[10px] text-emerald-700 font-mono font-medium">Relief Depots</div>
+              <div className="text-xs text-emerald-700 font-mono font-medium">Relief Depots</div>
             </button>
             <button
               onClick={() => handleQuickPersona('CITIZEN')}
               className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-app-text border border-app-border transition text-left shadow-sm"
             >
               <div className="font-semibold text-app-text">Citizen</div>
-              <div className="text-[10px] text-app-high font-mono font-medium">Emergency Report</div>
+              <div className="text-xs text-app-high font-mono font-medium">Emergency Report</div>
             </button>
           </div>
         </div>

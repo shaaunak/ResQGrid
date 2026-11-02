@@ -176,7 +176,7 @@ export const SystemHealthPage: React.FC = () => {
               <Server className="w-5 h-5 text-rq-brand" />
               <span>Cloud Infrastructure & Telemetry Health</span>
             </h1>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
               AWS ap-south-1 (Mumbai)
             </span>
           </div>
@@ -203,7 +203,7 @@ export const SystemHealthPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1: Formatted Uptime */}
         <div className="bg-white border border-rq-border rounded-xl p-4 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-[10px] uppercase font-mono tracking-wider text-rq-muted">
+          <div className="flex justify-between items-center text-xs uppercase font-mono tracking-wider text-rq-muted">
             <span>Continuous Uptime</span>
             <Clock className="w-3.5 h-3.5 text-blue-600" />
           </div>
@@ -211,11 +211,11 @@ export const SystemHealthPage: React.FC = () => {
             <div className="text-xl font-bold font-mono text-rq-ink">
               {health?.formatted_uptime || '0h 0m 0s'}
             </div>
-            <div className="text-[10px] text-rq-muted font-mono mt-0.5">
+            <div className="text-xs text-rq-muted font-mono mt-0.5">
               Service: FastAPI Engine (Python {health?.system?.python_version || '3.14'})
             </div>
           </div>
-          <div className="text-[10px] text-emerald-700 font-bold font-mono mt-3 flex items-center space-x-1">
+          <div className="text-xs text-emerald-700 font-bold font-mono mt-3 flex items-center space-x-1">
             <CheckCircle2 className="w-3 h-3" />
             <span>SLA: 99.95% Availability</span>
           </div>
@@ -223,9 +223,9 @@ export const SystemHealthPage: React.FC = () => {
 
         {/* Metric 2: CPU Utilization */}
         <div className="bg-white border border-rq-border rounded-xl p-4 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-[10px] uppercase font-mono tracking-wider text-rq-muted">
+          <div className="flex justify-between items-center text-xs uppercase font-mono tracking-wider text-rq-muted">
             <span>EC2 CPU Utilization</span>
-            <span className="text-[9px] bg-slate-100 px-1 py-0.5 rounded text-rq-muted">Simulated</span>
+            <span className="text-xs bg-slate-100 px-1 py-0.5 rounded text-rq-muted">Simulated</span>
           </div>
           <div className="mt-1 flex items-baseline space-x-2">
             <span className="text-2xl font-bold font-mono text-rq-ink">
@@ -239,16 +239,16 @@ export const SystemHealthPage: React.FC = () => {
               style={{ height: '100%', width: '100%' }}
             />
           </div>
-          <div className="text-[10px] text-rq-muted font-mono mt-1">
+          <div className="text-xs text-rq-muted font-mono mt-1">
             Instance: {metadata.instance_id}
           </div>
         </div>
 
         {/* Metric 3: Memory Utilization */}
         <div className="bg-white border border-rq-border rounded-xl p-4 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-[10px] uppercase font-mono tracking-wider text-rq-muted">
+          <div className="flex justify-between items-center text-xs uppercase font-mono tracking-wider text-rq-muted">
             <span>System Memory (RAM)</span>
-            <span className="text-[9px] bg-slate-100 px-1 py-0.5 rounded text-rq-muted">Simulated</span>
+            <span className="text-xs bg-slate-100 px-1 py-0.5 rounded text-rq-muted">Simulated</span>
           </div>
           <div className="mt-1 flex items-baseline space-x-2">
             <span className="text-2xl font-bold font-mono text-rq-ink">
@@ -262,16 +262,16 @@ export const SystemHealthPage: React.FC = () => {
               style={{ height: '100%', width: '100%' }}
             />
           </div>
-          <div className="text-[10px] text-rq-muted font-mono mt-1">
+          <div className="text-xs text-rq-muted font-mono mt-1">
             Allocated: 2.1 GB / 4.0 GB
           </div>
         </div>
 
         {/* Metric 4: RDS Query Latency (Real query) */}
         <div className="bg-white border border-rq-border rounded-xl p-4 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-center text-[10px] uppercase font-mono tracking-wider text-rq-muted">
+          <div className="flex justify-between items-center text-xs uppercase font-mono tracking-wider text-rq-muted">
             <span>RDS Query Latency</span>
-            <span className="text-[9px] bg-emerald-50 text-emerald-700 px-1 py-0.5 rounded font-bold font-mono">Real Query</span>
+            <span className="text-xs bg-emerald-50 text-emerald-700 px-1 py-0.5 rounded font-bold font-mono">Real Query</span>
           </div>
           <div className="mt-1 flex items-baseline space-x-2">
             <span className="text-2xl font-bold font-mono text-emerald-800">
@@ -285,7 +285,7 @@ export const SystemHealthPage: React.FC = () => {
               style={{ height: '100%', width: '100%' }}
             />
           </div>
-          <div className="text-[10px] text-rq-muted font-mono mt-1">
+          <div className="text-xs text-rq-muted font-mono mt-1">
             Engine: {health?.components?.database?.engine}
           </div>
         </div>
@@ -300,11 +300,11 @@ export const SystemHealthPage: React.FC = () => {
               <Cpu className="w-4 h-4 text-[#14284B]" />
               <span>Amazon EC2 (VPC)</span>
             </span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800">
+            <span className="px-1.5 py-0.5 rounded text-xs font-mono font-bold bg-emerald-50 text-emerald-800">
               ACTIVE
             </span>
           </div>
-          <div className="text-[11px] font-mono text-rq-muted space-y-0.5">
+          <div className="text-xs font-mono text-rq-muted space-y-0.5">
             <div>Instance: <strong className="text-rq-ink">{metadata.instance_id}</strong></div>
             <div>VPC: <strong className="text-rq-ink">{metadata.vpc_id}</strong></div>
             <div>Region: <strong className="text-rq-ink">{metadata.region}</strong></div>
@@ -318,11 +318,11 @@ export const SystemHealthPage: React.FC = () => {
               <Database className="w-4 h-4 text-emerald-700" />
               <span>Amazon RDS Engine</span>
             </span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800">
+            <span className="px-1.5 py-0.5 rounded text-xs font-mono font-bold bg-emerald-50 text-emerald-800">
               CONNECTED
             </span>
           </div>
-          <div className="text-[11px] font-mono text-rq-muted space-y-0.5">
+          <div className="text-xs font-mono text-rq-muted space-y-0.5">
             <div>DB Identifier: <strong className="text-rq-ink">{metadata.rds_identifier}</strong></div>
             <div>Status: <strong className="text-emerald-700">Healthy (ACID)</strong></div>
             <div>Latency: <strong className="text-rq-ink">{health?.components?.database?.latency_ms} ms</strong></div>
@@ -336,11 +336,11 @@ export const SystemHealthPage: React.FC = () => {
               <HardDrive className="w-4 h-4 text-blue-700" />
               <span>Amazon S3 Bucket</span>
             </span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800">
+            <span className="px-1.5 py-0.5 rounded text-xs font-mono font-bold bg-emerald-50 text-emerald-800">
               ENCRYPTED
             </span>
           </div>
-          <div className="text-[11px] font-mono text-rq-muted space-y-0.5">
+          <div className="text-xs font-mono text-rq-muted space-y-0.5">
             <div>Bucket: <strong className="text-rq-ink truncate block">{metadata.s3_bucket}</strong></div>
             <div>Access: <strong className="text-rq-ink">KMS SSE-S3</strong></div>
             <div>Storage Mode: <strong className="text-rq-ink">{health?.components?.storage?.backend}</strong></div>
@@ -354,13 +354,13 @@ export const SystemHealthPage: React.FC = () => {
               <Radio className="w-4 h-4 text-amber-700" />
               <span>Amazon SNS / SQS</span>
             </span>
-            <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold ${
+            <span className={`px-1.5 py-0.5 rounded text-xs font-mono font-bold ${
               isPaused ? 'bg-red-50 text-[#C8201B]' : 'bg-emerald-50 text-emerald-800'
             }`}>
               {isPaused ? 'CONSUMER PAUSED' : 'POLLING'}
             </span>
           </div>
-          <div className="text-[11px] font-mono text-rq-muted space-y-0.5">
+          <div className="text-xs font-mono text-rq-muted space-y-0.5">
             <div>Queue: <strong className="text-rq-ink">resqgrid-incident.fifo</strong></div>
             <div>Topic: <strong className="text-rq-ink">emergency-alarms</strong></div>
             <div>Backlog: <strong className={currentDepth > 0 ? 'text-[#C8201B]' : 'text-rq-ink'}>{currentDepth} msgs</strong></div>
@@ -377,7 +377,7 @@ export const SystemHealthPage: React.FC = () => {
                 <ShieldAlert className="w-4 h-4 text-[#C8201B]" />
                 <span>SQS Queue Depth Over Time & Outbox Consumer Recovery</span>
               </h2>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-rq-muted">
+              <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-slate-100 text-rq-muted">
                 Controlled Resilience Demo
               </span>
             </div>
@@ -420,13 +420,13 @@ export const SystemHealthPage: React.FC = () => {
             <Bell className="w-4 h-4 text-rq-brand" />
             <span>CloudWatch Alarm Timeline State</span>
           </span>
-          <span className="text-[11px] font-mono text-rq-muted">HighSQSQueueDepthAlarm</span>
+          <span className="text-xs font-mono text-rq-muted">HighSQSQueueDepthAlarm</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
           {alarmTimeline.map((item: any, idx: number) => (
             <div key={idx} className="p-3 bg-rq-surface2 border border-rq-border rounded-lg space-y-1">
-              <div className="flex justify-between items-center text-[10px] font-mono text-rq-muted">
+              <div className="flex justify-between items-center text-xs font-mono text-rq-muted">
                 <span>{item.timestamp}</span>
                 <span className={`px-1.5 py-0.5 rounded font-bold ${
                   item.state === 'OK' ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-[#C8201B]'
@@ -435,7 +435,7 @@ export const SystemHealthPage: React.FC = () => {
                 </span>
               </div>
               <div className="text-xs font-bold text-rq-ink font-mono">{item.alarm_name}</div>
-              <div className="text-[10px] text-rq-muted font-mono">
+              <div className="text-xs text-rq-muted font-mono">
                 Value: <strong>{item.metric_value}</strong> / Threshold &gt; {item.threshold}
               </div>
             </div>

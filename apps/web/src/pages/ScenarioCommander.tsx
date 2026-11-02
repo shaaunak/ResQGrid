@@ -265,7 +265,7 @@ export const ScenarioCommander: React.FC = () => {
               <Cpu className="w-5 h-5 text-rq-brand" />
               <span>Scenario Commander — Policy Benchmark & Discrete-Event Simulation</span>
             </h1>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200">
+            <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200">
               Monte Carlo Replications
             </span>
           </div>
@@ -304,12 +304,12 @@ export const ScenarioCommander: React.FC = () => {
             <Sliders className="w-4 h-4 text-rq-brand" />
             <span>Monte Carlo Multi-Seed Parameters</span>
           </span>
-          <span className="text-[11px] font-mono text-rq-muted">Deterministic & Replicable</span>
+          <span className="text-xs font-mono text-rq-muted">Deterministic & Replicable</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-sans">
           <div>
-            <label className="block text-[11px] font-mono text-rq-muted uppercase mb-1">Disaster Scenario</label>
+            <label className="block text-xs font-mono text-rq-muted uppercase mb-1">Disaster Scenario</label>
             <select
               value={scenarioName}
               onChange={(e) => setScenarioName(e.target.value)}
@@ -323,7 +323,7 @@ export const ScenarioCommander: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-[11px] font-mono text-rq-muted uppercase mb-1">
+            <label className="block text-xs font-mono text-rq-muted uppercase mb-1">
               Incident Batch Size (N = {incidentCount})
             </label>
             <input
@@ -338,7 +338,7 @@ export const ScenarioCommander: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-[11px] font-mono text-rq-muted uppercase mb-1">Random Seed (Base)</label>
+            <label className="block text-xs font-mono text-rq-muted uppercase mb-1">Random Seed (Base)</label>
             <input
               type="number"
               value={randomSeed}
@@ -348,7 +348,7 @@ export const ScenarioCommander: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-[11px] font-mono text-rq-muted uppercase mb-1">Monte Carlo Seeds</label>
+            <label className="block text-xs font-mono text-rq-muted uppercase mb-1">Monte Carlo Seeds</label>
             <input
               type="number"
               min={5}
@@ -383,11 +383,11 @@ export const ScenarioCommander: React.FC = () => {
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start space-x-3 text-xs leading-relaxed text-blue-900">
               <Sparkles className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
               <div>
-                <span className="font-bold font-mono uppercase tracking-wider text-[11px] text-blue-800 block mb-0.5">
+                <span className="font-bold font-mono uppercase tracking-wider text-xs text-blue-800 block mb-0.5">
                   Empirical Benchmark Result Summary
                 </span>
                 <p className="font-medium">{comparisonResult.summary_analysis}</p>
-                <div className="mt-2 text-[11px] font-mono text-blue-700 flex flex-wrap gap-4">
+                <div className="mt-2 text-xs font-mono text-blue-700 flex flex-wrap gap-4">
                   <span>Critical Wait Reduction: <strong>{improvements.critical_wait_reduction_pct}%</strong></span>
                   <span>Evaluated Seeds: <strong>{mcSummary?.seeds_evaluated}</strong></span>
                   <span>Statistical Significance: <strong>{mcSummary?.statistical_significance}</strong></span>
@@ -407,7 +407,7 @@ export const ScenarioCommander: React.FC = () => {
                     <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
                       Policy Benchmark Metrics: Mean &plusmn; Spread
                     </span>
-                    <span className="text-[11px] font-mono text-rq-muted">FIFO vs. ResQGrid</span>
+                    <span className="text-xs font-mono text-rq-muted">FIFO vs. ResQGrid</span>
                   </div>
                   <div className="h-72">
                     <ReactECharts option={groupedBarsOption} style={{ height: '100%', width: '100%' }} />
@@ -420,7 +420,7 @@ export const ScenarioCommander: React.FC = () => {
                     <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
                       Cumulative Distribution Function (CDF)
                     </span>
-                    <span className="text-[11px] font-mono text-rq-muted">P(Wait &le; t)</span>
+                    <span className="text-xs font-mono text-rq-muted">P(Wait &le; t)</span>
                   </div>
                   <div className="h-72">
                     <ReactECharts option={cdfOption} style={{ height: '100%', width: '100%' }} />
@@ -434,7 +434,7 @@ export const ScenarioCommander: React.FC = () => {
                   <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
                     Per-Seed Monte Carlo Replication Distribution (Critical Wait Times)
                   </span>
-                  <span className="text-[11px] font-mono text-rq-muted">
+                  <span className="text-xs font-mono text-rq-muted">
                     {seedDetails.length} Stochastic Runs
                   </span>
                 </div>
@@ -450,7 +450,7 @@ export const ScenarioCommander: React.FC = () => {
                     <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
                       Raw Simulation Replications Data Table
                     </span>
-                    <p className="text-[11px] text-rq-muted mt-0.5">
+                    <p className="text-xs text-rq-muted mt-0.5">
                       Empirical per-seed breakdown with exact response times and resource utilization delta.
                     </p>
                   </div>
@@ -466,7 +466,7 @@ export const ScenarioCommander: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs font-sans">
                     <thead>
-                      <tr className="border-b border-rq-border text-[11px] font-mono uppercase text-rq-muted">
+                      <tr className="border-b border-rq-border text-xs font-mono uppercase text-rq-muted">
                         <th className="py-2 px-3">Seed</th>
                         <th className="py-2 px-3">FIFO Critical Wait</th>
                         <th className="py-2 px-3">ResQGrid Critical Wait</th>
@@ -480,7 +480,7 @@ export const ScenarioCommander: React.FC = () => {
                     </thead>
                     <tbody className="divide-y divide-rq-border">
                       {seedDetails.map((s: any) => (
-                        <tr key={s.seed} className="hover:bg-rq-surface2 transition font-mono text-[11px]">
+                        <tr key={s.seed} className="hover:bg-rq-surface2 transition font-mono text-xs">
                           <td className="py-2 px-3 font-bold text-rq-ink">#{s.seed}</td>
                           <td className="py-2 px-3 text-rq-muted">{s.fifo_critical_wait_minutes} min</td>
                           <td className="py-2 px-3 font-semibold text-rq-brand">{s.resqgrid_critical_wait_minutes} min</td>

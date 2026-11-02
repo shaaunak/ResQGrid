@@ -220,7 +220,7 @@ export const IncidentMap: React.FC<IncidentMapProps> = ({
 
       {/* Floating Tactical Layer Toggles (Reference UI Match) */}
       <div className="absolute top-4 right-4 z-[1000] bg-white/95 backdrop-blur-md border border-app-border rounded-lg shadow-lg p-3 text-xs w-48 font-sans">
-        <div className="flex items-center space-x-2 text-app-text-secondary uppercase text-[10px] tracking-wider mb-2 pb-1 border-b border-app-border font-mono">
+        <div className="flex items-center space-x-2 text-app-text-secondary uppercase text-xs tracking-wider mb-2 pb-1 border-b border-app-border font-mono">
           <Layers className="w-3.5 h-3.5 text-app-primary" />
           <span className="font-semibold text-app-text">Tactical Layers</span>
         </div>

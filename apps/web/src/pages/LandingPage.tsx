@@ -153,7 +153,7 @@ export const LandingPage: React.FC = () => {
                       </div>
                       <h3 className="text-base font-bold text-app-text">{item.title}</h3>
                     </div>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 border border-app-border text-app-text-secondary uppercase font-semibold">
+                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-100 border border-app-border text-app-text-secondary uppercase font-semibold">
                       {item.badge}
                     </span>
                   </div>
@@ -162,7 +162,7 @@ export const LandingPage: React.FC = () => {
                 </div>
 
                 <div className="pt-2 border-t border-app-border flex items-center justify-between">
-                  <span className="text-[10px] font-mono text-app-text-secondary">
+                  <span className="text-xs font-mono text-app-text-secondary">
                     {PERSONA_CREDENTIALS[item.role].email}
                   </span>
                   <button
@@ -188,7 +188,7 @@ export const LandingPage: React.FC = () => {
             <span>Cloud-Native Disaster Response & Intelligent Resource Coordination</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 text-[11px]">
+          <div className="flex flex-wrap items-center gap-3 text-xs">
             <span className="text-app-primary font-semibold">EC2 Compute</span>
             <span>•</span>
             <span className="text-sky-700 font-semibold">Custom VPC (10.20.0.0/16)</span>

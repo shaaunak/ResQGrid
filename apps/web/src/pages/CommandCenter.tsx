@@ -103,7 +103,7 @@ export const CommandCenter: React.FC = () => {
           <div className="flex items-center space-x-2 text-rq-ink font-semibold">
             <Activity className="w-4 h-4 text-rq-navy animate-pulse" />
             <span className="tracking-wide">Command Center</span>
-            <span className="px-2 py-0.5 rounded bg-rq-surface-2 text-[10px] text-rq-muted border border-rq-border font-mono">
+            <span className="px-2 py-0.5 rounded bg-rq-surface-2 text-xs text-rq-muted border border-rq-border font-mono">
               MUMBAI DISPATCH GRID
             </span>
           </div>
@@ -167,7 +167,7 @@ export const CommandCenter: React.FC = () => {
           {/* Controls & Saved Views */}
           <div className="p-3 border-b border-rq-border bg-rq-surface-2 space-y-2.5">
             {/* Saved View Tabs */}
-            <div className="flex items-center space-x-1 bg-rq-surface p-0.5 rounded-md border border-rq-border text-[11px]">
+            <div className="flex items-center space-x-1 bg-rq-surface p-0.5 rounded-md border border-rq-border text-xs">
               <button
                 onClick={() => setSavedView('ALL')}
                 className={`flex-1 py-1 rounded transition text-center font-medium ${
@@ -281,7 +281,7 @@ export const CommandCenter: React.FC = () => {
                         <SeverityBadge severity={inc.severity} />
                         {inc.report_count && inc.report_count > 1 ? (
                           <span
-                            className="px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-900 font-mono text-[9px] font-semibold border border-amber-300 dark:bg-amber-950 dark:border-amber-800 dark:text-amber-300"
+                            className="px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-900 font-mono text-xs font-semibold border border-amber-300 dark:bg-amber-950 dark:border-amber-800 dark:text-amber-300"
                             title={`${inc.report_count} citizen reports merged into this incident`}
                           >
                             {inc.report_count} reports
@@ -295,11 +295,11 @@ export const CommandCenter: React.FC = () => {
                       {inc.title}
                     </h3>
 
-                    <p className="text-[11px] text-rq-muted line-clamp-2 leading-relaxed mb-2 pl-1">
+                    <p className="text-xs text-rq-muted line-clamp-2 leading-relaxed mb-2 pl-1">
                       {inc.description}
                     </p>
 
-                    <div className="flex items-center justify-between text-[10px] font-mono text-rq-muted pl-1">
+                    <div className="flex items-center justify-between text-xs font-mono text-rq-muted pl-1">
                       <span className="truncate max-w-[160px]">{inc.address.split(',')[0]}</span>
                       <div className="flex items-center space-x-1">
                         <span className="text-rq-navy font-bold">

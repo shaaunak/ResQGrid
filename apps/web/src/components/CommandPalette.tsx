@@ -97,7 +97,7 @@ export const CommandPalette: React.FC = () => {
             placeholder="Type a command, incident (e.g. INC-1042), squad or depot..."
             className="w-full bg-transparent text-rq-ink placeholder:text-rq-muted focus:outline-none text-sm"
           />
-          <span className="px-1.5 py-0.5 text-[10px] font-mono text-rq-muted bg-rq-surface border border-rq-border rounded">
+          <span className="px-1.5 py-0.5 text-xs font-mono text-rq-muted bg-rq-surface border border-rq-border rounded">
             ESC
           </span>
         </div>
@@ -107,7 +107,7 @@ export const CommandPalette: React.FC = () => {
           {/* Navigation */}
           {navigationItems.length > 0 && (
             <div>
-              <div className="px-2 py-1 text-[11px] font-semibold text-rq-muted uppercase tracking-wider">
+              <div className="px-2 py-1 text-xs font-semibold text-rq-muted uppercase tracking-wider">
                 Pages & Portals
               </div>
               <div className="space-y-0.5">
@@ -134,7 +134,7 @@ export const CommandPalette: React.FC = () => {
           {/* Incidents */}
           {filteredIncidents.length > 0 && (
             <div>
-              <div className="px-2 py-1 text-[11px] font-semibold text-rq-muted uppercase tracking-wider">
+              <div className="px-2 py-1 text-xs font-semibold text-rq-muted uppercase tracking-wider">
                 Active Incidents
               </div>
               <div className="space-y-0.5">
@@ -150,7 +150,7 @@ export const CommandPalette: React.FC = () => {
                       </span>
                       <span className="text-xs truncate">{inc.title}</span>
                     </div>
-                    <span className="text-[11px] font-mono text-rq-muted flex-shrink-0 ml-2">
+                    <span className="text-xs font-mono text-rq-muted flex-shrink-0 ml-2">
                       Score: {inc.priority_score.toFixed(0)}
                     </span>
                   </button>
@@ -162,7 +162,7 @@ export const CommandPalette: React.FC = () => {
           {/* Response Teams */}
           {filteredTeams.length > 0 && (
             <div>
-              <div className="px-2 py-1 text-[11px] font-semibold text-rq-muted uppercase tracking-wider">
+              <div className="px-2 py-1 text-xs font-semibold text-rq-muted uppercase tracking-wider">
                 Rescue Squads
               </div>
               <div className="space-y-0.5">
@@ -176,7 +176,7 @@ export const CommandPalette: React.FC = () => {
                       <Truck className="w-4 h-4 text-rq-muted" />
                       <span className="text-xs truncate">{team.name}</span>
                     </div>
-                    <span className="text-[11px] font-mono text-rq-muted flex-shrink-0 ml-2">
+                    <span className="text-xs font-mono text-rq-muted flex-shrink-0 ml-2">
                       {team.status}
                     </span>
                   </button>
@@ -188,7 +188,7 @@ export const CommandPalette: React.FC = () => {
           {/* Depots */}
           {filteredDepots.length > 0 && (
             <div>
-              <div className="px-2 py-1 text-[11px] font-semibold text-rq-muted uppercase tracking-wider">
+              <div className="px-2 py-1 text-xs font-semibold text-rq-muted uppercase tracking-wider">
                 Relief Depots
               </div>
               <div className="space-y-0.5">
@@ -202,7 +202,7 @@ export const CommandPalette: React.FC = () => {
                       <Box className="w-4 h-4 text-rq-muted" />
                       <span className="text-xs truncate">{depot.name}</span>
                     </div>
-                    <span className="text-[11px] font-mono text-rq-muted flex-shrink-0 ml-2">
+                    <span className="text-xs font-mono text-rq-muted flex-shrink-0 ml-2">
                       {depot.depot_type}
                     </span>
                   </button>
@@ -221,7 +221,7 @@ export const CommandPalette: React.FC = () => {
         </div>
 
         {/* Footer shortcuts hint */}
-        <div className="px-4 py-2 bg-rq-surface-2 border-t border-rq-border flex items-center justify-between text-[11px] text-rq-muted font-mono">
+        <div className="px-4 py-2 bg-rq-surface-2 border-t border-rq-border flex items-center justify-between text-xs text-rq-muted font-mono">
           <div className="flex items-center space-x-3">
             <span>↑↓ Navigate</span>
             <span>↵ Select</span>

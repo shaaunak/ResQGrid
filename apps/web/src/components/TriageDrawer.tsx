@@ -118,7 +118,7 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
       </div>
 
       {/* Tabs Bar */}
-      <div className="flex items-center px-4 border-b border-rq-border bg-rq-surface overflow-x-auto text-[11px] font-medium space-x-1 flex-shrink-0">
+      <div className="flex items-center px-4 border-b border-rq-border bg-rq-surface overflow-x-auto text-xs font-medium space-x-1 flex-shrink-0">
         {[
           { key: 'SUMMARY', label: 'Summary' },
           { key: 'PRIORITY', label: 'Priority' },
@@ -165,7 +165,7 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
             <div className="bg-rq-surface-2 p-3 rounded-card border border-rq-border flex items-center justify-between">
               <div>
                 <span className="font-semibold text-rq-ink text-xs block">AI Priority Urgency</span>
-                <span className="text-[11px] text-rq-muted">Calculated multi-factor score</span>
+                <span className="text-xs text-rq-muted">Calculated multi-factor score</span>
               </div>
               <div className="font-mono font-bold text-lg text-rq-navy px-2.5 py-0.5 bg-rq-surface rounded border border-rq-border">
                 {incident.priority_score.toFixed(1)} <span className="text-xs text-rq-muted">/ 100</span>
@@ -175,7 +175,7 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
             {/* Verification Action if Reported */}
             {incident.status === 'REPORTED' && (
               <div className="bg-rq-surface-2 p-3 rounded-card border border-rq-border space-y-2.5">
-                <span className="font-semibold text-rq-ink text-[11px] uppercase tracking-wider block font-mono">
+                <span className="font-semibold text-rq-ink text-xs uppercase tracking-wider block font-mono">
                   Human-in-the-Loop Triage
                 </span>
                 <p className="text-xs text-rq-muted">
@@ -269,7 +269,7 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-rq-border text-[11px] text-rq-muted italic">
+                <div className="pt-2 border-t border-rq-border text-xs text-rq-muted italic">
                   "{breakdown.explanation}"
                 </div>
               </div>
@@ -313,17 +313,17 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
                         <Truck className="w-3.5 h-3.5 text-rq-navy" />
                         <span className="font-semibold text-xs text-rq-ink">{team.name}</span>
                         {idx === 0 && (
-                          <span className="px-1.5 py-0.2 rounded-pill bg-emerald-50 text-[#2E7D5B] text-[10px] font-semibold border border-emerald-200">
+                          <span className="px-1.5 py-0.2 rounded-pill bg-emerald-50 text-[#2E7D5B] text-xs font-semibold border border-emerald-200">
                             Top Recommendation
                           </span>
                         )}
                       </div>
-                      <span className="font-mono text-[11px] font-semibold text-rq-navy">
+                      <span className="font-mono text-xs font-semibold text-rq-navy">
                         Score: {rec.suitability_score.toFixed(0)}
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-1 text-[11px] text-rq-muted font-mono mb-2">
+                    <div className="grid grid-cols-2 gap-1 text-xs text-rq-muted font-mono mb-2">
                       <span>Distance: {rec.distance_km.toFixed(1)} km</span>
                       <span>ETA: ~{Math.round(rec.distance_km * 3.5 + 4)} mins</span>
                       <span>Base: {team.base_location_name.split(' ')[0]}</span>
@@ -334,7 +334,7 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
                       {rec.reasons.map((r, rIdx) => (
                         <span
                           key={rIdx}
-                          className="px-1.5 py-0.5 rounded bg-rq-surface-2 border border-rq-border text-[10px] text-rq-muted"
+                          className="px-1.5 py-0.5 rounded bg-rq-surface-2 border border-rq-border text-xs text-rq-muted"
                         >
                           {r}
                         </span>
@@ -351,7 +351,7 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
                   <AlertTriangle className="w-3.5 h-3.5 text-[#E27D14]" />
                   <span>Operator Override Required</span>
                 </div>
-                <p className="text-[11px] text-amber-800 dark:text-amber-400">
+                <p className="text-xs text-amber-800 dark:text-amber-400">
                   You are selecting a non-top recommended squad. Please document the reason for the audit trail:
                 </p>
                 <input
@@ -377,8 +377,8 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
                 <div key={ev.id} className="relative text-xs">
                   <span className="absolute -left-[19px] top-1 w-2.5 h-2.5 rounded-full bg-rq-navy ring-4 ring-rq-surface" />
                   <div className="font-semibold text-rq-ink">{ev.new_status}</div>
-                  <p className="text-rq-muted text-[11px]">{ev.comment}</p>
-                  <span className="font-mono text-[10px] text-rq-muted">
+                  <p className="text-rq-muted text-xs">{ev.comment}</p>
+                  <span className="font-mono text-xs text-rq-muted">
                     {new Date(ev.created_at).toLocaleTimeString()}
                   </span>
                 </div>
@@ -405,7 +405,7 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
               <FileCheck className="w-4 h-4 text-rq-navy" />
               <span>Cryptographic Audit Trail</span>
             </div>
-            <div className="p-3 bg-rq-surface-2 rounded-card border border-rq-border text-[11px] font-mono space-y-1 text-rq-muted">
+            <div className="p-3 bg-rq-surface-2 rounded-card border border-rq-border text-xs font-mono space-y-1 text-rq-muted">
               <div>Incident ID: {incident.id}</div>
               <div>Optimistic Version: v{incident.version || 1}</div>
               <div>Report Count: {incident.report_count || 1}</div>
@@ -429,7 +429,7 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
             </span>
           </button>
           {!selectedTeamId && (
-            <p className="text-center text-[10px] text-rq-muted">
+            <p className="text-center text-xs text-rq-muted">
               Select a squad from the "Team Match" tab above to authorize dispatch.
             </p>
           )}

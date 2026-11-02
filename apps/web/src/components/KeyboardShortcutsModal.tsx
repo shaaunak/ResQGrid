@@ -45,7 +45,7 @@ export const KeyboardShortcutsModal: React.FC = () => {
           ))}
         </div>
 
-        <div className="p-3 bg-rq-surface-2 border-t border-rq-border text-center text-rq-muted text-[11px]">
+        <div className="p-3 bg-rq-surface-2 border-t border-rq-border text-center text-rq-muted text-xs">
           Press <kbd className="px-1.5 py-0.5 bg-rq-surface border border-rq-border rounded font-mono">ESC</kbd> to return to active workflow.
         </div>
       </div>

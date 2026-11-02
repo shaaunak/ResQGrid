@@ -99,7 +99,7 @@ export const InventoryPortal: React.FC = () => {
                 <div className="font-semibold text-xs text-amber-900 dark:text-amber-200">
                   Critical Inventory Shortage Alert ({lowStockAlerts.length} items below minimum threshold)
                 </div>
-                <p className="text-[11px] text-amber-800 dark:text-amber-300">
+                <p className="text-xs text-amber-800 dark:text-amber-300">
                   Frontline Kurla basin cache is running dangerously low on thermal blankets and portable gas generators.
                 </p>
               </div>
@@ -127,13 +127,13 @@ export const InventoryPortal: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-semibold text-xs text-rq-ink">{depot.name}</span>
-                <span className="font-mono text-[10px] text-rq-muted">{depot.depot_type}</span>
+                <span className="font-mono text-xs text-rq-muted">{depot.depot_type}</span>
               </div>
               <div className="text-xs text-rq-muted mb-3">{depot.location_name}</div>
 
               {/* Coverage mini bar */}
               <div className="space-y-1">
-                <div className="flex justify-between text-[11px] text-rq-muted">
+                <div className="flex justify-between text-xs text-rq-muted">
                   <span>Stock Availability</span>
                   <span className="font-mono text-rq-ink font-semibold">82%</span>
                 </div>
@@ -150,7 +150,7 @@ export const InventoryPortal: React.FC = () => {
           <div className="p-4 border-b border-rq-border bg-rq-surface-2 flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <span className="font-semibold text-xs text-rq-ink">Depot Inventory Ledger</span>
-              <span className="px-2 py-0.5 rounded-pill bg-rq-surface text-rq-muted font-mono text-[10px] border border-rq-border">
+              <span className="px-2 py-0.5 rounded-pill bg-rq-surface text-rq-muted font-mono text-xs border border-rq-border">
                 {filteredStocks.length} records
               </span>
             </div>
@@ -172,7 +172,7 @@ export const InventoryPortal: React.FC = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-rq-surface-2 border-b border-rq-border text-rq-muted uppercase font-mono text-[10px] tracking-wider">
+              <thead className="bg-rq-surface-2 border-b border-rq-border text-rq-muted uppercase font-mono text-xs tracking-wider">
                 <tr>
                   <th className="py-2.5 px-4 font-semibold">SKU / Item</th>
                   <th className="py-2.5 px-4 font-semibold">Depot Location</th>
@@ -202,7 +202,7 @@ export const InventoryPortal: React.FC = () => {
                       <tr key={idx} className="hover:bg-rq-surface-2 transition">
                         <td className="py-3 px-4 font-medium text-rq-ink">
                           <div>{s.item?.name || 'Emergency Relief Supplies'}</div>
-                          <div className="font-mono text-[10px] text-rq-muted">{s.item?.sku || 'SKU-GEN'}</div>
+                          <div className="font-mono text-xs text-rq-muted">{s.item?.sku || 'SKU-GEN'}</div>
                         </td>
                         <td className="py-3 px-4 text-rq-muted">
                           {s.depot?.name || 'Central Relief Hub'}
@@ -218,11 +218,11 @@ export const InventoryPortal: React.FC = () => {
                         </td>
                         <td className="py-3 px-4">
                           {isLow ? (
-                            <span className="px-2 py-0.5 rounded-pill bg-amber-50 text-[#E27D14] border border-amber-200 text-[11px] font-semibold">
+                            <span className="px-2 py-0.5 rounded-pill bg-amber-50 text-[#E27D14] border border-amber-200 text-xs font-semibold">
                               Low Stock ({s.minimum_threshold} min)
                             </span>
                           ) : (
-                            <span className="px-2 py-0.5 rounded-pill bg-emerald-50 text-[#2E7D5B] border border-emerald-200 text-[11px] font-semibold">
+                            <span className="px-2 py-0.5 rounded-pill bg-emerald-50 text-[#2E7D5B] border border-emerald-200 text-xs font-semibold">
                               Optimal
                             </span>
                           )}
