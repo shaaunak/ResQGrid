@@ -136,3 +136,4 @@ The backend couples `Incident`, `Assignment`, `ResponseTeam`, `InventoryStock`, 
 1. **Finalize Inventory**: Reconcile actual supplies consumed vs reserved. Unused supplies returned to depot available stock. Mark reservation `CONSUMED`.
 2. **Release Squad**: Decrement `team.active_assignments_count`. If zero active missions, set `team.status = AVAILABLE`.
 3. **Incident Resolution Check**: Query remaining active assignments. If all assigned squads have completed, atomically transition `incident.status` $\rightarrow$ `RESOLVED`.
+

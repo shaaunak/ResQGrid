@@ -12,3 +12,4 @@ async def get_mumbai_weather():
     internal operational databases and synthetic disaster simulation datasets.
     """
     return await external_intelligence_service.get_mumbai_weather_telemetry()
+

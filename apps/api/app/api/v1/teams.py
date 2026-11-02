@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from app.api.deps import get_current_user, require_roles
+from app.api.deps import get_current_user, get_optional_current_user, require_roles
 from app.core.database import get_db
 from app.models.enums import TeamStatus, TeamType, UserRole
 from app.models.team import ResponseTeam, TeamMember
@@ -18,7 +18,7 @@ async def list_teams(
     team_type: Optional[TeamType] = None,
     status_filter: Optional[TeamStatus] = Query(None, alias="status"),
     db: AsyncSession = Depends(get_db),
-    _user: User = Depends(get_current_user),
+    _user: Optional[User] = Depends(get_optional_current_user),
 ):
     """List response teams with optional type and status filtering."""
     stmt = select(ResponseTeam).order_by(ResponseTeam.name)

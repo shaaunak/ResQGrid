@@ -17,3 +17,4 @@ COPY scripts /app/scripts
 ENV PYTHONPATH=/app/apps/api:/app
 
 CMD ["python", "app/worker.py"]
+

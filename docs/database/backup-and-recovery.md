@@ -130,3 +130,4 @@ curl -X POST http://127.0.0.1:8000/api/v1/admin/worker/resume \
    - 7-day retention of incremental WAL changes generates ~2–4 GB of changelog per week under demo workloads.
    - Rate: \$0.095 per GB-month.
    - Total backup overhead: **\$0.20 – \$0.40 per month** (well within the project's \$20/month AWS budget cap).
+

@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from app.api.deps import get_current_user, require_roles
+from app.api.deps import get_current_user, get_optional_current_user, require_roles
 from app.core.database import get_db
 from app.models.enums import ItemCategory, MovementType, UserRole
 from app.models.inventory import (
@@ -29,14 +29,14 @@ router = APIRouter(prefix="/inventory", tags=["Relief Inventory & Depots"])
 
 
 @router.get("/depots", response_model=List[DepotResponse])
-async def list_depots(db: AsyncSession = Depends(get_db), _user: User = Depends(get_current_user)):
+async def list_depots(db: AsyncSession = Depends(get_db), _user: Optional[User] = Depends(get_optional_current_user)):
     """List all distribution depots and relief shelters."""
     result = await db.execute(select(Depot).order_by(Depot.name))
     return result.scalars().all()
 
 
 @router.get("/shelters", response_model=List[ShelterResponse])
-async def list_shelters(db: AsyncSession = Depends(get_db), _user: User = Depends(get_current_user)):
+async def list_shelters(db: AsyncSession = Depends(get_db), _user: Optional[User] = Depends(get_optional_current_user)):
     """List all emergency shelters and occupancy stats."""
     result = await db.execute(select(Shelter).order_by(Shelter.name))
     return result.scalars().all()
@@ -46,7 +46,7 @@ async def list_shelters(db: AsyncSession = Depends(get_db), _user: User = Depend
 async def list_items(
     category: Optional[ItemCategory] = None,
     db: AsyncSession = Depends(get_db),
-    _user: User = Depends(get_current_user),
+    _user: Optional[User] = Depends(get_optional_current_user),
 ):
     """List catalog of relief supply inventory items."""
     stmt = select(InventoryItem).order_by(InventoryItem.name)

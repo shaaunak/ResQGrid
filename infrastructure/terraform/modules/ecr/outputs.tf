@@ -17,3 +17,4 @@ output "worker_repository_arn" {
   description = "The ARN of the Worker ECR repository"
   value       = aws_ecr_repository.worker.arn
 }
+

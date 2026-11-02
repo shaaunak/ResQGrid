@@ -34,6 +34,7 @@ export type TeamType =
   | 'RELIEF_DISTRIBUTION';
 
 export type AssignmentStatus =
+  | 'OFFERED'
   | 'PENDING'
   | 'ACCEPTED'
   | 'DECLINED'
@@ -99,6 +100,9 @@ export interface Incident {
   verified_by?: string;
   verified_at?: string;
   rejection_reason?: string;
+  version?: number;
+  report_count?: number;
+  parent_incident_id?: string;
   created_at: string;
   updated_at: string;
   events?: IncidentEvent[];

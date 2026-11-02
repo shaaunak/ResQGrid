@@ -94,6 +94,10 @@ class IncidentResponse(BaseModel):
     # Optimistic Concurrency Control
     version: int = 1
 
+    # Spatial-temporal duplicate grouping
+    report_count: int = 1
+    parent_incident_id: Optional[str] = None
+
     created_at: datetime
     updated_at: datetime
 

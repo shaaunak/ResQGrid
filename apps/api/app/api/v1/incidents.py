@@ -1,10 +1,11 @@
 import asyncio
+import math
 import random
 import uuid
-from datetime import datetime, timezone
-from typing import List, Optional
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from app.algorithms.matching_engine import rank_teams_for_incident
@@ -23,7 +24,7 @@ from app.models.enums import (
     UserRole,
 )
 from app.models.incident import Incident, IncidentEvent, IncidentEvidence
-from app.models.inventory import InventoryStock, StockMovement, StockReservation
+from app.models.inventory import Depot, InventoryStock, StockMovement, StockReservation
 from app.models.team import ResponseTeam, TeamMember
 from app.models.user import User
 from app.schemas.assignment import AssignmentCreate, AssignmentResponse
@@ -42,6 +43,22 @@ from app.services.state_machine import IncidentStateMachine
 router = APIRouter(prefix="/incidents", tags=["Incidents"])
 
 
+def haversine_distance_meters(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Calculate the great circle distance in meters between two points on earth."""
+    R = 6371000.0  # Earth radius in meters
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    delta_phi = math.radians(lat2 - lat1)
+    delta_lambda = math.radians(lon2 - lon1)
+
+    a = (
+        math.sin(delta_phi / 2.0) ** 2
+        + math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2.0) ** 2
+    )
+    c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(1.0 - a))
+    return R * c
+
+
 def generate_tracking_id() -> str:
     """Generate a clean, professional incident tracking ID e.g. INC-48192."""
     digits = random.randint(10000, 99999)
@@ -54,10 +71,44 @@ async def create_incident(
     db: AsyncSession = Depends(get_db),
     current_user: Optional[User] = Depends(get_optional_current_user),
 ):
-    """Submit a simulated emergency incident report (Citizen / Public).
+    """Submit an emergency incident report (Citizen / Public).
 
-    Calculates initial explainable priority score and stages an outbox event.
+    Features spatial-temporal duplicate grouping:
+    If an active incident of the same category occurred within 150m and 20 minutes,
+    it increments report_count and links to the parent operational incident.
     """
+    now = datetime.now(timezone.utc)
+
+    # 1. Check for spatial-temporal duplicate candidate
+    # Same category, active status, created within the last 20 minutes
+    time_window = now - timedelta(minutes=20)
+    active_statuses = [
+        IncidentStatus.REPORTED,
+        IncidentStatus.VERIFIED,
+        IncidentStatus.ASSIGNED,
+        IncidentStatus.ACCEPTED,
+        IncidentStatus.IN_PROGRESS,
+    ]
+
+    candidate_stmt = select(Incident).where(
+        Incident.category == incident_in.category,
+        Incident.status.in_(active_statuses),
+        Incident.parent_incident_id.is_(None),  # Group into root incidents
+        Incident.created_at >= time_window,
+    )
+    candidates_res = await db.execute(candidate_stmt)
+    candidates = candidates_res.scalars().all()
+
+    matched_parent: Optional[Incident] = None
+    for cand in candidates:
+        dist_m = haversine_distance_meters(
+            cand.latitude, cand.longitude,
+            incident_in.latitude, incident_in.longitude,
+        )
+        if dist_m <= 150.0:
+            matched_parent = cand
+            break
+
     tracking_id = generate_tracking_id()
 
     # Calculate initial priority breakdown
@@ -65,9 +116,65 @@ async def create_incident(
         severity=incident_in.severity,
         affected_people=incident_in.affected_people,
         category=incident_in.category,
-        created_at=datetime.now(timezone.utc),
+        created_at=now,
     )
 
+    if matched_parent:
+        # Spatial-temporal duplicate detected: Group under matched_parent
+        matched_parent.report_count += 1
+        matched_parent.affected_people += incident_in.affected_people
+        # Update priority for parent with updated aggregate affected count
+        new_parent_priority = calculate_priority_score(
+            severity=matched_parent.severity,
+            affected_people=matched_parent.affected_people,
+            category=matched_parent.category,
+            created_at=matched_parent.created_at,
+        )
+        matched_parent.priority_score = new_parent_priority["total_score"]
+        matched_parent.priority_breakdown = new_parent_priority
+
+        child_incident = Incident(
+            tracking_id=tracking_id,
+            title=f"[Merged Report #{matched_parent.report_count}] {incident_in.title}",
+            description=incident_in.description,
+            category=incident_in.category,
+            severity=incident_in.severity,
+            status=matched_parent.status,
+            affected_people=incident_in.affected_people,
+            latitude=incident_in.latitude,
+            longitude=incident_in.longitude,
+            address=incident_in.address,
+            reporter_id=current_user.id if current_user else None,
+            reporter_phone=incident_in.reporter_phone,
+            is_simulated=incident_in.is_simulated,
+            priority_score=priority_data["total_score"],
+            priority_breakdown=priority_data,
+            parent_incident_id=matched_parent.id,
+            report_count=1,
+        )
+        db.add(child_incident)
+        await db.flush()
+
+        event = IncidentEvent(
+            incident_id=matched_parent.id,
+            previous_status=matched_parent.status,
+            new_status=matched_parent.status,
+            actor_id=current_user.id if current_user else None,
+            comment=f"Corroborating citizen report merged into this incident (Report #{matched_parent.report_count}, tracking {tracking_id}, +{incident_in.affected_people} affected).",
+        )
+        db.add(event)
+
+        await db.commit()
+
+        # Return the root incident to caller with updated report_count
+        result = await db.execute(
+            select(Incident)
+            .options(selectinload(Incident.events), selectinload(Incident.evidence))
+            .where(Incident.id == matched_parent.id)
+        )
+        return result.scalar_one()
+
+    # Normal standalone report
     incident = Incident(
         tracking_id=tracking_id,
         title=incident_in.title,
@@ -84,6 +191,7 @@ async def create_incident(
         is_simulated=incident_in.is_simulated,
         priority_score=priority_data["total_score"],
         priority_breakdown=priority_data,
+        report_count=1,
     )
     db.add(incident)
     await db.flush()
@@ -140,10 +248,12 @@ async def list_incidents(
 
     Citizens see their own submissions when authenticated or only_mine=true;
     Operators and Coordinators see all system incidents.
+    Child incidents merged into parent incidents are hidden from top-level queue.
     """
     stmt = (
         select(Incident)
         .options(selectinload(Incident.events), selectinload(Incident.evidence))
+        .where(Incident.parent_incident_id.is_(None))
         .order_by(Incident.priority_score.desc(), Incident.created_at.desc())
     )
 
@@ -172,6 +282,62 @@ async def list_incidents(
     stmt = stmt.offset(offset).limit(limit)
     result = await db.execute(stmt)
     return result.scalars().all()
+
+
+@router.get("/operational-summary")
+async def get_operational_summary(db: AsyncSession = Depends(get_db)):
+    """Public summary metrics for top ECC operational bar.
+
+    Accessible by all roles including guests and unauthenticated visitors.
+    Computes real database counts:
+      - critical_count: active critical incidents
+      - active_dispatches: active missions / dispatches in progress
+      - squads_ready: teams with AVAILABLE status
+      - depots_count: total operational depots
+    """
+    # Active incidents by severity
+    active_statuses = [
+        IncidentStatus.REPORTED,
+        IncidentStatus.VERIFIED,
+        IncidentStatus.ASSIGNED,
+        IncidentStatus.ACCEPTED,
+        IncidentStatus.IN_PROGRESS,
+    ]
+
+    crit_stmt = select(func.count(Incident.id)).where(
+        Incident.severity == IncidentSeverity.CRITICAL,
+        Incident.status.in_(active_statuses),
+        Incident.parent_incident_id.is_(None),
+    )
+    crit_count = (await db.execute(crit_stmt)).scalar() or 0
+
+    active_stmt = select(func.count(Incident.id)).where(
+        Incident.status.in_(active_statuses),
+        Incident.parent_incident_id.is_(None),
+    )
+    active_count = (await db.execute(active_stmt)).scalar() or 0
+
+    # Teams ready
+    teams_ready_stmt = select(func.count(ResponseTeam.id)).where(
+        ResponseTeam.status == TeamStatus.AVAILABLE
+    )
+    teams_ready_count = (await db.execute(teams_ready_stmt)).scalar() or 0
+
+    # Total teams
+    total_teams_stmt = select(func.count(ResponseTeam.id))
+    total_teams_count = (await db.execute(total_teams_stmt)).scalar() or 0
+
+    # Depots count
+    depots_stmt = select(func.count(Depot.id))
+    depots_count = (await db.execute(depots_stmt)).scalar() or 0
+
+    return {
+        "critical_count": crit_count,
+        "active_dispatches": active_count,
+        "squads_ready": teams_ready_count,
+        "total_teams": total_teams_count,
+        "depots_count": depots_count,
+    }
 
 
 @router.get("/tracking/{tracking_id}", response_model=IncidentResponse)

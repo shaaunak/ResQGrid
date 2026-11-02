@@ -122,3 +122,4 @@ jobs:
           
           echo "SSM Command dispatched: \${COMMAND_ID}"
           aws ssm wait command-executed --command-id "\${COMMAND_ID}" --instance-id "\${INSTANCE_ID}"
+

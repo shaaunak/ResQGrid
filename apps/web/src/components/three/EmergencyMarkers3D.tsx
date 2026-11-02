@@ -117,18 +117,18 @@ const SingleBeacon: React.FC<{
         className="pointer-events-none select-none"
       >
         <div
-          className={`px-2 py-0.5 rounded text-[10px] font-mono whitespace-nowrap transition shadow-xl border flex items-center space-x-1.5 ${
+          className={`px-2 py-0.5 rounded text-[10px] font-mono whitespace-nowrap transition shadow-md border flex items-center space-x-1.5 ${
             isSelected
-              ? 'bg-command-darkest border-white text-white font-bold ring-2 ring-command-teal'
-              : 'bg-command-surface/90 border-command-border text-slate-200'
+              ? 'bg-white border-app-primary text-app-text font-bold ring-2 ring-app-primary/20'
+              : 'bg-white/95 border-app-border text-app-text'
           }`}
         >
           <span
             className="w-2 h-2 rounded-full"
             style={{ backgroundColor: color }}
           />
-          <span>{incident.tracking_id}</span>
-          <span className="text-command-teal font-semibold">
+          <span className="font-semibold">{incident.tracking_id}</span>
+          <span className="text-app-primary font-bold">
             {incident.priority_score.toFixed(0)}pts
           </span>
         </div>

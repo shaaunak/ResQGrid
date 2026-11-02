@@ -127,10 +127,10 @@ const SingleRescueUnit: React.FC<{
         distanceFactor={24}
         className="pointer-events-none select-none"
       >
-        <div className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-command-darkest/90 border border-command-border text-white whitespace-nowrap shadow-md flex items-center space-x-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-          <span>{team.name.split(' ')[0]}</span>
-          <span className="text-command-muted">[{team.status}]</span>
+        <div className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-white/95 border border-app-border text-app-text whitespace-nowrap shadow-sm flex items-center space-x-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-app-primary" />
+          <span className="font-semibold">{team.name.split(' ')[0]}</span>
+          <span className="text-app-text-secondary">[{team.status}]</span>
         </div>
       </Html>
     </group>

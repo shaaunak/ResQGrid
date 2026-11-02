@@ -60,3 +60,4 @@ async def test_independent_incident_escalation_lifecycle():
         de_esc_data = de_esc_res.json()
         assert de_esc_data["is_escalated"] is False
         assert de_esc_data["escalation_resolved_at"] is not None
+

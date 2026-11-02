@@ -95,3 +95,4 @@ async def test_optimistic_concurrency_version_conflict():
         )
         assert res.status_code == 409
         assert "Stale incident record" in res.json()["detail"]
+

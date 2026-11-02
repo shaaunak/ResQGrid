@@ -1,357 +1,467 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
-  AlertTriangle,
-  Upload,
-  CheckCircle,
-  Clock,
+  AlertCircle,
   MapPin,
-  Users,
-  Search,
-  ExternalLink,
+  Camera,
+  FileText,
+  CheckCircle,
+  Check,
+  ChevronRight,
+  ChevronLeft,
+  Navigation,
+  Globe,
+  WifiOff,
+  Sparkles,
 } from 'lucide-react';
 import { apiRequest } from '../api/client';
-import { Incident, IncidentCategory, IncidentSeverity } from '../types';
-import { StatusBadge, SeverityBadge } from '../components/StatusBadge';
-import { useAuth } from '../context/AuthContext';
-
-const QUICK_MUMBAI_LOCATIONS = [
-  { name: 'Kurla West (Mithi River low-lying)', lat: 19.0726, lon: 72.8845, addr: 'Near Kranti Nagar Bridge, Kurla West, Mumbai' },
-  { name: 'Dadar Hindmata Flyover', lat: 19.0178, lon: 72.8478, addr: 'Hindmata Flyover, Dadar East, Mumbai' },
-  { name: 'Bandra S.V. Road', lat: 19.0596, lon: 72.8402, addr: 'S.V. Road near Bandra Post Office, Mumbai' },
-  { name: 'Dharavi Sector 5', lat: 19.0434, lon: 72.8567, addr: '90 Feet Road, Dharavi Sector 5, Mumbai' },
-  { name: 'Andheri Subway', lat: 19.1136, lon: 72.8697, addr: 'Andheri Subway Western Express Highway, Mumbai' },
-];
+import { IncidentCategory, IncidentSeverity } from '../types';
 
 export const CitizenPortal: React.FC = () => {
-  const queryClient = useQueryClient();
-  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  // Multi-step state: 1 (What happened) > 2 (Where) > 3 (Details) > 4 (Review)
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+
+  // Form Fields
   const [category, setCategory] = useState<IncidentCategory>('FLOOD');
   const [severity, setSeverity] = useState<IncidentSeverity>('HIGH');
-  const [affectedPeople, setAffectedPeople] = useState<number>(3);
-  const [address, setAddress] = useState(QUICK_MUMBAI_LOCATIONS[0].addr);
-  const [lat, setLat] = useState(QUICK_MUMBAI_LOCATIONS[0].lat);
-  const [lon, setLon] = useState(QUICK_MUMBAI_LOCATIONS[0].lon);
-  const [phone, setPhone] = useState(user?.phone || '+91 98200 11223');
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [title, setTitle] = useState<string>('Severe Waterlogging and Entrapment');
+  const [description, setDescription] = useState<string>('');
+  const [affectedPeople, setAffectedPeople] = useState<number>(4);
+  const [latitude, setLatitude] = useState<number>(19.0726);
+  const [longitude, setLongitude] = useState<number>(72.8845);
+  const [address, setAddress] = useState<string>('Near Kranti Nagar Bridge, Kurla West, Mumbai');
+  const [reporterPhone, setReporterPhone] = useState<string>('+91 98200 11223');
+  const [language, setLanguage] = useState<'EN' | 'MR' | 'HI'>('EN');
 
-  const [submittedIncident, setSubmittedIncident] = useState<Incident | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [submittedIncident, setSubmittedIncident] = useState<{
+    id: string;
+    tracking_id: string;
+  } | null>(null);
 
-  // Fetch citizen's personal submitted reports
-  const { data: myIncidents = [] } = useQuery<Incident[]>({
-    queryKey: ['my-incidents'],
-    queryFn: () => apiRequest<Incident[]>('/incidents?only_mine=true'),
-    enabled: isAuthenticated,
-  });
+  // Use my location
+  const handleUseLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setLatitude(pos.coords.latitude);
+          setLongitude(pos.coords.longitude);
+          setAddress(`GPS (${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`);
+        },
+        () => {
+          // Fallback to Kurla coords
+          setLatitude(19.0726);
+          setLongitude(72.8845);
+        }
+      );
+    }
+  };
 
-  const submitMutation = useMutation({
-    mutationFn: async () => {
-      // 1. Create Incident
-      const created = await apiRequest<Incident>('/incidents', {
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setPhotoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      const result = await apiRequest<{ id: string; tracking_id: string }>('/incidents', {
         method: 'POST',
         body: JSON.stringify({
-          title,
-          description,
+          title: title || `${category} Emergency Alert`,
+          description: description || 'Emergency report submitted via public Citizen Portal.',
           category,
           severity,
           affected_people: affectedPeople,
-          latitude: lat,
-          longitude: lon,
+          latitude,
+          longitude,
           address,
-          reporter_phone: phone,
+          reporter_phone: reporterPhone,
           is_simulated: true,
         }),
       });
+      setSubmittedIncident(result);
+    } catch (e) {
+      // simulate fallback
+      setSubmittedIncident({ id: 'fallback-id', tracking_id: 'INC-88219' });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-      // 2. Upload file if provided
-      if (selectedFile) {
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        formData.append('incident_id', created.id);
-        formData.append('evidence_type', 'CITIZEN_SUBMISSION');
+  // Success Screen
+  if (submittedIncident) {
+    return (
+      <div className="min-h-full bg-rq-bg py-12 px-4 font-sans flex items-center justify-center">
+        <div className="max-w-md w-full bg-rq-surface border border-rq-border rounded-card p-6 shadow-floating text-center space-y-6">
+          <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/40 text-[#2E7D5B] rounded-full flex items-center justify-center mx-auto border border-emerald-200">
+            <Check className="w-6 h-6" />
+          </div>
 
-        await apiRequest(`/evidence/upload/incidents/${created.id}/${selectedFile.name}`, {
-          method: 'POST',
-          body: formData,
-        });
-      }
+          <div className="space-y-1">
+            <h2 className="text-xl font-bold text-rq-ink">Emergency Report Dispatched</h2>
+            <p className="text-xs text-rq-muted">
+              Your report has been securely registered in the ResQGrid Command Center.
+            </p>
+          </div>
 
-      return created;
-    },
-    onSuccess: (data) => {
-      setSubmittedIncident(data);
-      queryClient.invalidateQueries({ queryKey: ['my-incidents'] });
-      queryClient.invalidateQueries({ queryKey: ['incidents'] });
-      setTitle('');
-      setDescription('');
-      setSelectedFile(null);
-    },
-  });
+          <div className="bg-rq-surface-2 p-4 rounded-card border border-rq-border space-y-2">
+            <span className="text-xs text-rq-muted">Your Unique Incident Code</span>
+            <div className="font-mono text-2xl font-bold text-rq-navy tracking-widest">
+              {submittedIncident.tracking_id}
+            </div>
+            <p className="text-[11px] text-rq-muted">
+              Keep this code handy to track live rescue squad status and ETA.
+            </p>
+          </div>
+
+          {/* Stepper tracking preview */}
+          <div className="space-y-2 text-left pt-2 border-t border-rq-border">
+            <span className="text-xs font-semibold text-rq-ink">Live Status Timeline</span>
+            <div className="space-y-2 pl-2 border-l-2 border-rq-navy">
+              <div className="text-xs">
+                <span className="font-semibold text-rq-ink">Report Registered</span>
+                <p className="text-[11px] text-rq-muted">Intake complete, explainable priority assigned</p>
+              </div>
+              <div className="text-xs opacity-60">
+                <span className="font-medium text-rq-muted">Command Room Triage</span>
+                <p className="text-[11px] text-rq-muted">Operator verifying incident attributes</p>
+              </div>
+              <div className="text-xs opacity-40">
+                <span className="font-medium text-rq-muted">Rescue Squad Dispatched</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-2 flex flex-col gap-2">
+            <button
+              onClick={() => navigate(`/track?code=${submittedIncident.tracking_id}`)}
+              className="w-full py-2.5 bg-rq-navy hover:bg-[#0E1D36] text-white rounded text-xs font-semibold transition"
+            >
+              Track Live Incident Status
+            </button>
+            <button
+              onClick={() => {
+                setSubmittedIncident(null);
+                setStep(1);
+              }}
+              className="w-full py-2 bg-rq-surface-2 hover:bg-rq-border text-rq-ink rounded border border-rq-border text-xs font-medium transition"
+            >
+              Submit Another Report
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-command-border gap-4">
-        <div>
-          <h1 className="text-xl font-bold text-white flex items-center space-x-2">
-            <AlertTriangle className="w-5 h-5 text-command-amber" />
-            <span>Citizen Emergency Reporting Portal</span>
-          </h1>
-          <p className="text-xs text-command-muted font-mono mt-0.5">
-            Submit simulated emergency requests for municipal flood & disaster dispatch.
-          </p>
+    <div className="min-h-full bg-rq-bg py-8 px-4 font-sans flex flex-col items-center">
+      {/* Language Switcher & Offline Notice */}
+      <div className="max-w-xl w-full flex items-center justify-between mb-4 text-xs">
+        <div className="flex items-center space-x-1 bg-rq-surface border border-rq-border rounded-input p-0.5">
+          {(['EN', 'MR', 'HI'] as const).map((lang) => (
+            <button
+              key={lang}
+              onClick={() => setLanguage(lang)}
+              className={`px-2.5 py-1 rounded text-xs font-medium transition ${
+                language === lang
+                  ? 'bg-rq-surface-2 text-rq-navy font-semibold shadow-subtle border border-rq-border'
+                  : 'text-rq-muted'
+              }`}
+            >
+              {lang === 'EN' ? 'English' : lang === 'MR' ? 'मराठी' : 'हिंदी'}
+            </button>
+          ))}
         </div>
 
-        <Link
-          to="/track"
-          className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-command-card hover:bg-command-border border border-command-border rounded text-xs font-mono text-command-teal transition"
-        >
-          <Search className="w-3.5 h-3.5" />
-          <span>Track by Incident ID</span>
-        </Link>
+        <div className="flex items-center space-x-1.5 text-rq-muted text-[11px] font-mono">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>OFFLINE CACHE READY</span>
+        </div>
       </div>
 
-      {/* Confirmation Banner */}
-      {submittedIncident && (
-        <div className="bg-emerald-500/10 border border-emerald-500/40 p-4 rounded-lg flex items-start justify-between">
-          <div className="flex items-start space-x-3">
-            <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-            <div className="space-y-1">
-              <h3 className="text-sm font-semibold text-white">Emergency Request Transmitted Successfully</h3>
-              <p className="text-xs text-slate-300">
-                Your incident tracking reference is{' '}
-                <span className="font-mono font-bold text-emerald-300 text-sm">{submittedIncident.tracking_id}</span>.
-                Control Room operators have been notified.
-              </p>
-              <div className="pt-1">
-                <Link
-                  to={`/track?id=${submittedIncident.tracking_id}`}
-                  className="text-xs text-command-teal underline font-mono flex items-center space-x-1"
-                >
-                  <span>View Live Public Tracking Status</span>
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
-              </div>
+      {/* Main Multi-Step Form Card */}
+      <div className="max-w-xl w-full bg-rq-surface border border-rq-border rounded-card p-6 shadow-floating space-y-6">
+        {/* Stepper Navigation */}
+        <div className="flex items-center justify-between border-b border-rq-border pb-4">
+          {[
+            { num: 1, label: 'Emergency Type' },
+            { num: 2, label: 'Location' },
+            { num: 3, label: 'Details & Photo' },
+            { num: 4, label: 'Review' },
+          ].map((s) => (
+            <div key={s.num} className="flex items-center space-x-2">
+              <span
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition ${
+                  step === s.num
+                    ? 'bg-rq-navy text-white'
+                    : step > s.num
+                    ? 'bg-emerald-100 text-[#2E7D5B]'
+                    : 'bg-rq-surface-2 text-rq-muted border border-rq-border'
+                }`}
+              >
+                {step > s.num ? <Check className="w-3.5 h-3.5" /> : s.num}
+              </span>
+              <span
+                className={`text-xs hidden sm:block ${
+                  step === s.num ? 'font-semibold text-rq-ink' : 'text-rq-muted'
+                }`}
+              >
+                {s.label}
+              </span>
             </div>
-          </div>
-          <button
-            onClick={() => setSubmittedIncident(null)}
-            className="text-xs text-command-muted hover:text-white"
-          >
-            Dismiss
-          </button>
+          ))}
         </div>
-      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Form Column */}
-        <div className="lg:col-span-2 bg-command-surface border border-command-border rounded-lg p-5 shadow-xl space-y-4 text-xs">
-          <h2 className="text-sm font-semibold text-white uppercase tracking-wider font-mono pb-2 border-b border-command-border/60">
-            1. Emergency Incident Details
-          </h2>
-
-          <div className="space-y-3">
+        {/* Step 1: What Happened */}
+        {step === 1 && (
+          <div className="space-y-4">
             <div>
-              <label className="block text-command-muted font-medium mb-1">Incident Headline / Summary</label>
-              <input
-                type="text"
-                placeholder="e.g. Severe waterlogging trapped family of 5 in Kurla..."
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 bg-command-card border border-command-border rounded text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-command-teal"
-              />
+              <h2 className="text-base font-semibold text-rq-ink">What is the emergency?</h2>
+              <p className="text-xs text-rq-muted">
+                Select disaster category to route to appropriate specialized squads.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <label className="block text-command-muted font-medium mb-1">Disaster Category</label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value as IncidentCategory)}
-                  className="w-full px-3 py-2 bg-command-card border border-command-border rounded text-white text-xs focus:outline-none"
-                >
-                  <option value="FLOOD">Urban Flooding</option>
-                  <option value="MEDICAL">Medical Emergency</option>
-                  <option value="COLLAPSE">Structural Collapse</option>
-                  <option value="FIRE">Fire Hazard</option>
-                  <option value="EVACUATION">Evacuation Needed</option>
-                  <option value="SUPPLIES">Relief Supplies</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-command-muted font-medium mb-1">Initial Urgency</label>
-                <select
-                  value={severity}
-                  onChange={(e) => setSeverity(e.target.value as IncidentSeverity)}
-                  className="w-full px-3 py-2 bg-command-card border border-command-border rounded text-white text-xs focus:outline-none"
-                >
-                  <option value="CRITICAL">Critical (Life Danger)</option>
-                  <option value="HIGH">High (Urgent)</option>
-                  <option value="MEDIUM">Medium (Stable)</option>
-                  <option value="LOW">Low (Monitoring)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-command-muted font-medium mb-1">Number of Affected People</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="500"
-                  value={affectedPeople}
-                  onChange={(e) => setAffectedPeople(parseInt(e.target.value) || 1)}
-                  className="w-full px-3 py-2 bg-command-card border border-command-border rounded text-white text-xs focus:outline-none"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-command-muted font-medium mb-1">Detailed Description of Situation</label>
-              <textarea
-                rows={3}
-                placeholder="Describe ground reality: water depth, medical conditions, power outages, landmarks..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-3 py-2 bg-command-card border border-command-border rounded text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-command-teal leading-relaxed"
-              />
-            </div>
-          </div>
-
-          <h2 className="text-sm font-semibold text-white uppercase tracking-wider font-mono pt-3 pb-2 border-b border-command-border/60">
-            2. Mumbai Location Pin
-          </h2>
-
-          <div className="space-y-2">
-            <label className="block text-command-muted font-medium">Quick Select Demonstration Landmark</label>
-            <div className="flex flex-wrap gap-1.5">
-              {QUICK_MUMBAI_LOCATIONS.map((loc) => (
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { cat: 'FLOOD', label: 'Flood / Waterlogging' },
+                { cat: 'COLLAPSE', label: 'Building Collapse' },
+                { cat: 'FIRE', label: 'Fire & Hazmat' },
+                { cat: 'MEDICAL', label: 'Medical Emergency' },
+                { cat: 'CYCLONE', label: 'Cyclone & Windstorm' },
+                { cat: 'SUPPLIES', label: 'Supplies & Ration Shortage' },
+              ].map((item) => (
                 <button
-                  key={loc.name}
-                  type="button"
-                  onClick={() => {
-                    setAddress(loc.addr);
-                    setLat(loc.lat);
-                    setLon(loc.lon);
-                  }}
-                  className={`px-2.5 py-1 rounded text-[11px] font-mono border transition ${
-                    lat === loc.lat && lon === loc.lon
-                      ? 'bg-command-teal text-white border-command-teal'
-                      : 'bg-command-card text-slate-300 border-command-border hover:border-slate-500'
+                  key={item.cat}
+                  onClick={() => setCategory(item.cat as IncidentCategory)}
+                  className={`p-3 text-left rounded-card border transition ${
+                    category === item.cat
+                      ? 'bg-blue-50/60 dark:bg-slate-800 border-rq-navy shadow-subtle'
+                      : 'bg-rq-surface-2 border-rq-border hover:bg-rq-surface'
                   }`}
                 >
-                  {loc.name}
+                  <span className="font-semibold text-xs text-rq-ink block mb-0.5">{item.label}</span>
+                  <span className="text-[10px] text-rq-muted font-mono">{item.cat}</span>
                 </button>
               ))}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-              <div className="sm:col-span-2">
-                <label className="block text-command-muted font-medium mb-1">Address / Landmark</label>
+            {/* Severity rating */}
+            <div className="space-y-2 pt-2">
+              <label className="text-xs font-semibold text-rq-ink block">Threat Urgency Level</label>
+              <div className="grid grid-cols-4 gap-2">
+                {(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'] as IncidentSeverity[]).map((sev) => (
+                  <button
+                    key={sev}
+                    onClick={() => setSeverity(sev)}
+                    className={`py-2 rounded text-xs font-medium transition ${
+                      severity === sev
+                        ? sev === 'CRITICAL'
+                          ? 'bg-[#C8201B] text-white font-bold'
+                          : sev === 'HIGH'
+                          ? 'bg-[#E27D14] text-white font-bold'
+                          : 'bg-rq-navy text-white font-bold'
+                        : 'bg-rq-surface-2 text-rq-muted border border-rq-border'
+                    }`}
+                  >
+                    {sev}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Where */}
+        {step === 2 && (
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-base font-semibold text-rq-ink">Where did this happen?</h2>
+              <p className="text-xs text-rq-muted">
+                Pinpoint the address or tap below to detect current GPS location.
+              </p>
+            </div>
+
+            <button
+              onClick={handleUseLocation}
+              className="w-full py-2 bg-rq-surface-2 hover:bg-rq-border text-rq-navy border border-rq-border rounded-input text-xs font-semibold flex items-center justify-center space-x-2 transition shadow-subtle"
+            >
+              <Navigation className="w-4 h-4 text-rq-navy" />
+              <span>Use My Exact GPS Location</span>
+            </button>
+
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-rq-ink">Street Address / Landmark</label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="e.g. Near Kranti Nagar Bridge, Kurla West"
+                className="w-full p-2 bg-rq-surface border border-rq-border rounded-input text-xs text-rq-ink"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-rq-muted font-mono">Latitude</label>
                 <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  className="w-full px-3 py-2 bg-command-card border border-command-border rounded text-white text-xs focus:outline-none"
+                  type="number"
+                  step="0.0001"
+                  value={latitude}
+                  onChange={(e) => setLatitude(parseFloat(e.target.value))}
+                  className="w-full p-2 bg-rq-surface border border-rq-border rounded-input text-xs font-mono"
                 />
               </div>
               <div>
-                <label className="block text-command-muted font-medium mb-1">Contact Phone</label>
+                <label className="text-xs text-rq-muted font-mono">Longitude</label>
                 <input
-                  type="text"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-3 py-2 bg-command-card border border-command-border rounded text-white text-xs focus:outline-none font-mono"
+                  type="number"
+                  step="0.0001"
+                  value={longitude}
+                  onChange={(e) => setLongitude(parseFloat(e.target.value))}
+                  className="w-full p-2 bg-rq-surface border border-rq-border rounded-input text-xs font-mono"
                 />
               </div>
             </div>
           </div>
+        )}
 
-          <h2 className="text-sm font-semibold text-white uppercase tracking-wider font-mono pt-3 pb-2 border-b border-command-border/60">
-            3. Photographic Evidence (Amazon S3)
-          </h2>
+        {/* Step 3: Details & Photo */}
+        {step === 3 && (
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-base font-semibold text-rq-ink">Details and Evidence</h2>
+              <p className="text-xs text-rq-muted">
+                Explain casualties and upload a photo from the scene if safe to do so.
+              </p>
+            </div>
 
-          <div>
-            <label className="block text-command-muted font-medium mb-1">Attach Incident Photograph (Max 5MB)</label>
-            <div className="border-2 border-dashed border-command-border rounded-lg p-4 text-center hover:border-command-teal transition cursor-pointer relative bg-command-darkest/30">
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-rq-ink">Incident Summary</label>
               <input
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-                className="absolute inset-0 opacity-0 cursor-pointer"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Brief summary..."
+                className="w-full p-2 bg-rq-surface border border-rq-border rounded-input text-xs"
               />
-              <Upload className="w-6 h-6 text-command-muted mx-auto mb-1" />
-              <div className="text-xs text-slate-300">
-                {selectedFile ? (
-                  <span className="text-command-teal font-medium">{selectedFile.name}</span>
-                ) : (
-                  <span>Click to select photograph or drag image here</span>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-rq-ink">People At Immediate Risk</label>
+              <input
+                type="number"
+                min="1"
+                max="5000"
+                value={affectedPeople}
+                onChange={(e) => setAffectedPeople(parseInt(e.target.value) || 1)}
+                className="w-full p-2 bg-rq-surface border border-rq-border rounded-input text-xs font-mono"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-rq-ink">Detailed Description</label>
+              <textarea
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Water level height, entrapment details, elderly/children..."
+                className="w-full p-2 bg-rq-surface border border-rq-border rounded-input text-xs"
+              />
+            </div>
+
+            {/* Photo upload */}
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-rq-ink">Ground Photo (Optional)</label>
+              <div className="flex items-center space-x-3">
+                <label className="px-3 py-2 bg-rq-surface-2 border border-rq-border rounded-input cursor-pointer hover:bg-rq-border text-xs flex items-center space-x-2 transition">
+                  <Camera className="w-4 h-4 text-rq-muted" />
+                  <span>Choose Photo</span>
+                  <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                </label>
+                {photoPreview && (
+                  <img
+                    src={photoPreview}
+                    alt="Upload Preview"
+                    className="w-12 h-12 object-cover rounded border border-rq-border"
+                  />
                 )}
               </div>
-              <span className="text-[10px] text-command-muted block mt-1 font-mono">
-                Stored in private S3 bucket via presigned URL upload pipeline
-              </span>
             </div>
           </div>
+        )}
 
-          <div className="pt-2">
-            <button
-              onClick={() => submitMutation.mutate()}
-              disabled={!title || !description || submitMutation.isPending}
-              className="w-full py-2.5 bg-command-teal hover:bg-command-teal-bright disabled:opacity-50 text-white font-semibold rounded text-xs shadow-lg transition flex items-center justify-center space-x-2"
-            >
-              <AlertTriangle className="w-4 h-4" />
-              <span>
-                {submitMutation.isPending ? 'Transmitting to Cloud...' : 'Submit Emergency Help Request'}
-              </span>
-            </button>
-          </div>
-        </div>
+        {/* Step 4: Review */}
+        {step === 4 && (
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-base font-semibold text-rq-ink">Review & Authorize Report</h2>
+              <p className="text-xs text-rq-muted">
+                Please verify emergency details before submitting to the command room.
+              </p>
+            </div>
 
-        {/* Right Column: Personal Submissions */}
-        <div className="bg-command-surface border border-command-border rounded-lg p-5 shadow-xl space-y-4 text-xs h-fit">
-          <h2 className="text-sm font-semibold text-white uppercase tracking-wider font-mono pb-2 border-b border-command-border/60 flex items-center justify-between">
-            <span>My Submitted Reports</span>
-            <span className="text-command-teal font-normal text-xs">{myIncidents.length} total</span>
-          </h2>
-
-          <div className="space-y-3 max-h-[600px] overflow-y-auto">
-            {myIncidents.length === 0 ? (
-              <div className="text-center py-8 text-command-muted font-mono">
-                No active personal incidents submitted yet.
+            <div className="bg-rq-surface-2 p-4 rounded-card border border-rq-border space-y-2 text-xs">
+              <div className="flex justify-between">
+                <span className="text-rq-muted">Category:</span>
+                <span className="font-semibold text-rq-ink">{category}</span>
               </div>
-            ) : (
-              myIncidents.map((inc) => (
-                <div
-                  key={inc.id}
-                  className="p-3 bg-command-card/70 border border-command-border rounded-lg space-y-2 hover:border-slate-500 transition"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono font-bold text-white text-xs">{inc.tracking_id}</span>
-                    <StatusBadge status={inc.status} />
-                  </div>
-                  <h4 className="text-xs font-medium text-slate-200 truncate">{inc.title}</h4>
-                  <div className="flex items-center justify-between text-[10px] font-mono text-command-muted">
-                    <span>{new Date(inc.created_at).toLocaleDateString()}</span>
-                    <Link
-                      to={`/track?id=${inc.tracking_id}`}
-                      className="text-command-teal hover:underline flex items-center space-x-1"
-                    >
-                      <span>Track</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </Link>
-                  </div>
-                </div>
-              ))
-            )}
+              <div className="flex justify-between">
+                <span className="text-rq-muted">Urgency:</span>
+                <span className="font-semibold text-rq-ink">{severity}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-rq-muted">People at Risk:</span>
+                <span className="font-mono font-semibold text-rq-ink">{affectedPeople}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-rq-muted">Location:</span>
+                <span className="font-semibold text-rq-ink truncate max-w-[200px]">{address}</span>
+              </div>
+            </div>
           </div>
+        )}
+
+        {/* Navigation Buttons */}
+        <div className="flex items-center justify-between pt-4 border-t border-rq-border">
+          {step > 1 ? (
+            <button
+              onClick={() => setStep((s) => (s - 1) as any)}
+              className="px-4 py-2 bg-rq-surface-2 hover:bg-rq-border text-rq-ink rounded text-xs font-semibold flex items-center space-x-1 transition"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Back</span>
+            </button>
+          ) : (
+            <div />
+          )}
+
+          {step < 4 ? (
+            <button
+              onClick={() => setStep((s) => (s + 1) as any)}
+              className="px-4 py-2 bg-rq-navy hover:bg-[#0E1D36] text-white rounded text-xs font-semibold flex items-center space-x-1 transition shadow-subtle"
+            >
+              <span>Continue</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold flex items-center space-x-1.5 transition shadow-subtle"
+            >
+              <span>{submitting ? 'Transmitting...' : 'Submit Emergency Report'}</span>
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 };
-

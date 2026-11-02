@@ -39,23 +39,23 @@ export const CommandCenter3D: React.FC<Command3DProps> = ({
   const [layersOpen, setLayersOpen] = useState<boolean>(true);
 
   return (
-    <div className="relative w-full h-full min-h-[480px] bg-command-darkest overflow-hidden select-none">
+    <div className="relative w-full h-full min-h-[480px] bg-[#EEF3F6] overflow-hidden select-none">
       <CanvasErrorBoundary>
         <Canvas shadows gl={{ antialias: true, alpha: false }} dpr={[1, 1.5]}>
-          <color attach="background" args={[TACTICAL_PALETTE.darkest]} />
-          <fog attach="fog" args={[TACTICAL_PALETTE.darkest, 30, 85]} />
+          <color attach="background" args={['#EEF3F6']} />
+          <fog attach="fog" args={['#EEF3F6', 35, 95]} />
 
           <CameraController preset={cameraPreset} />
 
           {/* Ambient & Directional Lighting */}
-          <ambientLight intensity={0.45} color="#c7d2fe" />
+          <ambientLight intensity={0.9} color="#ffffff" />
           <directionalLight
-            position={[30, 50, 25]}
-            intensity={1.2}
+            position={[35, 55, 30]}
+            intensity={1.6}
             color="#ffffff"
             castShadow
           />
-          <pointLight position={[0, 15, 0]} intensity={1.5} color="#137C82" distance={60} />
+          <pointLight position={[0, 15, 0]} intensity={1.2} color="#146D73" distance={60} />
 
           {/* Procedural 3D City */}
           <TacticalCityScene showRadar={showRadar} />
@@ -85,7 +85,7 @@ export const CommandCenter3D: React.FC<Command3DProps> = ({
               startLon={72.8402}
               endLat={incidents[0].latitude}
               endLon={incidents[0].longitude}
-              color="#137C82"
+              color="#146D73"
               arcHeight={4.5}
             />
           )}
@@ -93,22 +93,22 @@ export const CommandCenter3D: React.FC<Command3DProps> = ({
       </CanvasErrorBoundary>
 
       {/* Top Left: Operational Guidance & Status */}
-      <div className="absolute top-4 left-4 z-10 bg-command-surface/90 backdrop-blur-md border border-command-border rounded-lg p-3 shadow-xl font-mono text-[10px] text-command-muted space-y-1.5 pointer-events-auto">
-        <div className="text-white font-bold uppercase tracking-wider flex items-center space-x-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+      <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-md border border-app-border rounded-lg p-3 shadow-lg font-sans text-[11px] text-app-text-secondary space-y-1.5 pointer-events-auto">
+        <div className="text-app-text font-bold uppercase tracking-wider flex items-center space-x-2 font-mono">
+          <span className="w-2.5 h-2.5 rounded-full bg-app-low animate-pulse" />
           <span className="text-xs">3D Tactical Command Grid</span>
         </div>
-        <div className="text-slate-400">
+        <div className="text-app-text-secondary text-xs">
           Showing real Mumbai simulated incidents, depots, and response squads.
         </div>
-        <div className="flex items-center space-x-2 pt-1 border-t border-command-border/50 text-[10px]">
-          <span className="text-slate-300">View Presets:</span>
+        <div className="flex items-center space-x-2 pt-1 border-t border-app-border text-[10px] font-mono">
+          <span className="text-app-text-secondary">View Presets:</span>
           <button
             onClick={() => setCameraPreset('ISOMETRIC')}
             className={`px-2 py-0.5 rounded border transition ${
               cameraPreset === 'ISOMETRIC'
-                ? 'bg-command-teal text-white border-command-teal font-semibold'
-                : 'bg-command-card text-slate-400 border-command-border hover:text-white'
+                ? 'bg-app-primary text-white border-app-primary font-semibold'
+                : 'bg-slate-100 text-app-text-secondary border-app-border hover:text-app-text'
             }`}
           >
             Tactical Iso
@@ -117,8 +117,8 @@ export const CommandCenter3D: React.FC<Command3DProps> = ({
             onClick={() => setCameraPreset('OVERHEAD')}
             className={`px-2 py-0.5 rounded border transition ${
               cameraPreset === 'OVERHEAD'
-                ? 'bg-command-teal text-white border-command-teal font-semibold'
-                : 'bg-command-card text-slate-400 border-command-border hover:text-white'
+                ? 'bg-app-primary text-white border-app-primary font-semibold'
+                : 'bg-slate-100 text-app-text-secondary border-app-border hover:text-app-text'
             }`}
           >
             Overhead
@@ -127,8 +127,8 @@ export const CommandCenter3D: React.FC<Command3DProps> = ({
             onClick={() => setCameraPreset('COASTAL')}
             className={`px-2 py-0.5 rounded border transition ${
               cameraPreset === 'COASTAL'
-                ? 'bg-command-teal text-white border-command-teal font-semibold'
-                : 'bg-command-card text-slate-400 border-command-border hover:text-white'
+                ? 'bg-app-primary text-white border-app-primary font-semibold'
+                : 'bg-slate-100 text-app-text-secondary border-app-border hover:text-app-text'
             }`}
           >
             Coastal
@@ -137,38 +137,38 @@ export const CommandCenter3D: React.FC<Command3DProps> = ({
       </div>
 
       {/* Top Right: Tactical Layers Panel (Matches Devpost ECC Design) */}
-      <div className="absolute top-4 right-4 z-10 w-52 bg-command-surface/95 backdrop-blur-md border border-command-border rounded-lg shadow-2xl font-mono text-xs overflow-hidden pointer-events-auto">
+      <div className="absolute top-4 right-4 z-10 w-52 bg-white/95 backdrop-blur-md border border-app-border rounded-lg shadow-lg font-sans text-xs overflow-hidden pointer-events-auto">
         <div
           onClick={() => setLayersOpen(!layersOpen)}
-          className="px-3 py-2 bg-command-darkest/60 border-b border-command-border flex items-center justify-between cursor-pointer hover:bg-command-card transition"
+          className="px-3 py-2 bg-slate-50 border-b border-app-border flex items-center justify-between cursor-pointer hover:bg-slate-100 transition"
         >
-          <div className="flex items-center space-x-2 text-white font-semibold">
-            <Layers className="w-3.5 h-3.5 text-command-teal" />
+          <div className="flex items-center space-x-2 text-app-text font-semibold font-mono">
+            <Layers className="w-3.5 h-3.5 text-app-primary" />
             <span className="tracking-wider uppercase text-[11px]">Layers</span>
           </div>
-          <span className="text-[10px] text-command-muted">
+          <span className="text-[10px] text-app-text-secondary font-mono">
             {layersOpen ? 'HIDE' : 'SHOW'}
           </span>
         </div>
 
         {layersOpen && (
           <div className="p-3 space-y-2 text-[11px]">
-            <div className="text-[9px] uppercase tracking-wider text-slate-500 font-bold">
+            <div className="text-[9px] uppercase tracking-wider text-app-text-secondary font-bold font-mono">
               Core Objects
             </div>
 
             {/* Incidents Toggle */}
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-slate-300">
-                <span className="w-2 h-2 rounded-full bg-command-red" />
+              <span className="flex items-center space-x-1.5 text-app-text">
+                <span className="w-2 h-2 rounded-full bg-app-critical" />
                 <span>Incidents</span>
               </span>
               <button
                 onClick={() => setShowIncidents(!showIncidents)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border transition ${
+                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
                   showIncidents
-                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                    : 'bg-command-card text-slate-500 border-command-border'
+                    ? 'bg-teal-50 text-app-primary border-teal-200'
+                    : 'bg-slate-100 text-slate-400 border-slate-200'
                 }`}
               >
                 {showIncidents ? 'ON' : 'OFF'}
@@ -177,16 +177,16 @@ export const CommandCenter3D: React.FC<Command3DProps> = ({
 
             {/* Responders Toggle */}
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-slate-300">
-                <span className="w-2 h-2 rounded-full bg-cyan-400" />
+              <span className="flex items-center space-x-1.5 text-app-text">
+                <span className="w-2 h-2 rounded-full bg-teal-600" />
                 <span>Responders</span>
               </span>
               <button
                 onClick={() => setShowResponders(!showResponders)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border transition ${
+                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
                   showResponders
-                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                    : 'bg-command-card text-slate-500 border-command-border'
+                    ? 'bg-teal-50 text-app-primary border-teal-200'
+                    : 'bg-slate-100 text-slate-400 border-slate-200'
                 }`}
               >
                 {showResponders ? 'ON' : 'OFF'}
@@ -195,38 +195,38 @@ export const CommandCenter3D: React.FC<Command3DProps> = ({
 
             {/* Depots Toggle */}
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-slate-300">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="flex items-center space-x-1.5 text-app-text">
+                <span className="w-2 h-2 rounded-full bg-emerald-600" />
                 <span>Supply Hubs</span>
               </span>
               <button
                 onClick={() => setShowDepots(!showDepots)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border transition ${
+                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
                   showDepots
-                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                    : 'bg-command-card text-slate-500 border-command-border'
+                    ? 'bg-teal-50 text-app-primary border-teal-200'
+                    : 'bg-slate-100 text-slate-400 border-slate-200'
                 }`}
               >
                 {showDepots ? 'ON' : 'OFF'}
               </button>
             </div>
 
-            <div className="text-[9px] uppercase tracking-wider text-slate-500 font-bold pt-1.5 border-t border-command-border/50">
+            <div className="text-[9px] uppercase tracking-wider text-app-text-secondary font-bold pt-1.5 border-t border-app-border font-mono">
               Tactical Overlays
             </div>
 
             {/* Hazard Inundation Polygon */}
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-slate-300">
-                <span className="w-2 h-2 rounded bg-amber-500" />
+              <span className="flex items-center space-x-1.5 text-app-text">
+                <span className="w-2 h-2 rounded bg-app-high" />
                 <span>Hazard Zones</span>
               </span>
               <button
                 onClick={() => setShowHazardZone(!showHazardZone)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border transition ${
+                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
                   showHazardZone
-                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                    : 'bg-command-card text-slate-500 border-command-border'
+                    ? 'bg-teal-50 text-app-primary border-teal-200'
+                    : 'bg-slate-100 text-slate-400 border-slate-200'
                 }`}
               >
                 {showHazardZone ? 'ON' : 'OFF'}
@@ -235,16 +235,16 @@ export const CommandCenter3D: React.FC<Command3DProps> = ({
 
             {/* Dispatch Arcs */}
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-slate-300">
-                <span className="w-2 h-2 rounded bg-command-teal" />
+              <span className="flex items-center space-x-1.5 text-app-text">
+                <span className="w-2 h-2 rounded bg-app-primary" />
                 <span>Dispatch Vectors</span>
               </span>
               <button
                 onClick={() => setShowArcs(!showArcs)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border transition ${
+                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
                   showArcs
-                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                    : 'bg-command-card text-slate-500 border-command-border'
+                    ? 'bg-teal-50 text-app-primary border-teal-200'
+                    : 'bg-slate-100 text-slate-400 border-slate-200'
                 }`}
               >
                 {showArcs ? 'ON' : 'OFF'}
@@ -253,16 +253,16 @@ export const CommandCenter3D: React.FC<Command3DProps> = ({
 
             {/* Radar Sweep */}
             <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-slate-300">
-                <span className="w-2 h-2 rounded-full border border-teal-400" />
+              <span className="flex items-center space-x-1.5 text-app-text">
+                <span className="w-2 h-2 rounded-full border border-teal-600" />
                 <span>Radar Sweep</span>
               </span>
               <button
                 onClick={() => setShowRadar(!showRadar)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border transition ${
+                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
                   showRadar
-                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
-                    : 'bg-command-card text-slate-500 border-command-border'
+                    ? 'bg-teal-50 text-app-primary border-teal-200'
+                    : 'bg-slate-100 text-slate-400 border-slate-200'
                 }`}
               >
                 {showRadar ? 'ON' : 'OFF'}
@@ -352,7 +352,7 @@ function DisasterHazardZone3D() {
 
       {/* Hazard Zone Label */}
       <Html position={[0, 0.5, 0]} center distanceFactor={24} className="pointer-events-none select-none">
-        <div className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-950/80 border border-amber-500/60 text-amber-300 shadow uppercase tracking-wider">
+        <div className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-white/95 border border-amber-300 text-app-high shadow-md uppercase tracking-wider">
           Mithi Basin Flood Hazard Zone
         </div>
       </Html>
@@ -372,19 +372,19 @@ const Depots3D: React.FC<{ depots: Depot[] }> = ({ depots }) => {
             <mesh position={[0, 0.35, 0]}>
               <boxGeometry args={[1.2, 0.7, 1.2]} />
               <meshStandardMaterial
-                color="#059669"
-                roughness={0.4}
-                metalness={0.6}
+                color="#0E555A"
+                roughness={0.7}
+                metalness={0.1}
               />
             </mesh>
             {/* Ground Ring */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
               <ringGeometry args={[0.8, 1.05, 24]} />
-              <meshBasicMaterial color="#10b981" transparent opacity={0.5} side={THREE.DoubleSide} />
+              <meshBasicMaterial color="#146D73" transparent opacity={0.5} side={THREE.DoubleSide} />
             </mesh>
             {/* Label */}
             <Html position={[0, 1.2, 0]} center distanceFactor={25} className="pointer-events-none select-none">
-              <div className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-command-darkest/90 border border-emerald-500/40 text-emerald-300 shadow whitespace-nowrap">
+              <div className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-white/95 border border-app-border text-app-text shadow-sm whitespace-nowrap">
                 {d.name.split(' ')[0]} Hub
               </div>
             </Html>

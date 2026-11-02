@@ -39,10 +39,10 @@ export const IncidentMap: React.FC<IncidentMapProps> = ({
       zoomControl: false,
     });
 
-    // Clean OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // Free public OpenStreetMap tile layer (100% free, zero API key required, zero authentication)
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contributors | ResQGrid Tactical Ops',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | ResQGrid Tactical Ops',
     }).addTo(map);
 
     L.control.zoom({ position: 'topright' }).addTo(map);
@@ -76,9 +76,9 @@ export const IncidentMap: React.FC<IncidentMapProps> = ({
         [19.0650, 72.8550],
       ];
       const floodPolygon = L.polygon(floodPolygonCoords, {
-        color: '#CF4B4B',
-        fillColor: '#E7A645',
-        fillOpacity: 0.15,
+        color: '#0284C7',
+        fillColor: '#38BDF8',
+        fillOpacity: 0.22,
         weight: 1.5,
         dashArray: '4, 4',
       }).bindTooltip('Simulated Mithi River Flood Vulnerability Inundation Zone', { sticky: true });
@@ -91,28 +91,31 @@ export const IncidentMap: React.FC<IncidentMapProps> = ({
         const isSelected = selectedIncident?.id === inc.id;
         const color =
           inc.status === 'RESOLVED'
-            ? '#10b981'
+            ? '#347F68'
             : inc.severity === 'CRITICAL'
-            ? '#CF4B4B'
+            ? '#C84343'
             : inc.severity === 'HIGH'
-            ? '#E7A645'
-            : '#3b82f6';
+            ? '#D77A34'
+            : inc.severity === 'MEDIUM'
+            ? '#C99A3D'
+            : '#146D73';
 
         const customHtml = `
           <div style="
-            width: ${isSelected ? '26px' : '20px'};
-            height: ${isSelected ? '26px' : '20px'};
+            width: ${isSelected ? '24px' : '18px'};
+            height: ${isSelected ? '24px' : '18px'};
             background-color: ${color};
-            border: 2px solid ${isSelected ? '#ffffff' : '#142235'};
+            border: 2px solid #ffffff;
             border-radius: 50%;
-            box-shadow: 0 0 10px ${color};
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
+            ${isSelected ? 'outline: 2px solid ' + color + '; outline-offset: 2px;' : ''}
           ">
-            <span style="font-size: 9px; font-weight: bold; color: white; font-family: monospace;">!</span>
+            <span style="font-size: ${isSelected ? '10px' : '8px'}; font-weight: bold; color: white; font-family: 'IBM Plex Mono', monospace;">!</span>
           </div>
         `;
 
@@ -137,7 +140,7 @@ export const IncidentMap: React.FC<IncidentMapProps> = ({
     // 3. Response Team Markers
     if (showResponders) {
       teams.forEach((t) => {
-        const teamColor = t.status === 'AVAILABLE' ? '#137C82' : t.status === 'DISPATCHED' ? '#8b5cf6' : '#64748b';
+        const teamColor = t.status === 'AVAILABLE' ? '#146D73' : t.status === 'DISPATCHED' ? '#D77A34' : '#64727B';
         const teamHtml = `
           <div style="
             width: 18px;
@@ -148,9 +151,9 @@ export const IncidentMap: React.FC<IncidentMapProps> = ({
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
           ">
-            <span style="font-size: 8px; font-weight: bold; color: white; font-family: monospace;">T</span>
+            <span style="font-size: 8px; font-weight: bold; color: white; font-family: 'IBM Plex Mono', monospace;">T</span>
           </div>
         `;
 
@@ -176,11 +179,16 @@ export const IncidentMap: React.FC<IncidentMapProps> = ({
           <div style="
             width: 16px;
             height: 16px;
-            background-color: #059669;
+            background-color: #0E555A;
             border: 2px solid #ffffff;
-            border-radius: 2px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-          "></div>
+            border-radius: 3px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">
+            <span style="font-size: 8px; font-weight: bold; color: white; font-family: 'IBM Plex Mono', monospace;">D</span>
+          </div>
         `;
         const icon = L.divIcon({
           className: 'custom-depot-marker',
@@ -211,46 +219,46 @@ export const IncidentMap: React.FC<IncidentMapProps> = ({
       <div ref={mapContainerRef} className="w-full h-full" />
 
       {/* Floating Tactical Layer Toggles (Reference UI Match) */}
-      <div className="absolute top-4 right-4 z-[1000] bg-command-surface/90 backdrop-blur-md border border-command-border rounded-lg shadow-2xl p-3 text-xs w-48 font-mono">
-        <div className="flex items-center space-x-2 text-command-muted uppercase text-[10px] tracking-wider mb-2 pb-1 border-b border-command-border/50">
-          <Layers className="w-3.5 h-3.5 text-command-teal" />
-          <span className="font-semibold text-white">Tactical Layers</span>
+      <div className="absolute top-4 right-4 z-[1000] bg-white/95 backdrop-blur-md border border-app-border rounded-lg shadow-lg p-3 text-xs w-48 font-sans">
+        <div className="flex items-center space-x-2 text-app-text-secondary uppercase text-[10px] tracking-wider mb-2 pb-1 border-b border-app-border font-mono">
+          <Layers className="w-3.5 h-3.5 text-app-primary" />
+          <span className="font-semibold text-app-text">Tactical Layers</span>
         </div>
         <div className="space-y-1.5">
-          <label className="flex items-center justify-between cursor-pointer hover:text-white text-slate-300">
+          <label className="flex items-center justify-between cursor-pointer hover:text-app-text text-app-text-secondary text-xs">
             <span>Incidents ({incidents.length})</span>
             <input
               type="checkbox"
               checked={showIncidents}
               onChange={(e) => setShowIncidents(e.target.checked)}
-              className="accent-command-teal rounded"
+              className="accent-app-primary rounded cursor-pointer"
             />
           </label>
-          <label className="flex items-center justify-between cursor-pointer hover:text-white text-slate-300">
+          <label className="flex items-center justify-between cursor-pointer hover:text-app-text text-app-text-secondary text-xs">
             <span>Responders ({teams.length})</span>
             <input
               type="checkbox"
               checked={showResponders}
               onChange={(e) => setShowResponders(e.target.checked)}
-              className="accent-command-teal rounded"
+              className="accent-app-primary rounded cursor-pointer"
             />
           </label>
-          <label className="flex items-center justify-between cursor-pointer hover:text-white text-slate-300">
+          <label className="flex items-center justify-between cursor-pointer hover:text-app-text text-app-text-secondary text-xs">
             <span>Depots ({depots.length})</span>
             <input
               type="checkbox"
               checked={showDepots}
               onChange={(e) => setShowDepots(e.target.checked)}
-              className="accent-command-teal rounded"
+              className="accent-app-primary rounded cursor-pointer"
             />
           </label>
-          <label className="flex items-center justify-between cursor-pointer hover:text-white text-slate-300">
+          <label className="flex items-center justify-between cursor-pointer hover:text-app-text text-app-text-secondary text-xs">
             <span>Flood Heatmap</span>
             <input
               type="checkbox"
               checked={showFloodZone}
               onChange={(e) => setShowFloodZone(e.target.checked)}
-              className="accent-command-teal rounded"
+              className="accent-app-primary rounded cursor-pointer"
             />
           </label>
         </div>

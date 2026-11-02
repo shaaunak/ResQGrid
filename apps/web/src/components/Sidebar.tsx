@@ -1,72 +1,87 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  Map,
-  AlertTriangle,
-  Truck,
-  Boxes,
-  Cpu,
-  BarChart3,
-  Server,
+  LayoutDashboard,
+  MapPin,
+  Shield,
   Search,
-  HelpCircle,
+  Truck,
+  Box,
+  Sparkles,
+  Activity,
+  FileText,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
 
 export const Sidebar: React.FC = () => {
-  const { role } = useAuth();
+  const [collapsed, setCollapsed] = useState(false);
 
   const navItems = [
-    { to: '/command', label: 'Command Center', icon: Map, roles: ['OPERATOR', 'ADMIN', 'COORDINATOR'] },
-    { to: '/citizen', label: 'Citizen Portal', icon: AlertTriangle, roles: ['CITIZEN', 'OPERATOR', 'ADMIN'] },
-    { to: '/track', label: 'Track Incident', icon: Search, roles: ['CITIZEN', 'OPERATOR', 'RESPONDER', 'COORDINATOR', 'ADMIN'] },
-    { to: '/responder', label: 'Field Responder', icon: Truck, roles: ['RESPONDER', 'OPERATOR', 'ADMIN'] },
-    { to: '/inventory', label: 'Relief Inventory', icon: Boxes, roles: ['COORDINATOR', 'OPERATOR', 'ADMIN'] },
-    { to: '/scenario', label: 'Scenario Commander', icon: Cpu, roles: ['OPERATOR', 'COORDINATOR', 'ADMIN'] },
-    { to: '/analytics', label: 'Operational KPIs', icon: BarChart3, roles: ['OPERATOR', 'COORDINATOR', 'ADMIN'] },
-    { to: '/health', label: 'Cloud & Health', icon: Server, roles: ['ADMIN', 'OPERATOR'] },
+    { to: '/', label: 'Overview', icon: LayoutDashboard },
+    { to: '/command', label: 'Command Center', icon: MapPin },
+    { to: '/citizen', label: 'Citizen Portal', icon: Shield },
+    { to: '/track', label: 'Track Incident', icon: Search },
+    { to: '/responder', label: 'Field Responder', icon: Truck },
+    { to: '/inventory', label: 'Relief Inventory', icon: Box },
+    { to: '/scenarios', label: 'Scenario Commander', icon: Sparkles },
+    { to: '/analytics', label: 'Operational KPIs', icon: Activity },
+    { to: '/health', label: 'Cloud & Health', icon: FileText },
   ];
 
   return (
-    <aside className="w-16 md:w-56 bg-command-darkest border-r border-command-border flex flex-col justify-between select-none">
-      <div className="py-3">
-        <div className="px-3 mb-2 hidden md:block text-[10px] font-mono uppercase text-command-muted tracking-wider">
-          Operations Rail
-        </div>
-        <nav className="space-y-1 px-2">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  `flex items-center space-x-3 px-3 py-2.5 rounded text-xs font-medium transition ${
-                    isActive
-                      ? 'bg-command-teal/20 text-white border-l-2 border-command-teal font-semibold'
-                      : 'text-command-muted hover:text-white hover:bg-command-surface/50'
-                  }`
-                }
-              >
-                <Icon className="w-4 h-4 flex-shrink-0" />
-                <span className="hidden md:inline truncate">{item.label}</span>
-              </NavLink>
-            );
-          })}
-        </nav>
+    <aside
+      className={`h-[calc(100vh-3.5rem)] sticky top-14 bg-rq-surface border-r border-rq-border flex flex-col justify-between transition-all duration-200 z-20 font-sans select-none flex-shrink-0 ${
+        collapsed ? 'w-16' : 'w-56'
+      }`}
+    >
+      {/* Navigation list */}
+      <div className="p-3 space-y-1 overflow-y-auto">
+        {!collapsed && (
+          <div className="px-2.5 py-1.5 text-[11px] font-semibold text-rq-muted tracking-wider uppercase">
+            Operations
+          </div>
+        )}
+
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              title={collapsed ? item.label : undefined}
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-3 py-2 rounded-md transition text-xs ${
+                  isActive
+                    ? 'bg-rq-surface-2 text-rq-navy font-semibold shadow-subtle border border-rq-border'
+                    : 'text-rq-muted hover:text-rq-ink hover:bg-rq-surface-2 border border-transparent'
+                } ${collapsed ? 'justify-center px-0' : ''}`
+              }
+            >
+              <Icon className="w-4 h-4 flex-shrink-0" />
+              {!collapsed && <span className="truncate">{item.label}</span>}
+            </NavLink>
+          );
+        })}
       </div>
 
-      <div className="p-3 border-t border-command-border hidden md:block text-xs font-mono text-command-muted">
-        <div className="flex items-center justify-between text-[11px] mb-1">
-          <span className="text-slate-400">AWS Region</span>
-          <span className="text-emerald-400">ap-south-1</span>
-        </div>
-        <div className="flex items-center justify-between text-[11px]">
-          <span className="text-slate-400">Compute</span>
-          <span className="text-cyan-400">EC2 VPC</span>
-        </div>
+      {/* Collapse / Expand rail toggle */}
+      <div className="p-3 border-t border-rq-border bg-rq-surface-2 flex items-center justify-between">
+        {!collapsed && (
+          <div className="text-[11px] text-rq-muted font-mono leading-tight">
+            <span>v1.2.0 • Active</span>
+          </div>
+        )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className={`p-1.5 rounded-md hover:bg-rq-surface text-rq-muted hover:text-rq-ink transition border border-transparent hover:border-rq-border ${
+            collapsed ? 'mx-auto' : ''
+          }`}
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+        </button>
       </div>
     </aside>
   );
 };
-

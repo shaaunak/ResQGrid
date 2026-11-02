@@ -36,11 +36,13 @@ async def seed_all():
         await conn.run_sync(Base.metadata.create_all)
 
     async with AsyncSessionLocal() as db:
-        # Reset transient missions and stock reservations for clean demo baseline
+        # Reset transient missions, incidents and stock reservations for clean demo baseline
         await db.execute(delete(StockReservation))
         await db.execute(delete(StockMovement))
         await db.execute(delete(Assignment))
         await db.execute(delete(OutboxEvent))
+        await db.execute(delete(IncidentEvent))
+        await db.execute(delete(Incident))
 
         # 1. Seed Users for each role
         users_data = [
@@ -245,9 +247,47 @@ async def seed_all():
             else:
                 created_items.append(existing)
 
-        # Populate stocks across depots
+        # Populate varied stocks across depots with realistic differences, reservations, and low-stock alerts
+        # Stock distribution plan:
+        # - Dadar Central Relief Hub (Primary hub): high stock levels, some reserved for active logistics
+        # - Kurla West Rapid Supply Depot (Mithi River frontline): high water/rescue gear, low blankets/generators (triggering alert)
+        # - Andheri Disaster Logistics Center (Western Suburbs): moderate stock levels, active medical cache
+        depot_stock_profiles = {
+            "Dadar Central Relief Hub": {
+                "WAT-500": {"avail": 420, "res": 80, "min": 50},
+                "RAT-MRE": {"avail": 310, "res": 40, "min": 50},
+                "MED-KIT": {"avail": 65, "res": 15, "min": 20},
+                "RES-VAK": {"avail": 52, "res": 18, "min": 20},
+                "BLK-THM": {"avail": 180, "res": 20, "min": 30},
+                "GEN-5KW": {"avail": 14, "res": 2, "min": 5},
+            },
+            "Kurla West Rapid Supply Depot": {
+                "WAT-500": {"avail": 140, "res": 60, "min": 40},
+                "RAT-MRE": {"avail": 95, "res": 25, "min": 30},
+                "MED-KIT": {"avail": 28, "res": 12, "min": 15},
+                "RES-VAK": {"avail": 48, "res": 22, "min": 20},
+                "BLK-THM": {"avail": 12, "res": 0, "min": 25},   # LOW STOCK ALERT (< min threshold 25)
+                "GEN-5KW": {"avail": 6, "res": 1, "min": 5},      # Available >= 5 for assignment, close to min threshold
+            },
+            "Andheri Disaster Logistics Center": {
+                "WAT-500": {"avail": 260, "res": 40, "min": 40},
+                "RAT-MRE": {"avail": 180, "res": 20, "min": 30},
+                "MED-KIT": {"avail": 45, "res": 10, "min": 15},
+                "RES-VAK": {"avail": 35, "res": 5, "min": 15},
+                "BLK-THM": {"avail": 90, "res": 10, "min": 25},
+                "GEN-5KW": {"avail": 8, "res": 2, "min": 4},
+            },
+        }
+
         for depot in created_depots:
+            profile = depot_stock_profiles.get(depot.name, {})
             for item in created_items:
+                item_spec = profile.get(item.sku, {"avail": 50, "res": 0, "min": 15})
+                avail_qty = item_spec["avail"]
+                res_qty = item_spec["res"]
+                min_thresh = item_spec["min"]
+                tot_qty = avail_qty + res_qty
+
                 stock_existing = (
                     await db.execute(
                         select(InventoryStock).where(
@@ -257,22 +297,21 @@ async def seed_all():
                     )
                 ).scalar_one_or_none()
                 if not stock_existing:
-                    qty = 150 if item.category in [ItemCategory.WATER, ItemCategory.FOOD_RATION] else 40
                     db.add(
                         InventoryStock(
                             depot_id=depot.id,
                             item_id=item.id,
-                            quantity_available=qty,
-                            quantity_reserved=0,
-                            quantity_total=qty,
-                            minimum_threshold=15,
+                            quantity_available=avail_qty,
+                            quantity_reserved=res_qty,
+                            quantity_total=tot_qty,
+                            minimum_threshold=min_thresh,
                         )
                     )
                 else:
-                    qty = 150 if item.category in [ItemCategory.WATER, ItemCategory.FOOD_RATION] else 40
-                    stock_existing.quantity_available = qty
-                    stock_existing.quantity_reserved = 0
-                    stock_existing.quantity_total = qty
+                    stock_existing.quantity_available = avail_qty
+                    stock_existing.quantity_reserved = res_qty
+                    stock_existing.quantity_total = tot_qty
+                    stock_existing.minimum_threshold = min_thresh
 
         # 5. Seed Flagship Demonstration Incident (Mumbai Urban Flood Rescue #INC-1042)
         flagship_existing = (await db.execute(select(Incident).where(Incident.tracking_id == "INC-1042"))).scalar_one_or_none()

@@ -129,14 +129,14 @@ export const TacticalCityScene: React.FC<CityProps> = ({
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
         <planeGeometry args={[120, 120]} />
         <meshStandardMaterial
-          color={TACTICAL_PALETTE.darkest}
-          roughness={0.8}
-          metalness={0.2}
+          color={TACTICAL_PALETTE.navy}
+          roughness={0.95}
+          metalness={0.05}
         />
       </mesh>
 
       {/* Grid Overlay */}
-      <gridHelper args={[100, 50, '#1c2d44', '#142235']} position={[0, 0.02, 0]} />
+      <gridHelper args={[100, 50, '#CBD5E1', '#E2E8F0']} position={[0, 0.02, 0]} />
 
       {/* 2. Coastline / Arabian Sea Water Plane (Western Margin) */}
       <mesh
@@ -146,12 +146,12 @@ export const TacticalCityScene: React.FC<CityProps> = ({
       >
         <planeGeometry args={[35, 110]} />
         <meshStandardMaterial
-          color="#0f2b46"
-          emissive="#061826"
-          roughness={0.15}
-          metalness={0.85}
+          color={TACTICAL_PALETTE.water}
+          emissive="#0284C7"
+          roughness={0.1}
+          metalness={0.3}
           transparent
-          opacity={0.88}
+          opacity={0.75}
         />
       </mesh>
 
@@ -159,12 +159,12 @@ export const TacticalCityScene: React.FC<CityProps> = ({
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[1, 0.06 + waterLevel * 0.8, -3]}>
         <planeGeometry args={[6, 32]} />
         <meshStandardMaterial
-          color="#0d283f"
-          emissive="#081d2f"
-          roughness={0.2}
-          metalness={0.7}
+          color={TACTICAL_PALETTE.waterDeep}
+          emissive="#0369A1"
+          roughness={0.15}
+          metalness={0.4}
           transparent
-          opacity={0.8}
+          opacity={0.82}
         />
       </mesh>
 
@@ -172,12 +172,12 @@ export const TacticalCityScene: React.FC<CityProps> = ({
       {/* Western Express Highway */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-7, 0.08, 0]}>
         <planeGeometry args={[2.2, 70]} />
-        <meshStandardMaterial color={TACTICAL_PALETTE.road} roughness={0.6} />
+        <meshStandardMaterial color={TACTICAL_PALETTE.road} roughness={0.8} />
       </mesh>
       {/* Bandra-Worli Sea Link Highway Viaduct */}
       <mesh rotation={[-Math.PI / 2, 0, -0.35]} position={[-14, 0.2, 8]}>
         <planeGeometry args={[1.8, 24]} />
-        <meshStandardMaterial color="#2a3f5a" roughness={0.5} />
+        <meshStandardMaterial color="#64748B" roughness={0.7} />
       </mesh>
 
       {/* 4. Animated Highway Traffic Lights */}
@@ -190,10 +190,9 @@ export const TacticalCityScene: React.FC<CityProps> = ({
         </bufferGeometry>
         <pointsMaterial
           size={0.25}
-          color="#E7A645"
+          color="#D77A34"
           transparent
           opacity={0.9}
-          blending={THREE.AdditiveBlending}
         />
       </points>
 
@@ -205,15 +204,15 @@ export const TacticalCityScene: React.FC<CityProps> = ({
               <boxGeometry args={b.size} />
               <meshStandardMaterial
                 color={b.color}
-                roughness={0.35}
-                metalness={0.65}
+                roughness={0.75}
+                metalness={0.1}
               />
             </mesh>
             {/* Rooftop Beacons on tall skyscrapers */}
             {b.hasAntenna && (
               <mesh position={[0, b.size[1] / 2 + 0.3, 0]}>
                 <cylinderGeometry args={[0.03, 0.03, 0.6, 6]} />
-                <meshBasicMaterial color="#CF4B4B" />
+                <meshBasicMaterial color="#C84343" />
               </mesh>
             )}
           </group>
@@ -225,9 +224,9 @@ export const TacticalCityScene: React.FC<CityProps> = ({
         <mesh ref={radarRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.15, 0]}>
           <ringGeometry args={[0.9, 1.05, 64]} />
           <meshBasicMaterial
-            color={TACTICAL_PALETTE.tealBright}
+            color={TACTICAL_PALETTE.teal}
             transparent
-            opacity={0.4}
+            opacity={0.45}
             side={THREE.DoubleSide}
           />
         </mesh>
@@ -236,7 +235,7 @@ export const TacticalCityScene: React.FC<CityProps> = ({
       {/* Coastal Retaining Walls / Promenades */}
       <mesh position={[-11, 0.25, 0]}>
         <boxGeometry args={[0.4, 0.5, 60]} />
-        <meshStandardMaterial color="#2a3d54" roughness={0.7} />
+        <meshStandardMaterial color="#94A3B8" roughness={0.7} />
       </mesh>
     </group>
   );

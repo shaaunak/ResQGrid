@@ -57,6 +57,10 @@ class Incident(Base):
     # Optimistic Concurrency Control
     version = Column(Integer, default=1, nullable=False)
 
+    # Spatial-temporal duplicate grouping
+    report_count = Column(Integer, default=1, nullable=False)
+    parent_incident_id = Column(String(36), ForeignKey("incidents.id", ondelete="SET NULL"), nullable=True)
+
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False, index=True)
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
 

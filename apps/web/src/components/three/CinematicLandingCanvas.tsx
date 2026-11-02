@@ -202,19 +202,19 @@ export const CinematicLandingCanvas: React.FC = () => {
   const activeStage = STORY_STAGES[currentStep];
 
   return (
-    <div className="relative w-full h-[620px] md:h-[720px] bg-command-darkest overflow-hidden border-b border-command-border/80 select-none">
+    <div className="relative w-full h-[620px] md:h-[720px] bg-[#EEF3F6] overflow-hidden border-b border-app-border select-none">
       {/* 3D WebGL Canvas */}
       {!is2DMode ? (
         <CanvasErrorBoundary
           fallback={
-            <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-command-surface/60 font-mono text-center">
-              <div className="text-amber-400 font-bold mb-1">WebGL Acceleration Unavailable</div>
-              <p className="text-xs text-slate-400 max-w-md mb-4">
+            <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-app-surface font-sans text-center">
+              <div className="text-app-critical font-bold mb-1">WebGL Acceleration Unavailable</div>
+              <p className="text-xs text-app-text-secondary max-w-md mb-4">
                 Hardware 3D context could not be created. Showing 2D tactical intelligence overview.
               </p>
               <button
                 onClick={() => setIs2DMode(true)}
-                className="px-3 py-1.5 bg-command-teal text-white rounded text-xs"
+                className="px-3 py-1.5 bg-app-primary text-white rounded text-xs"
               >
                 Switch to 2D Mode
               </button>
@@ -222,25 +222,25 @@ export const CinematicLandingCanvas: React.FC = () => {
           }
         >
           <Canvas shadows gl={{ antialias: true, alpha: false }} dpr={[1, 1.5]}>
-            <color attach="background" args={[TACTICAL_PALETTE.darkest]} />
-            <fog attach="fog" args={[TACTICAL_PALETTE.darkest, 30, 80]} />
+            <color attach="background" args={['#EEF3F6']} />
+            <fog attach="fog" args={['#EEF3F6', 35, 95]} />
 
             <PerspectiveCamera makeDefault position={[0, 24, 32]} fov={45} />
             <CameraChoreographer stageIndex={currentStep} />
 
-            {/* Tactical Atmospheric Lighting */}
-            <ambientLight intensity={0.4} color="#a5b4fc" />
+            {/* Daytime Enterprise Atmospheric Lighting */}
+            <ambientLight intensity={0.9} color="#ffffff" />
             <directionalLight
-              position={[25, 45, 20]}
-              intensity={1.2}
+              position={[35, 55, 30]}
+              intensity={1.6}
               color="#ffffff"
               castShadow
               shadow-mapSize-width={1024}
               shadow-mapSize-height={1024}
             />
-            {/* Subtle Key Tactical Blue/Teal Accent Light */}
-            <pointLight position={[-15, 12, -10]} intensity={2.0} color="#137C82" distance={50} />
-            <pointLight position={[15, 10, 15]} intensity={1.5} color="#E7A645" distance={40} />
+            {/* Subtle Key Accent Lights */}
+            <pointLight position={[-15, 15, -10]} intensity={1.2} color="#146D73" distance={50} />
+            <pointLight position={[15, 12, 15]} intensity={1.0} color="#D77A34" distance={40} />
 
             {/* Miniature 3D City Model */}
             <TacticalCityScene showRadar={true} />
@@ -260,40 +260,40 @@ export const CinematicLandingCanvas: React.FC = () => {
               startLon={72.8402}
               endLat={19.0726}
               endLon={72.8845}
-              color="#137C82"
+              color="#146D73"
               arcHeight={4.0}
             />
           </Canvas>
         </CanvasErrorBoundary>
       ) : (
         /* Accessible 2D Fallback Map View */
-        <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-command-surface font-mono">
-          <Activity className="w-10 h-10 text-command-teal mb-3 animate-pulse" />
-          <h3 className="text-base font-bold text-white uppercase">2D Accessible Tactical Stream Active</h3>
-          <p className="text-xs text-command-muted max-w-md mt-1 leading-relaxed">
+        <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-app-surface font-sans">
+          <Activity className="w-10 h-10 text-app-primary mb-3 animate-pulse" />
+          <h3 className="text-base font-bold text-app-text uppercase font-mono">2D Accessible Tactical Stream Active</h3>
+          <p className="text-xs text-app-text-secondary max-w-md mt-1 leading-relaxed">
             High-contrast 2D fallback mode enabled for accessibility, low-power devices, or reduced motion preferences.
           </p>
         </div>
       )}
 
-      {/* Floating Tactical Story Overlay (Matching Emergency Control Room Aesthetic) */}
-      <div className="absolute top-6 left-6 z-20 max-w-sm md:max-w-md bg-command-surface/90 backdrop-blur-md border border-command-border rounded-xl p-5 shadow-2xl space-y-3 font-mono">
-        <div className="flex items-center justify-between border-b border-command-border/60 pb-2 text-[10px] text-command-muted uppercase tracking-wider">
+      {/* Floating Tactical Story Overlay (Matching Linear / Palantir Enterprise Aesthetic) */}
+      <div className="absolute top-6 left-6 z-20 max-w-sm md:max-w-md bg-white/95 backdrop-blur-md border border-app-border rounded-xl p-5 shadow-xl space-y-3 font-sans">
+        <div className="flex items-center justify-between border-b border-app-border pb-2 text-[10px] text-app-text-secondary uppercase tracking-wider font-mono">
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-command-teal animate-ping" />
-            <span className="font-semibold text-white">Live Lifecycle Showcase</span>
+            <span className="w-2 h-2 rounded-full bg-app-primary animate-ping" />
+            <span className="font-semibold text-app-text">Live Lifecycle Showcase</span>
           </div>
           <span>Sector: {activeStage.focusSector}</span>
         </div>
 
         <div>
-          <span className="text-[11px] font-bold text-command-teal uppercase tracking-widest block mb-0.5">
+          <span className="text-[11px] font-bold text-app-primary uppercase tracking-widest block mb-0.5 font-mono">
             {activeStage.title}
           </span>
-          <h2 className="text-sm md:text-base font-bold text-white leading-snug">
+          <h2 className="text-sm md:text-base font-bold text-app-text leading-snug">
             {activeStage.headline}
           </h2>
-          <p className="text-xs text-slate-300 font-sans leading-relaxed mt-1.5 font-normal">
+          <p className="text-xs text-app-text-secondary leading-relaxed mt-1.5 font-normal">
             {activeStage.desc}
           </p>
         </div>
@@ -309,8 +309,8 @@ export const CinematicLandingCanvas: React.FC = () => {
               }}
               className={`h-1.5 flex-1 rounded-full transition ${
                 currentStep === idx
-                  ? 'bg-command-teal shadow-md ring-1 ring-command-teal'
-                  : 'bg-command-card hover:bg-slate-500'
+                  ? 'bg-app-primary shadow-sm ring-1 ring-app-primary'
+                  : 'bg-slate-200 hover:bg-slate-300'
               }`}
               title={s.title}
             />
@@ -319,16 +319,16 @@ export const CinematicLandingCanvas: React.FC = () => {
       </div>
 
       {/* Floating 3D Viewport Controls (Bottom Center) */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 bg-command-surface/90 backdrop-blur-md border border-command-border rounded-full px-4 py-2 shadow-2xl flex items-center space-x-3 text-xs font-mono text-slate-300">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 bg-white/95 backdrop-blur-md border border-app-border rounded-full px-4 py-2 shadow-lg flex items-center space-x-3 text-xs font-mono text-app-text">
         <button
           onClick={() => setIsAutoPlay(!isAutoPlay)}
-          className="p-1.5 rounded-full hover:bg-command-card hover:text-white transition"
+          className="p-1.5 rounded-full hover:bg-slate-100 text-app-text transition"
           title={isAutoPlay ? 'Pause Auto-Play' : 'Resume Auto-Play'}
         >
-          {isAutoPlay ? <Pause className="w-3.5 h-3.5 text-command-amber" /> : <Play className="w-3.5 h-3.5 text-command-teal" />}
+          {isAutoPlay ? <Pause className="w-3.5 h-3.5 text-app-high" /> : <Play className="w-3.5 h-3.5 text-app-primary" />}
         </button>
 
-        <span className="text-slate-600">|</span>
+        <span className="text-slate-300">|</span>
 
         {/* Previous / Next Steps */}
         <button
@@ -336,11 +336,11 @@ export const CinematicLandingCanvas: React.FC = () => {
             setIsAutoPlay(false);
             setCurrentStep((prev) => (prev > 0 ? prev - 1 : STORY_STAGES.length - 1));
           }}
-          className="px-2 py-0.5 rounded hover:bg-command-card hover:text-white transition text-[11px]"
+          className="px-2 py-0.5 rounded hover:bg-slate-100 text-app-text transition text-[11px]"
         >
           Prev
         </button>
-        <span className="text-command-teal font-semibold text-[11px]">
+        <span className="text-app-primary font-semibold text-[11px]">
           {currentStep + 1} / {STORY_STAGES.length}
         </span>
         <button
@@ -348,26 +348,26 @@ export const CinematicLandingCanvas: React.FC = () => {
             setIsAutoPlay(false);
             setCurrentStep((prev) => (prev + 1) % STORY_STAGES.length);
           }}
-          className="px-2 py-0.5 rounded hover:bg-command-card hover:text-white transition text-[11px]"
+          className="px-2 py-0.5 rounded hover:bg-slate-100 text-app-text transition text-[11px]"
         >
           Next
         </button>
 
-        <span className="text-slate-600">|</span>
+        <span className="text-slate-300">|</span>
 
         {/* 2D / 3D Accessibility Toggle */}
         <button
           onClick={() => setIs2DMode(!is2DMode)}
-          className="flex items-center space-x-1 px-2.5 py-1 rounded bg-command-card hover:bg-command-border text-[11px] text-white transition"
+          className="flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-[11px] text-app-text font-medium transition"
           title="Toggle 2D Accessible Mode"
         >
-          <Eye className="w-3 h-3 text-command-teal" />
+          <Eye className="w-3 h-3 text-app-primary" />
           <span>{is2DMode ? '3D View' : '2D Mode'}</span>
         </button>
       </div>
 
       {/* Orbit Hint */}
-      <div className="absolute bottom-6 right-6 hidden md:block z-20 text-[10px] font-mono text-command-muted bg-command-darkest/70 px-2.5 py-1 rounded border border-command-border/40">
+      <div className="absolute bottom-6 right-6 hidden md:block z-20 text-[10px] font-mono text-app-text-secondary bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded border border-app-border shadow-sm">
         Left-click + drag to orbit • Scroll to zoom
       </div>
     </div>

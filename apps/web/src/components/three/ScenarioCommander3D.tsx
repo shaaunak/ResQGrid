@@ -142,12 +142,12 @@ export const ScenarioCommander3D: React.FC<Scenario3DProps> = ({
   ];
 
   return (
-    <div className="relative w-full h-[540px] bg-command-darkest rounded-xl overflow-hidden border border-command-border shadow-2xl select-none">
+    <div className="relative w-full h-[540px] bg-[#EEF3F6] rounded-xl overflow-hidden border border-app-border shadow-lg select-none">
       {/* 3D WebGL Canvas */}
       <CanvasErrorBoundary>
         <Canvas shadows gl={{ antialias: true, alpha: false }} dpr={[1, 1.5]}>
-          <color attach="background" args={[TACTICAL_PALETTE.darkest]} />
-          <fog attach="fog" args={[TACTICAL_PALETTE.darkest, 25, 75]} />
+          <color attach="background" args={['#EEF3F6']} />
+          <fog attach="fog" args={['#EEF3F6', 30, 90]} />
 
           <PerspectiveCamera makeDefault position={[0, 26, 36]} fov={45} />
           <OrbitControls
@@ -158,14 +158,14 @@ export const ScenarioCommander3D: React.FC<Scenario3DProps> = ({
             maxDistance={65}
           />
 
-          <ambientLight intensity={0.4} color="#a5b4fc" />
+          <ambientLight intensity={0.9} color="#ffffff" />
           <directionalLight
-            position={[25, 40, 20]}
-            intensity={1.1}
+            position={[30, 50, 25]}
+            intensity={1.6}
             color="#ffffff"
             castShadow
           />
-          <pointLight position={[6, 8, -4]} intensity={2.0} color="#CF4B4B" distance={35} />
+          <pointLight position={[6, 8, -4]} intensity={1.5} color="#C84343" distance={35} />
 
           {/* 3D City with dynamic water level */}
           <TacticalCityScene showRadar={true} waterLevel={waterLevel} />
@@ -187,7 +187,7 @@ export const ScenarioCommander3D: React.FC<Scenario3DProps> = ({
               startLon={72.8402}
               endLat={activeIncidents[0].latitude}
               endLon={activeIncidents[0].longitude}
-              color="#137C82"
+              color="#146D73"
               arcHeight={4.2}
             />
           )}
@@ -195,29 +195,29 @@ export const ScenarioCommander3D: React.FC<Scenario3DProps> = ({
       </CanvasErrorBoundary>
 
       {/* Floating Tactical Telemetry Overlay (Top Left) */}
-      <div className="absolute top-4 left-4 z-20 bg-command-surface/90 backdrop-blur-md border border-command-border rounded-lg p-3.5 shadow-xl font-mono text-xs space-y-2 max-w-xs">
-        <div className="flex items-center space-x-2 text-command-teal uppercase tracking-wider text-[10px] pb-1 border-b border-command-border/50">
+      <div className="absolute top-4 left-4 z-20 bg-white/95 backdrop-blur-md border border-app-border rounded-lg p-3.5 shadow-lg font-sans text-xs space-y-2 max-w-xs">
+        <div className="flex items-center space-x-2 text-app-primary uppercase tracking-wider text-[10px] pb-1 border-b border-app-border font-mono">
           <Activity className="w-3.5 h-3.5" />
-          <span className="font-bold text-white">3D Dynamic Scenario</span>
+          <span className="font-bold text-app-text">3D Dynamic Scenario</span>
         </div>
-        <div className="text-[11px] text-slate-200 font-semibold">{scenarioName}</div>
-        <div className="space-y-1 text-[10px] text-command-muted">
-          <div>Step Cycle: <span className="text-white font-bold">{playbackIndex + 1} / {totalSteps}</span></div>
+        <div className="text-[12px] text-app-text font-semibold">{scenarioName}</div>
+        <div className="space-y-1 text-[11px] text-app-text-secondary">
+          <div>Step Cycle: <span className="text-app-text font-bold font-mono">{playbackIndex + 1} / {totalSteps}</span></div>
           {scenarioName.includes('Flood') && (
-            <div className="flex items-center space-x-1 text-cyan-300">
-              <Waves className="w-3 h-3 text-cyan-400" />
-              <span>Simulated Water Level: +{waterLevel.toFixed(2)}m Inundation</span>
+            <div className="flex items-center space-x-1 text-sky-700">
+              <Waves className="w-3.5 h-3.5 text-sky-600" />
+              <span>Simulated Water Level: <strong className="font-mono">+{waterLevel.toFixed(2)}m</strong></span>
             </div>
           )}
-          <div>Active Beacons: <span className="text-amber-400 font-semibold">{activeIncidents.length} calls</span></div>
+          <div>Active Beacons: <span className="text-app-critical font-semibold font-mono">{activeIncidents.length} calls</span></div>
         </div>
       </div>
 
       {/* Floating 3D Playback & Step Controls (Bottom Center) */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-command-surface/90 backdrop-blur-md border border-command-border rounded-full px-4 py-2 shadow-2xl flex items-center space-x-3 text-xs font-mono text-slate-300">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-white/95 backdrop-blur-md border border-app-border rounded-full px-4 py-2 shadow-lg flex items-center space-x-3 text-xs font-mono text-app-text">
         <button
           onClick={() => setPlaybackIndex(0)}
-          className="p-1.5 rounded-full hover:bg-command-card hover:text-white transition"
+          className="p-1.5 rounded-full hover:bg-slate-100 text-app-text transition"
           title="Reset to Step 1"
         >
           <RotateCcw className="w-3.5 h-3.5" />
@@ -225,31 +225,31 @@ export const ScenarioCommander3D: React.FC<Scenario3DProps> = ({
 
         <button
           onClick={() => setIsPlaying(!isPlaying)}
-          className="p-1.5 rounded-full hover:bg-command-card hover:text-white transition"
+          className="p-1.5 rounded-full hover:bg-slate-100 text-app-text transition"
           title={isPlaying ? 'Pause Simulation' : 'Play Simulation'}
         >
-          {isPlaying ? <Pause className="w-3.5 h-3.5 text-command-amber" /> : <Play className="w-3.5 h-3.5 text-command-teal" />}
+          {isPlaying ? <Pause className="w-3.5 h-3.5 text-app-high" /> : <Play className="w-3.5 h-3.5 text-app-primary" />}
         </button>
 
         <button
           onClick={() => setPlaybackIndex((prev) => Math.min(totalSteps - 1, prev + 1))}
-          className="p-1.5 rounded-full hover:bg-command-card hover:text-white transition"
+          className="p-1.5 rounded-full hover:bg-slate-100 text-app-text transition"
           title="Step Forward"
         >
           <SkipForward className="w-3.5 h-3.5" />
         </button>
 
-        <span className="text-slate-600">|</span>
+        <span className="text-slate-300">|</span>
 
         {/* Progress scrub bar */}
-        <div className="w-32 bg-command-darkest h-2 rounded-full overflow-hidden border border-command-border/50">
+        <div className="w-32 bg-slate-200 h-2 rounded-full overflow-hidden border border-app-border">
           <div
-            className="bg-command-teal h-full rounded-full transition-all duration-300"
+            className="bg-app-primary h-full rounded-full transition-all duration-300"
             style={{ width: `${((playbackIndex + 1) / totalSteps) * 100}%` }}
           />
         </div>
 
-        <span className="text-command-teal font-semibold text-[11px]">
+        <span className="text-app-primary font-semibold text-[11px]">
           {playbackIndex + 1}/{totalSteps}
         </span>
       </div>

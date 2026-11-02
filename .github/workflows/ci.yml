@@ -91,3 +91,4 @@ jobs:
           cd infrastructure/terraform/environments/prod
           terraform init -backend=false
           terraform validate
+

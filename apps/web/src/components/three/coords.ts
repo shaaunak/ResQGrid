@@ -22,21 +22,23 @@ export function geoTo3D(
 }
 
 export const TACTICAL_PALETTE = {
-  darkest: '#0b1320',
-  navy: '#142235',
-  surface: '#1c2d44',
-  card: '#223652',
-  border: '#2e4566',
-  slate: '#526276',
-  teal: '#137C82',
-  tealBright: '#17a2a8',
-  amber: '#E7A645',
-  red: '#CF4B4B',
-  green: '#10b981',
-  water: '#0a1d37',
-  road: '#1a293e',
-  building: '#18283d',
-  buildingLit: '#243b59',
-  windowGlow: '#e0f2fe',
+  // Architectural enterprise GIS palette
+  darkest: '#F1F5F7',      // Soft atmospheric background
+  navy: '#DCE4E8',         // Base terrain plane
+  surface: '#FFFFFF',      // Crisp architectural facade
+  card: '#F8FAFC',         // Secondary facade
+  border: '#CBD5E1',       // Structure outlines and grid
+  slate: '#64748B',        // Muted annotations
+  teal: '#146D73',         // Responders & brand primary
+  tealBright: '#0D9488',   // Active telemetry sweep
+  amber: '#D77A34',        // High severity
+  red: '#C84343',          // Critical emergency
+  green: '#347F68',        // Low / Resolved state
+  water: '#38BDF8',        // Coastal water
+  waterDeep: '#0284C7',    // Deep river channel
+  road: '#94A3B8',         // Major highways and expressways
+  building: '#FFFFFF',     // Clean architectural stone/concrete
+  buildingLit: '#E2E8F0',  // Warm concrete variation
+  windowGlow: '#0284C7',   // Dynamic accent
 };
 
