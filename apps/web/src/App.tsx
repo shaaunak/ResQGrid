@@ -19,6 +19,8 @@ import { InventoryPortal } from './pages/InventoryPortal';
 import { ScenarioCommander } from './pages/ScenarioCommander';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { SystemHealthPage } from './pages/SystemHealthPage';
+import { EvidencePage } from './pages/EvidencePage';
+import { AuditLogPage } from './pages/AuditLogPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -125,6 +127,22 @@ export const App: React.FC = () => {
                   element={
                     <AppLayout>
                       <AnalyticsPage />
+                    </AppLayout>
+                  }
+                />
+                <Route
+                  path="/evidence"
+                  element={
+                    <AppLayout>
+                      <EvidencePage />
+                    </AppLayout>
+                  }
+                />
+                <Route
+                  path="/audit"
+                  element={
+                    <AppLayout>
+                      <AuditLogPage />
                     </AppLayout>
                   }
                 />

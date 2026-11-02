@@ -10,24 +10,40 @@ import {
   Sparkles,
   Activity,
   FileText,
+  FileCheck2,
+  ScrollText,
   ChevronLeft,
   ChevronRight,
+  Radio,
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { UserRole } from '../types';
 
 export const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const { role } = useAuth();
 
-  const navItems = [
-    { to: '/', label: 'Overview', icon: LayoutDashboard },
-    { to: '/command', label: 'Command Center', icon: MapPin },
-    { to: '/citizen', label: 'Citizen Portal', icon: Shield },
-    { to: '/track', label: 'Track Incident', icon: Search },
-    { to: '/responder', label: 'Field Responder', icon: Truck },
-    { to: '/inventory', label: 'Relief Inventory', icon: Box },
-    { to: '/scenarios', label: 'Scenario Commander', icon: Sparkles },
-    { to: '/analytics', label: 'Operational KPIs', icon: Activity },
-    { to: '/health', label: 'Cloud & Health', icon: FileText },
+  // Role-Based Navigation Filtering:
+  // - CITIZEN: Citizen Portal, Track Incident, Overview
+  // - RESPONDER: Field Responder, Track Incident, Overview
+  // - COORDINATOR: Relief Inventory, Overview, Command Center, Situation Brief / Analytics
+  // - OPERATOR & ADMIN: All navigation items
+  const allNavItems = [
+    { to: '/', label: 'Overview', icon: LayoutDashboard, roles: ['CITIZEN', 'RESPONDER', 'COORDINATOR', 'OPERATOR', 'ADMIN'] },
+    { to: '/command', label: 'Command Center', icon: MapPin, roles: ['COORDINATOR', 'OPERATOR', 'ADMIN'] },
+    { to: '/citizen', label: 'Citizen Portal', icon: Shield, roles: ['CITIZEN', 'OPERATOR', 'ADMIN'] },
+    { to: '/track', label: 'Track Incident', icon: Search, roles: ['CITIZEN', 'RESPONDER', 'COORDINATOR', 'OPERATOR', 'ADMIN'] },
+    { to: '/responder', label: 'Field Responder', icon: Truck, roles: ['RESPONDER', 'OPERATOR', 'ADMIN'] },
+    { to: '/inventory', label: 'Relief Inventory', icon: Box, roles: ['COORDINATOR', 'OPERATOR', 'ADMIN'] },
+    { to: '/scenarios', label: 'Scenario Commander', icon: Sparkles, roles: ['OPERATOR', 'ADMIN'] },
+    { to: '/analytics', label: 'Operational KPIs', icon: Activity, roles: ['COORDINATOR', 'OPERATOR', 'ADMIN'] },
+    { to: '/evidence', label: 'Project Evidence', icon: FileCheck2, roles: ['OPERATOR', 'ADMIN', 'COORDINATOR'] },
+    { to: '/audit', label: 'Audit Trail', icon: ScrollText, roles: ['OPERATOR', 'ADMIN'] },
+    { to: '/health', label: 'Cloud & Health', icon: FileText, roles: ['OPERATOR', 'ADMIN'] },
   ];
+
+  const currentRole = role || 'OPERATOR';
+  const visibleNavItems = allNavItems.filter((item) => item.roles.includes(currentRole));
 
   return (
     <aside
@@ -38,12 +54,15 @@ export const Sidebar: React.FC = () => {
       {/* Navigation list */}
       <div className="p-3 space-y-1 overflow-y-auto">
         {!collapsed && (
-          <div className="px-2.5 py-1.5 text-[11px] font-semibold text-rq-muted tracking-wider uppercase">
-            Operations
+          <div className="flex items-center justify-between px-2.5 py-1.5">
+            <span className="text-[10px] font-semibold text-rq-muted tracking-wider uppercase font-mono">
+              {currentRole} WORKSPACE
+            </span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Live WS Connected" />
           </div>
         )}
 
-        {navItems.map((item) => {
+        {visibleNavItems.map((item) => {
           const Icon = item.icon;
           return (
             <NavLink
@@ -53,7 +72,7 @@ export const Sidebar: React.FC = () => {
               className={({ isActive }) =>
                 `flex items-center space-x-3 px-3 py-2 rounded-md transition text-xs ${
                   isActive
-                    ? 'bg-rq-surface-2 text-rq-navy font-semibold shadow-subtle border border-rq-border'
+                    ? 'bg-rq-surface-2 text-[#14284B] font-semibold shadow-subtle border border-rq-border'
                     : 'text-rq-muted hover:text-rq-ink hover:bg-rq-surface-2 border border-transparent'
                 } ${collapsed ? 'justify-center px-0' : ''}`
               }
@@ -68,8 +87,8 @@ export const Sidebar: React.FC = () => {
       {/* Collapse / Expand rail toggle */}
       <div className="p-3 border-t border-rq-border bg-rq-surface-2 flex items-center justify-between">
         {!collapsed && (
-          <div className="text-[11px] text-rq-muted font-mono leading-tight">
-            <span>v1.2.0 • Active</span>
+          <div className="text-[10px] text-rq-muted font-mono leading-tight">
+            <span>Role: <strong>{currentRole}</strong></span>
           </div>
         )}
         <button
