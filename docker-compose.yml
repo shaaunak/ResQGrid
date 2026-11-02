@@ -1,0 +1,88 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: resqgrid-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: resqgrid_db
+      POSTGRES_USER: resqgrid_app
+      POSTGRES_PASSWORD: resqgrid_local_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resqgrid_app -d resqgrid_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - resqgrid-net
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: resqgrid-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: development
+      DATABASE_URL: postgresql+asyncpg://resqgrid_app:resqgrid_local_password@postgres:5432/resqgrid_db
+      DATABASE_SYNC_URL: postgresql://resqgrid_app:resqgrid_local_password@postgres:5432/resqgrid_db
+      STORAGE_BACKEND: local
+      QUEUE_BACKEND: outbox
+      NOTIFICATION_BACKEND: database
+      JWT_SECRET_KEY: dev_secret_for_local_docker_testing_only_32_bytes_min
+    ports:
+      - "8000:8000"
+    volumes:
+      - local_uploads:/app/uploads
+    networks:
+      - resqgrid-net
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    container_name: resqgrid-worker
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_started
+    environment:
+      ENVIRONMENT: development
+      DATABASE_URL: postgresql+asyncpg://resqgrid_app:resqgrid_local_password@postgres:5432/resqgrid_db
+      DATABASE_SYNC_URL: postgresql://resqgrid_app:resqgrid_local_password@postgres:5432/resqgrid_db
+      QUEUE_BACKEND: outbox
+      NOTIFICATION_BACKEND: database
+    networks:
+      - resqgrid-net
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: resqgrid-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "5173:80"
+    networks:
+      - resqgrid-net
+
+volumes:
+  postgres_data:
+  local_uploads:
+
+networks:
+  resqgrid-net:
+    driver: bridge
+
