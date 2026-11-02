@@ -170,8 +170,10 @@ export const OverviewPage: React.FC = () => {
           {/* Right Column: Hero 3D Mini Tactical Scene */}
           <div className="lg:col-span-5 h-[340px] rounded-card border border-rq-border bg-slate-900 overflow-hidden relative shadow-floating">
             <TacticalCityScene
-              waterLevel={1.4}
-              showRadar={true}
+              waterLevel={1.2}
+              interactive={false}
+              autoRotate={true}
+              cameraPreset="overview"
             />
             <div className="absolute top-3 left-3 px-2 py-1 bg-black/60 backdrop-blur-md rounded text-[10px] font-mono text-white flex items-center space-x-1.5 border border-white/10">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />

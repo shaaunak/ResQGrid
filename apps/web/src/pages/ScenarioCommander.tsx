@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import ReactECharts from 'echarts-for-react';
 import {
   Cpu,
   Play,
@@ -13,38 +14,35 @@ import {
   Activity,
   Box,
   BarChart2,
+  Download,
+  AlertCircle,
+  Sliders,
 } from 'lucide-react';
-import {
-  BarChart as RechartsBar,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  CartesianGrid,
-} from 'recharts';
 import { apiRequest } from '../api/client';
 import { ComparisonResult } from '../types';
 import { ScenarioCommander3D } from '../components/three/ScenarioCommander3D';
+import { RESQ_PALETTE, exportToCSV } from '../utils/chartTheme';
 
 export const ScenarioCommander: React.FC = () => {
   const [scenarioName, setScenarioName] = useState('Mumbai Urban Flood');
   const [incidentCount, setIncidentCount] = useState<number>(35);
   const [randomSeed, setRandomSeed] = useState<number>(42);
-  const [viewMode, setViewMode] = useState<'3D' | 'CHARTS'>('3D');
+  const [monteCarloSeeds, setMonteCarloSeeds] = useState<number>(10);
+  const [viewMode, setViewMode] = useState<'3D' | 'CHARTS'>('CHARTS');
 
-  const [comparisonResult, setComparisonResult] = useState<ComparisonResult | null>(null);
+  const [comparisonResult, setComparisonResult] = useState<any>(null);
 
   const compareMutation = useMutation({
     mutationFn: () =>
-      apiRequest<ComparisonResult>('/simulations/compare', {
+      apiRequest<any>('/simulations/compare', {
         method: 'POST',
         body: JSON.stringify({
           scenario_name: scenarioName,
           incident_count: incidentCount,
           random_seed: randomSeed,
           algorithm: 'BOTH',
+          run_monte_carlo: true,
+          monte_carlo_seeds_count: monteCarloSeeds,
         }),
       }),
     onSuccess: (data) => {
@@ -52,265 +50,467 @@ export const ScenarioCommander: React.FC = () => {
     },
   });
 
-  // Prepare chart comparison data
-  const chartData = comparisonResult
-    ? [
-        {
-          metric: 'Critical Wait Time (min)',
-          FIFO: Math.round(comparisonResult.baseline_fifo.critical_wait_time_seconds / 60),
-          RiskAware: Math.round(comparisonResult.risk_aware_algorithm.critical_wait_time_seconds / 60),
-        },
-        {
-          metric: 'Average Wait Time (min)',
-          FIFO: Math.round(comparisonResult.baseline_fifo.avg_wait_time_seconds / 60),
-          RiskAware: Math.round(comparisonResult.risk_aware_algorithm.avg_wait_time_seconds / 60),
-        },
-        {
-          metric: 'P95 Wait Time (min)',
-          FIFO: Math.round(comparisonResult.baseline_fifo.p95_wait_time_seconds / 60),
-          RiskAware: Math.round(comparisonResult.risk_aware_algorithm.p95_wait_time_seconds / 60),
-        },
-      ]
-    : [];
+  const mcSummary = comparisonResult?.monte_carlo_summary;
+  const seedDetails = mcSummary?.seed_details || [];
+  const cdfPoints = mcSummary?.cdf_points || [];
+  const improvements = comparisonResult?.improvements || {};
 
-  const rateData = comparisonResult
-    ? [
-        {
-          metric: 'Success Rate (%)',
-          FIFO: comparisonResult.baseline_fifo.assignment_success_rate,
-          RiskAware: comparisonResult.risk_aware_algorithm.assignment_success_rate,
+  // Handlers
+  const handleRunBenchmark = () => {
+    compareMutation.mutate();
+  };
+
+  const handleExportBenchmarkCSV = () => {
+    if (!seedDetails.length) return;
+    const headers = [
+      'Seed',
+      'FIFO Critical Wait (min)',
+      'ResQGrid Critical Wait (min)',
+      'Reduction %',
+      'FIFO Avg Wait (min)',
+      'ResQGrid Avg Wait (min)',
+      'FIFO Util %',
+      'ResQGrid Util %',
+      'FIFO Unresolved',
+      'ResQGrid Unresolved',
+    ];
+    const rows = seedDetails.map((s: any) => [
+      s.seed,
+      s.fifo_critical_wait_minutes,
+      s.resqgrid_critical_wait_minutes,
+      s.reduction_pct,
+      s.fifo_avg_wait_minutes,
+      s.resqgrid_avg_wait_minutes,
+      s.fifo_utilization_pct,
+      s.resqgrid_utilization_pct,
+      s.fifo_unresolved,
+      s.resqgrid_unresolved,
+    ]);
+    exportToCSV(`resqgrid_benchmark_${scenarioName.replace(/\s+/g, '_')}`, rows, headers);
+  };
+
+  // 1. Grouped Bars (Mean +- Spread)
+  const groupedBarsOption = comparisonResult
+    ? {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { type: 'shadow' },
+          backgroundColor: '#FFFFFF',
+          borderColor: '#E3DFD6',
         },
-        {
-          metric: 'Resource Utilization (%)',
-          FIFO: comparisonResult.baseline_fifo.resource_utilization_pct,
-          RiskAware: comparisonResult.risk_aware_algorithm.resource_utilization_pct,
+        legend: {
+          data: ['Baseline FIFO', 'ResQGrid Risk-Aware'],
+          bottom: 0,
+          textStyle: { color: '#5A6472', fontSize: 11 },
         },
-      ]
-    : [];
+        grid: { top: 25, right: 25, bottom: 45, left: 45 },
+        xAxis: {
+          type: 'category',
+          data: ['Avg Response Time (m)', 'Critical Wait (m)', 'Resource Util (%)', 'Unresolved Requests'],
+          axisLabel: { color: '#5A6472', fontSize: 11 },
+        },
+        yAxis: {
+          type: 'value',
+          axisLabel: { color: '#5A6472', fontSize: 11 },
+          splitLine: { lineStyle: { color: '#FAF8F4', type: 'dashed' } },
+        },
+        series: [
+          {
+            name: 'Baseline FIFO',
+            type: 'bar',
+            barWidth: '28%',
+            data: [
+              Math.round((comparisonResult.baseline_fifo.avg_wait_time_seconds / 60) * 10) / 10,
+              Math.round((comparisonResult.baseline_fifo.critical_wait_time_seconds / 60) * 10) / 10,
+              comparisonResult.baseline_fifo.resource_utilization_pct,
+              comparisonResult.baseline_fifo.unfulfilled_requests,
+            ],
+            itemStyle: { color: '#94A3B8', borderRadius: [4, 4, 0, 0] },
+          },
+          {
+            name: 'ResQGrid Risk-Aware',
+            type: 'bar',
+            barWidth: '28%',
+            data: [
+              Math.round((comparisonResult.risk_aware_algorithm.avg_wait_time_seconds / 60) * 10) / 10,
+              Math.round((comparisonResult.risk_aware_algorithm.critical_wait_time_seconds / 60) * 10) / 10,
+              comparisonResult.risk_aware_algorithm.resource_utilization_pct,
+              comparisonResult.risk_aware_algorithm.unfulfilled_requests,
+            ],
+            itemStyle: { color: '#14284B', borderRadius: [4, 4, 0, 0] },
+          },
+        ],
+      }
+    : null;
+
+  // 2. Cumulative Distribution Function (CDF) of response times
+  const cdfOption = cdfPoints.length
+    ? {
+        tooltip: {
+          trigger: 'axis',
+          backgroundColor: '#FFFFFF',
+          borderColor: '#E3DFD6',
+          formatter: (params: any) => {
+            let res = `<strong>Wait Threshold: ${params[0].axisValue} min</strong><br/>`;
+            params.forEach((p: any) => {
+              res += `${p.marker} ${p.seriesName}: <span style="font-family: monospace; font-weight: bold;">${p.value}%</span><br/>`;
+            });
+            return res;
+          },
+        },
+        legend: {
+          data: ['Baseline FIFO (CDF)', 'ResQGrid Risk-Aware (CDF)'],
+          bottom: 0,
+          textStyle: { color: '#5A6472', fontSize: 11 },
+        },
+        grid: { top: 25, right: 25, bottom: 45, left: 45 },
+        xAxis: {
+          type: 'category',
+          name: 'Wait (min)',
+          data: cdfPoints.map((p: any) => `${p.wait_threshold_minutes}m`),
+          axisLabel: { color: '#5A6472', fontSize: 11 },
+        },
+        yAxis: {
+          type: 'value',
+          name: 'Cumulative %',
+          min: 0,
+          max: 100,
+          axisLabel: { color: '#5A6472', fontSize: 11 },
+          splitLine: { lineStyle: { color: '#FAF8F4', type: 'dashed' } },
+        },
+        series: [
+          {
+            name: 'Baseline FIFO (CDF)',
+            type: 'line',
+            data: cdfPoints.map((p: any) => p.fifo_cumulative_pct),
+            smooth: true,
+            lineStyle: { color: '#94A3B8', width: 2, type: 'dashed' },
+            itemStyle: { color: '#94A3B8' },
+          },
+          {
+            name: 'ResQGrid Risk-Aware (CDF)',
+            type: 'line',
+            data: cdfPoints.map((p: any) => p.resqgrid_cumulative_pct),
+            smooth: true,
+            lineStyle: { color: '#14284B', width: 3 },
+            itemStyle: { color: '#14284B' },
+            areaStyle: {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: 'rgba(20, 40, 75, 0.25)' },
+                  { offset: 1, color: 'rgba(20, 40, 75, 0.00)' },
+                ],
+              },
+            },
+          },
+        ],
+      }
+    : null;
+
+  // 3. Box Plot / Per-Seed Critical Wait Times
+  const boxPlotOption = seedDetails.length
+    ? {
+        tooltip: {
+          trigger: 'axis',
+          backgroundColor: '#FFFFFF',
+          borderColor: '#E3DFD6',
+        },
+        legend: {
+          data: ['FIFO Critical Wait', 'ResQGrid Critical Wait'],
+          bottom: 0,
+          textStyle: { color: '#5A6472', fontSize: 11 },
+        },
+        grid: { top: 25, right: 25, bottom: 45, left: 45 },
+        xAxis: {
+          type: 'category',
+          data: seedDetails.map((s: any) => `Seed ${s.seed}`),
+          axisLabel: { color: '#5A6472', fontSize: 10, rotate: 30 },
+        },
+        yAxis: {
+          type: 'value',
+          name: 'Critical Wait (min)',
+          axisLabel: { color: '#5A6472', fontSize: 11 },
+          splitLine: { lineStyle: { color: '#FAF8F4', type: 'dashed' } },
+        },
+        series: [
+          {
+            name: 'FIFO Critical Wait',
+            type: 'bar',
+            barGap: '15%',
+            data: seedDetails.map((s: any) => s.fifo_critical_wait_minutes),
+            itemStyle: { color: '#CBD5E1', borderRadius: [3, 3, 0, 0] },
+          },
+          {
+            name: 'ResQGrid Critical Wait',
+            type: 'bar',
+            data: seedDetails.map((s: any) => s.resqgrid_critical_wait_minutes),
+            itemStyle: { color: '#14284B', borderRadius: [3, 3, 0, 0] },
+          },
+        ],
+      }
+    : null;
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6 font-sans">
+    <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6 font-sans">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-app-border gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-rq-border gap-4">
         <div>
-          <h1 className="text-xl font-bold text-app-text flex items-center space-x-2">
-            <Cpu className="w-5 h-5 text-app-primary" />
-            <span>Scenario Commander — Simulation & Algorithm Benchmark</span>
-          </h1>
-          <p className="text-xs text-app-text-secondary font-mono mt-0.5">
-            Empirical comparative analysis: Baseline FIFO vs. Risk-Aware Intelligent Priority & Resource Matching.
+          <div className="flex items-center space-x-2">
+            <h1 className="text-xl font-bold text-rq-ink flex items-center space-x-2">
+              <Cpu className="w-5 h-5 text-rq-brand" />
+              <span>Scenario Commander — Policy Benchmark & Discrete-Event Simulation</span>
+            </h1>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200">
+              Monte Carlo Replications
+            </span>
+          </div>
+          <p className="text-xs text-rq-muted mt-1 font-mono">
+            Scientific comparison of Baseline First-In-First-Out (FIFO) vs. ResQGrid Intelligent Risk-Aware Dispatch Engine.
           </p>
         </div>
 
-        {/* 2D / 3D Mode Toggle */}
-        <div className="flex items-center bg-slate-100 border border-app-border rounded-lg p-1 font-mono text-xs">
-          <button
-            onClick={() => setViewMode('3D')}
-            className={`px-3 py-1 rounded flex items-center space-x-1.5 transition ${
-              viewMode === '3D'
-                ? 'bg-white text-app-text font-semibold shadow-sm border border-app-border'
-                : 'text-app-text-secondary hover:text-app-text'
-            }`}
-          >
-            <Box className="w-3.5 h-3.5 text-app-primary" />
-            <span>3D Interactive Simulation</span>
-          </button>
-          <button
-            onClick={() => setViewMode('CHARTS')}
-            className={`px-3 py-1 rounded flex items-center space-x-1.5 transition ${
-              viewMode === 'CHARTS'
-                ? 'bg-white text-app-text font-semibold shadow-sm border border-app-border'
-                : 'text-app-text-secondary hover:text-app-text'
-            }`}
-          >
-            <BarChart2 className="w-3.5 h-3.5 text-app-primary" />
-            <span>Benchmark Charts</span>
-          </button>
+        {/* View Mode Toggle */}
+        <div className="flex items-center space-x-2">
+          <div className="inline-flex rounded-lg border border-rq-border bg-rq-surface2 p-0.5 text-xs font-mono">
+            <button
+              onClick={() => setViewMode('CHARTS')}
+              className={`px-3 py-1.5 rounded-md transition ${
+                viewMode === 'CHARTS' ? 'bg-white font-bold text-rq-ink shadow-sm' : 'text-rq-muted hover:text-rq-ink'
+              }`}
+            >
+              Benchmark Charts
+            </button>
+            <button
+              onClick={() => setViewMode('3D')}
+              className={`px-3 py-1.5 rounded-md transition ${
+                viewMode === '3D' ? 'bg-white font-bold text-rq-ink shadow-sm' : 'text-rq-muted hover:text-rq-ink'
+              }`}
+            >
+              3D Disaster Sim
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Simulation Setup Console */}
-      <div className="bg-white border border-app-border rounded-xl p-5 shadow-sm space-y-4 text-xs font-sans">
-        <div className="flex items-center justify-between pb-2 border-b border-app-border">
-          <span className="font-semibold text-app-text uppercase text-xs tracking-wider flex items-center space-x-1.5 font-mono">
-            <Sparkles className="w-4 h-4 text-app-primary" />
-            <span>Disaster Parameters</span>
+      {/* Simulation Parameter Controls */}
+      <div className="bg-white border border-rq-border rounded-xl p-5 shadow-sm space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-rq-border">
+          <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider flex items-center space-x-2">
+            <Sliders className="w-4 h-4 text-rq-brand" />
+            <span>Monte Carlo Multi-Seed Parameters</span>
           </span>
-          <span className="text-app-text-secondary text-[11px] font-mono">Reproducible Stochastic Models</span>
+          <span className="text-[11px] font-mono text-rq-muted">Deterministic & Replicable</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-sans">
           <div>
-            <label className="block text-app-text-secondary mb-1 font-semibold">Disaster Scenario</label>
+            <label className="block text-[11px] font-mono text-rq-muted uppercase mb-1">Disaster Scenario</label>
             <select
               value={scenarioName}
               onChange={(e) => setScenarioName(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 border border-app-border rounded text-app-text text-xs focus:bg-white focus:outline-none focus:border-app-primary"
+              className="w-full bg-rq-surface2 border border-rq-border rounded-lg px-3 py-2 text-rq-ink font-semibold"
             >
-              <option value="Mumbai Urban Flood">Mumbai Urban Flood (Mithi River Basin)</option>
-              <option value="Cyclone Disaster Response">Coastal Cyclone Relief (Colaba / Bandra)</option>
-              <option value="Severe Earthquake Extrication">Dense Urban Structural Collapse</option>
+              <option value="Mumbai Urban Flood">Mumbai Urban Flood (Mithi River)</option>
+              <option value="Mumbai Coastal Cyclone">Mumbai Coastal Cyclone (High Tide)</option>
+              <option value="Structural Collapse Scenario">Dharavi Structural Collapse</option>
+              <option value="Industrial Fire & Hazmat">Industrial Chemical Fire</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-app-text-secondary mb-1 font-semibold">Simulated Incidents Count</label>
+            <label className="block text-[11px] font-mono text-rq-muted uppercase mb-1">
+              Incident Batch Size (N = {incidentCount})
+            </label>
             <input
-              type="number"
-              min="10"
-              max="150"
+              type="range"
+              min={10}
+              max={80}
+              step={5}
               value={incidentCount}
-              onChange={(e) => setIncidentCount(parseInt(e.target.value) || 10)}
-              className="w-full px-3 py-2 bg-slate-50 border border-app-border rounded text-app-text text-xs focus:bg-white focus:outline-none focus:border-app-primary font-mono"
+              onChange={(e) => setIncidentCount(Number(e.target.value))}
+              className="w-full accent-[#14284B]"
             />
           </div>
 
           <div>
-            <label className="block text-app-text-secondary mb-1 font-semibold">Deterministic Random Seed</label>
+            <label className="block text-[11px] font-mono text-rq-muted uppercase mb-1">Random Seed (Base)</label>
             <input
               type="number"
               value={randomSeed}
-              onChange={(e) => setRandomSeed(parseInt(e.target.value) || 1)}
-              className="w-full px-3 py-2 bg-slate-50 border border-app-border rounded text-app-text text-xs focus:bg-white focus:outline-none focus:border-app-primary font-mono"
+              onChange={(e) => setRandomSeed(Number(e.target.value))}
+              className="w-full bg-rq-surface2 border border-rq-border rounded-lg px-3 py-1.5 font-mono text-rq-ink"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-mono text-rq-muted uppercase mb-1">Monte Carlo Seeds</label>
+            <input
+              type="number"
+              min={5}
+              max={30}
+              value={monteCarloSeeds}
+              onChange={(e) => setMonteCarloSeeds(Number(e.target.value))}
+              className="w-full bg-rq-surface2 border border-rq-border rounded-lg px-3 py-1.5 font-mono text-rq-ink"
             />
           </div>
         </div>
 
-        <div className="pt-2">
+        <div className="pt-2 flex justify-end">
           <button
-            onClick={() => compareMutation.mutate()}
+            onClick={handleRunBenchmark}
             disabled={compareMutation.isPending}
-            className="w-full py-3 bg-app-primary hover:bg-[#0E555A] disabled:opacity-50 text-white font-bold rounded-lg flex items-center justify-center space-x-2 shadow transition tracking-wider uppercase text-xs"
+            className="flex items-center space-x-2 px-5 py-2.5 bg-[#14284B] hover:bg-[#1E3A8A] disabled:opacity-50 text-white font-bold rounded-lg text-xs shadow-sm transition"
           >
-            <Play className="w-4 h-4" />
+            <Play className={`w-4 h-4 ${compareMutation.isPending ? 'animate-spin' : ''}`} />
             <span>
-              {compareMutation.isPending
-                ? 'Simulating Multi-Agent Dispatch Cycles...'
-                : 'Execute Side-by-Side Algorithmic Benchmark'}
+              {compareMutation.isPending ? 'Running Monte Carlo Iterations...' : 'Execute Benchmark Simulation'}
             </span>
           </button>
         </div>
       </div>
 
-      {/* 3D Visualization View */}
-      {viewMode === '3D' && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-app-text uppercase font-mono tracking-wider flex items-center space-x-2">
-              <Box className="w-4 h-4 text-app-primary" />
-              <span>3D Disaster Response & Inundation Simulation</span>
-            </h2>
-            <span className="text-[11px] font-mono text-app-text-secondary">
-              Synchronized with real backend heuristic dispatch model
-            </span>
-          </div>
-
-          <ScenarioCommander3D
-            scenarioName={scenarioName}
-            metrics={comparisonResult?.risk_aware_algorithm || null}
-            stepHistory={
-              comparisonResult?.risk_aware_algorithm?.step_history || [
-                { tracking_id: 'SIM-101', assigned_team: 'Bandra Water Rescue Alpha', severity: 'CRITICAL' },
-                { tracking_id: 'SIM-102', assigned_team: 'Kurla Rapid Evacuation Beta', severity: 'HIGH' },
-                { tracking_id: 'SIM-103', assigned_team: 'Dadar Trauma Medical Unit 1', severity: 'HIGH' },
-                { tracking_id: 'SIM-104', assigned_team: 'Andheri Search & Rescue Delta', severity: 'MEDIUM' },
-              ]
-            }
-          />
-        </div>
-      )}
-
-      {/* Benchmark Results (Charts View) */}
-      {(viewMode === 'CHARTS' || comparisonResult) && comparisonResult && (
-        <div className="space-y-6">
-          {/* Summary Callout Banner */}
-          <div className="bg-white border border-teal-200 p-5 rounded-xl shadow-sm space-y-3">
-            <div className="flex items-center space-x-2 text-app-primary font-mono font-semibold text-xs uppercase tracking-wider">
-              <CheckCircle className="w-4 h-4" />
-              <span>Evaluator Benchmark Findings</span>
-            </div>
-            <p className="text-sm text-app-text leading-relaxed font-sans">
-              {comparisonResult.summary_analysis}
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 font-mono text-xs">
-              <div className="bg-slate-50 p-3 rounded-lg border border-app-border">
-                <div className="text-app-text-secondary text-[10px]">Critical Wait Time Reduction</div>
-                <div className="text-2xl font-bold text-app-low mt-1">
-                  -{comparisonResult.improvements.critical_wait_time_reduction_pct}%
-                </div>
-                <div className="text-[10px] text-app-text-secondary mt-0.5">Risk-aware priority triage</div>
-              </div>
-              <div className="bg-slate-50 p-3 rounded-lg border border-app-border">
-                <div className="text-app-text-secondary text-[10px]">Mean Wait Time Reduction</div>
-                <div className="text-2xl font-bold text-app-primary mt-1">
-                  -{comparisonResult.improvements.overall_wait_time_reduction_pct}%
-                </div>
-                <div className="text-[10px] text-app-text-secondary mt-0.5">Haversine distance matching</div>
-              </div>
-              <div className="bg-slate-50 p-3 rounded-lg border border-app-border">
-                <div className="text-app-text-secondary text-[10px]">Resource Utilization</div>
-                <div className="text-2xl font-bold text-indigo-700 mt-1">
-                  {comparisonResult.risk_aware_algorithm.resource_utilization_pct}%
-                </div>
-                <div className="text-[10px] text-app-text-secondary mt-0.5">
-                  vs {comparisonResult.baseline_fifo.resource_utilization_pct}% baseline
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Visual Recharts Comparison */}
-          {viewMode === 'CHARTS' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Chart 1: Wait Times */}
-              <div className="bg-white border border-app-border rounded-xl p-5 shadow-sm space-y-3">
-                <div className="flex justify-between items-center pb-2 border-b border-app-border font-mono text-xs">
-                  <span className="font-semibold text-app-text uppercase tracking-wider">Wait Times Comparison (Minutes)</span>
-                  <span className="text-app-primary font-bold">Lower is Better</span>
-                </div>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RechartsBar data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                      <XAxis dataKey="metric" stroke="#64748B" tick={{ fontSize: 10, fill: '#64748B' }} />
-                      <YAxis stroke="#64748B" tick={{ fontSize: 10, fill: '#64748B' }} />
-                      <Tooltip
-                        contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#CBD5E1', color: '#18242B', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
-                      />
-                      <Legend wrapperStyle={{ fontSize: '11px', color: '#64748B' }} />
-                      <Bar dataKey="FIFO" fill="#94A3B8" name="Baseline FIFO" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="RiskAware" fill="#146D73" name="Risk-Aware Matching" radius={[4, 4, 0, 0]} />
-                    </RechartsBar>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              {/* Chart 2: Success & Utilization */}
-              <div className="bg-white border border-app-border rounded-xl p-5 shadow-sm space-y-3">
-                <div className="flex justify-between items-center pb-2 border-b border-app-border font-mono text-xs">
-                  <span className="font-semibold text-app-text uppercase tracking-wider">System Efficiency Metrics</span>
-                  <span className="text-app-primary font-bold">Higher is Better</span>
-                </div>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RechartsBar data={rateData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                      <XAxis dataKey="metric" stroke="#64748B" tick={{ fontSize: 10, fill: '#64748B' }} />
-                      <YAxis stroke="#64748B" domain={[0, 100]} tick={{ fontSize: 10, fill: '#64748B' }} />
-                      <Tooltip
-                        contentStyle={{ backgroundColor: '#FFFFFF', borderColor: '#CBD5E1', color: '#18242B', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
-                      />
-                      <Legend wrapperStyle={{ fontSize: '11px', color: '#64748B' }} />
-                      <Bar dataKey="FIFO" fill="#94A3B8" name="Baseline FIFO" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="RiskAware" fill="#347F68" name="Risk-Aware Matching" radius={[4, 4, 0, 0]} />
-                    </RechartsBar>
-                  </ResponsiveContainer>
+      {viewMode === '3D' ? (
+        <ScenarioCommander3D incidents={[]} teams={[]} depots={[]} />
+      ) : (
+        <>
+          {/* Result Summary Sentence Callout */}
+          {comparisonResult && (
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start space-x-3 text-xs leading-relaxed text-blue-900">
+              <Sparkles className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold font-mono uppercase tracking-wider text-[11px] text-blue-800 block mb-0.5">
+                  Empirical Benchmark Result Summary
+                </span>
+                <p className="font-medium">{comparisonResult.summary_analysis}</p>
+                <div className="mt-2 text-[11px] font-mono text-blue-700 flex flex-wrap gap-4">
+                  <span>Critical Wait Reduction: <strong>{improvements.critical_wait_reduction_pct}%</strong></span>
+                  <span>Evaluated Seeds: <strong>{mcSummary?.seeds_evaluated}</strong></span>
+                  <span>Statistical Significance: <strong>{mcSummary?.statistical_significance}</strong></span>
                 </div>
               </div>
             </div>
           )}
-        </div>
+
+          {/* Benchmark Charts Grid */}
+          {comparisonResult ? (
+            <div className="space-y-6">
+              {/* Row 1: Grouped Bars & CDF Curve */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Grouped Bars */}
+                <div className="bg-white border border-rq-border rounded-xl p-5 shadow-sm space-y-3">
+                  <div className="flex justify-between items-center pb-2 border-b border-rq-border">
+                    <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
+                      Policy Benchmark Metrics: Mean &plusmn; Spread
+                    </span>
+                    <span className="text-[11px] font-mono text-rq-muted">FIFO vs. ResQGrid</span>
+                  </div>
+                  <div className="h-72">
+                    <ReactECharts option={groupedBarsOption} style={{ height: '100%', width: '100%' }} />
+                  </div>
+                </div>
+
+                {/* CDF Curve */}
+                <div className="bg-white border border-rq-border rounded-xl p-5 shadow-sm space-y-3">
+                  <div className="flex justify-between items-center pb-2 border-b border-rq-border">
+                    <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
+                      Cumulative Distribution Function (CDF)
+                    </span>
+                    <span className="text-[11px] font-mono text-rq-muted">P(Wait &le; t)</span>
+                  </div>
+                  <div className="h-72">
+                    <ReactECharts option={cdfOption} style={{ height: '100%', width: '100%' }} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Row 2: Per-Seed Box Plot Comparison */}
+              <div className="bg-white border border-rq-border rounded-xl p-5 shadow-sm space-y-3">
+                <div className="flex justify-between items-center pb-2 border-b border-rq-border">
+                  <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
+                    Per-Seed Monte Carlo Replication Distribution (Critical Wait Times)
+                  </span>
+                  <span className="text-[11px] font-mono text-rq-muted">
+                    {seedDetails.length} Stochastic Runs
+                  </span>
+                </div>
+                <div className="h-64">
+                  <ReactECharts option={boxPlotOption} style={{ height: '100%', width: '100%' }} />
+                </div>
+              </div>
+
+              {/* Row 3: Raw Numbers Table & CSV Export */}
+              <div className="bg-white border border-rq-border rounded-xl p-5 shadow-sm space-y-3">
+                <div className="flex justify-between items-center pb-2 border-b border-rq-border">
+                  <div>
+                    <span className="font-semibold text-rq-ink text-xs uppercase font-mono tracking-wider">
+                      Raw Simulation Replications Data Table
+                    </span>
+                    <p className="text-[11px] text-rq-muted mt-0.5">
+                      Empirical per-seed breakdown with exact response times and resource utilization delta.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleExportBenchmarkCSV}
+                    className="flex items-center space-x-1.5 px-3 py-1.5 bg-[#14284B] hover:bg-[#1E3A8A] text-white rounded-lg text-xs font-mono shadow-sm transition"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Export Benchmark CSV</span>
+                  </button>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs font-sans">
+                    <thead>
+                      <tr className="border-b border-rq-border text-[11px] font-mono uppercase text-rq-muted">
+                        <th className="py-2 px-3">Seed</th>
+                        <th className="py-2 px-3">FIFO Critical Wait</th>
+                        <th className="py-2 px-3">ResQGrid Critical Wait</th>
+                        <th className="py-2 px-3">Critical Reduction %</th>
+                        <th className="py-2 px-3">FIFO Avg Wait</th>
+                        <th className="py-2 px-3">ResQGrid Avg Wait</th>
+                        <th className="py-2 px-3">FIFO Util %</th>
+                        <th className="py-2 px-3">ResQGrid Util %</th>
+                        <th className="py-2 px-3">Unresolved (FIFO / RQ)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-rq-border">
+                      {seedDetails.map((s: any) => (
+                        <tr key={s.seed} className="hover:bg-rq-surface2 transition font-mono text-[11px]">
+                          <td className="py-2 px-3 font-bold text-rq-ink">#{s.seed}</td>
+                          <td className="py-2 px-3 text-rq-muted">{s.fifo_critical_wait_minutes} min</td>
+                          <td className="py-2 px-3 font-semibold text-rq-brand">{s.resqgrid_critical_wait_minutes} min</td>
+                          <td className="py-2 px-3">
+                            <span className="px-1.5 py-0.5 rounded font-bold bg-emerald-50 text-emerald-800">
+                              {s.reduction_pct}%
+                            </span>
+                          </td>
+                          <td className="py-2 px-3 text-rq-muted">{s.fifo_avg_wait_minutes} min</td>
+                          <td className="py-2 px-3 text-rq-ink">{s.resqgrid_avg_wait_minutes} min</td>
+                          <td className="py-2 px-3 text-rq-muted">{s.fifo_utilization_pct}%</td>
+                          <td className="py-2 px-3 font-bold text-rq-ink">{s.resqgrid_utilization_pct}%</td>
+                          <td className="py-2 px-3 text-rq-muted">{s.fifo_unresolved} / {s.resqgrid_unresolved}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white border border-rq-border rounded-xl p-12 text-center space-y-3 font-sans">
+              <Cpu className="w-10 h-10 text-rq-brand mx-auto opacity-40" />
+              <div className="text-sm font-bold text-rq-ink">Simulation Benchmark Ready</div>
+              <p className="text-xs text-rq-muted max-w-md mx-auto">
+                Select your disaster scenario and seed parameters above, then click <strong>Execute Benchmark Simulation</strong> to generate grouped bars, CDF curves, and per-seed performance distributions.
+              </p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

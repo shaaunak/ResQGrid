@@ -83,3 +83,4 @@ export const useUI = (): UIContextType => {
   if (!ctx) throw new Error('useUI must be used within UIProvider');
   return ctx;
 };
+

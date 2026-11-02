@@ -72,3 +72,4 @@ export const useWebSocket = (): WebSocketContextType => {
   if (!ctx) throw new Error('useWebSocket must be used within WebSocketProvider');
   return ctx;
 };
+

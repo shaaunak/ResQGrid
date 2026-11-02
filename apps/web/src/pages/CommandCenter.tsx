@@ -27,7 +27,7 @@ export const CommandCenter: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [severityFilter, setSeverityFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [mapMode, setMapMode] = useState<'2D' | '3D'>('2D');
+  const [mapMode, setMapMode] = useState<'2D' | '3D'>('3D');
   const [savedView, setSavedView] = useState<'ALL' | 'UNASSIGNED' | 'CRITICAL_ONLY'>('ALL');
 
   const { density, setDensity } = useUI();

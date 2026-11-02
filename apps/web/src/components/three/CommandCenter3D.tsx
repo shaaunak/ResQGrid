@@ -1,17 +1,16 @@
-import React, { useRef, useState } from 'react';
-import * as THREE from 'three';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Html } from '@react-three/drei';
+import React, { useState } from 'react';
 import { TacticalCityScene } from './TacticalCityScene';
-import { EmergencyMarkers3D } from './EmergencyMarkers3D';
-import { RescueUnits3D } from './RescueUnits3D';
-import { DispatchArc3D } from './DispatchArcs3D';
-import { TACTICAL_PALETTE, geoTo3D } from './coords';
-import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 import { Incident, ResponseTeam, Depot } from '../../types';
-import { Layers, Eye, EyeOff, Compass, Maximize2 } from 'lucide-react';
+import {
+  Maximize2,
+  Minimize2,
+  Sparkles,
+  Layers,
+  Activity,
+  Info,
+} from 'lucide-react';
 
-interface Command3DProps {
+interface CommandCenter3DProps {
   incidents: Incident[];
   teams: ResponseTeam[];
   depots: Depot[];
@@ -19,378 +18,69 @@ interface Command3DProps {
   onSelectIncident: (inc: Incident) => void;
 }
 
-type CameraPreset = 'ISOMETRIC' | 'OVERHEAD' | 'COASTAL';
-
-export const CommandCenter3D: React.FC<Command3DProps> = ({
+export const CommandCenter3D: React.FC<CommandCenter3DProps> = ({
   incidents,
   teams,
   depots,
   selectedIncident,
   onSelectIncident,
 }) => {
-  // Layer Toggles (Inspired by Devpost Emergency Command Center reference UI)
-  const [showIncidents, setShowIncidents] = useState<boolean>(true);
-  const [showResponders, setShowResponders] = useState<boolean>(true);
-  const [showDepots, setShowDepots] = useState<boolean>(true);
-  const [showArcs, setShowArcs] = useState<boolean>(true);
-  const [showRadar, setShowRadar] = useState<boolean>(true);
-  const [showHazardZone, setShowHazardZone] = useState<boolean>(true);
-  const [cameraPreset, setCameraPreset] = useState<CameraPreset>('ISOMETRIC');
-  const [layersOpen, setLayersOpen] = useState<boolean>(true);
+  const [fullscreen, setFullscreen] = useState(false);
 
   return (
-    <div className="relative w-full h-full min-h-[480px] bg-[#EEF3F6] overflow-hidden select-none">
-      <CanvasErrorBoundary>
-        <Canvas shadows gl={{ antialias: true, alpha: false }} dpr={[1, 1.5]}>
-          <color attach="background" args={['#EEF3F6']} />
-          <fog attach="fog" args={['#EEF3F6', 35, 95]} />
+    <div
+      className={`w-full h-full relative ${
+        fullscreen ? 'fixed inset-0 z-50 bg-slate-950' : ''
+      }`}
+    >
+      <TacticalCityScene
+        incidents={incidents}
+        teams={teams}
+        depots={depots}
+        selectedIncident={selectedIncident}
+        onSelectIncident={onSelectIncident}
+        waterLevel={1.2}
+        interactive={true}
+      />
 
-          <CameraController preset={cameraPreset} />
-
-          {/* Ambient & Directional Lighting */}
-          <ambientLight intensity={0.9} color="#ffffff" />
-          <directionalLight
-            position={[35, 55, 30]}
-            intensity={1.6}
-            color="#ffffff"
-            castShadow
-          />
-          <pointLight position={[0, 15, 0]} intensity={1.2} color="#146D73" distance={60} />
-
-          {/* Procedural 3D City */}
-          <TacticalCityScene showRadar={showRadar} />
-
-          {/* 3D Disaster Hazard Zone (Amber/Red Inundation Polygon like Devpost reference) */}
-          {showHazardZone && <DisasterHazardZone3D />}
-
-          {/* 3D Incident Beacons - Clicking connects to TriageDrawer */}
-          {showIncidents && (
-            <EmergencyMarkers3D
-              incidents={incidents}
-              selectedIncident={selectedIncident}
-              onSelectIncident={onSelectIncident}
-            />
-          )}
-
-          {/* 3D Response Teams */}
-          {showResponders && <RescueUnits3D teams={teams} />}
-
-          {/* 3D Depots Representation */}
-          {showDepots && <Depots3D depots={depots} />}
-
-          {/* Active Dispatch Vectors */}
-          {showArcs && incidents.length > 0 && (
-            <DispatchArc3D
-              startLat={19.0596}
-              startLon={72.8402}
-              endLat={incidents[0].latitude}
-              endLon={incidents[0].longitude}
-              color="#146D73"
-              arcHeight={4.5}
-            />
-          )}
-        </Canvas>
-      </CanvasErrorBoundary>
-
-      {/* Top Left: Operational Guidance & Status */}
-      <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-md border border-app-border rounded-lg p-3 shadow-lg font-sans text-[11px] text-app-text-secondary space-y-1.5 pointer-events-auto">
-        <div className="text-app-text font-bold uppercase tracking-wider flex items-center space-x-2 font-mono">
-          <span className="w-2.5 h-2.5 rounded-full bg-app-low animate-pulse" />
-          <span className="text-xs">3D Tactical Command Grid</span>
+      {/* Floating Top Header Info */}
+      <div className="absolute top-3 right-3 flex items-center space-x-2 z-10">
+        <div className="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded text-white text-[11px] font-mono border border-white/10 flex items-center space-x-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span>REAL-TIME 3D DIGITAL TWIN</span>
         </div>
-        <div className="text-app-text-secondary text-xs">
-          Showing real Mumbai simulated incidents, depots, and response squads.
-        </div>
-        <div className="flex items-center space-x-2 pt-1 border-t border-app-border text-[10px] font-mono">
-          <span className="text-app-text-secondary">View Presets:</span>
-          <button
-            onClick={() => setCameraPreset('ISOMETRIC')}
-            className={`px-2 py-0.5 rounded border transition ${
-              cameraPreset === 'ISOMETRIC'
-                ? 'bg-app-primary text-white border-app-primary font-semibold'
-                : 'bg-slate-100 text-app-text-secondary border-app-border hover:text-app-text'
-            }`}
-          >
-            Tactical Iso
-          </button>
-          <button
-            onClick={() => setCameraPreset('OVERHEAD')}
-            className={`px-2 py-0.5 rounded border transition ${
-              cameraPreset === 'OVERHEAD'
-                ? 'bg-app-primary text-white border-app-primary font-semibold'
-                : 'bg-slate-100 text-app-text-secondary border-app-border hover:text-app-text'
-            }`}
-          >
-            Overhead
-          </button>
-          <button
-            onClick={() => setCameraPreset('COASTAL')}
-            className={`px-2 py-0.5 rounded border transition ${
-              cameraPreset === 'COASTAL'
-                ? 'bg-app-primary text-white border-app-primary font-semibold'
-                : 'bg-slate-100 text-app-text-secondary border-app-border hover:text-app-text'
-            }`}
-          >
-            Coastal
-          </button>
-        </div>
+
+        <button
+          onClick={() => setFullscreen(!fullscreen)}
+          className="p-1.5 bg-black/60 hover:bg-black/80 backdrop-blur-md text-white rounded border border-white/10 transition"
+          title={fullscreen ? 'Exit Fullscreen' : 'Fullscreen 3D View'}
+        >
+          {fullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+        </button>
       </div>
 
-      {/* Top Right: Tactical Layers Panel (Matches Devpost ECC Design) */}
-      <div className="absolute top-4 right-4 z-10 w-52 bg-white/95 backdrop-blur-md border border-app-border rounded-lg shadow-lg font-sans text-xs overflow-hidden pointer-events-auto">
-        <div
-          onClick={() => setLayersOpen(!layersOpen)}
-          className="px-3 py-2 bg-slate-50 border-b border-app-border flex items-center justify-between cursor-pointer hover:bg-slate-100 transition"
-        >
-          <div className="flex items-center space-x-2 text-app-text font-semibold font-mono">
-            <Layers className="w-3.5 h-3.5 text-app-primary" />
-            <span className="tracking-wider uppercase text-[11px]">Layers</span>
-          </div>
-          <span className="text-[10px] text-app-text-secondary font-mono">
-            {layersOpen ? 'HIDE' : 'SHOW'}
-          </span>
+      {/* Tactical Legend */}
+      <div className="absolute bottom-3 left-3 p-3 bg-black/60 backdrop-blur-md rounded-card border border-white/10 text-white text-xs z-10 font-sans space-y-1.5 hidden md:block">
+        <div className="font-semibold text-[11px] text-slate-300 uppercase font-mono mb-1">
+          Tactical Legend
         </div>
-
-        {layersOpen && (
-          <div className="p-3 space-y-2 text-[11px]">
-            <div className="text-[9px] uppercase tracking-wider text-app-text-secondary font-bold font-mono">
-              Core Objects
-            </div>
-
-            {/* Incidents Toggle */}
-            <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-app-text">
-                <span className="w-2 h-2 rounded-full bg-app-critical" />
-                <span>Incidents</span>
-              </span>
-              <button
-                onClick={() => setShowIncidents(!showIncidents)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
-                  showIncidents
-                    ? 'bg-teal-50 text-app-primary border-teal-200'
-                    : 'bg-slate-100 text-slate-400 border-slate-200'
-                }`}
-              >
-                {showIncidents ? 'ON' : 'OFF'}
-              </button>
-            </div>
-
-            {/* Responders Toggle */}
-            <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-app-text">
-                <span className="w-2 h-2 rounded-full bg-teal-600" />
-                <span>Responders</span>
-              </span>
-              <button
-                onClick={() => setShowResponders(!showResponders)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
-                  showResponders
-                    ? 'bg-teal-50 text-app-primary border-teal-200'
-                    : 'bg-slate-100 text-slate-400 border-slate-200'
-                }`}
-              >
-                {showResponders ? 'ON' : 'OFF'}
-              </button>
-            </div>
-
-            {/* Depots Toggle */}
-            <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-app-text">
-                <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                <span>Supply Hubs</span>
-              </span>
-              <button
-                onClick={() => setShowDepots(!showDepots)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
-                  showDepots
-                    ? 'bg-teal-50 text-app-primary border-teal-200'
-                    : 'bg-slate-100 text-slate-400 border-slate-200'
-                }`}
-              >
-                {showDepots ? 'ON' : 'OFF'}
-              </button>
-            </div>
-
-            <div className="text-[9px] uppercase tracking-wider text-app-text-secondary font-bold pt-1.5 border-t border-app-border font-mono">
-              Tactical Overlays
-            </div>
-
-            {/* Hazard Inundation Polygon */}
-            <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-app-text">
-                <span className="w-2 h-2 rounded bg-app-high" />
-                <span>Hazard Zones</span>
-              </span>
-              <button
-                onClick={() => setShowHazardZone(!showHazardZone)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
-                  showHazardZone
-                    ? 'bg-teal-50 text-app-primary border-teal-200'
-                    : 'bg-slate-100 text-slate-400 border-slate-200'
-                }`}
-              >
-                {showHazardZone ? 'ON' : 'OFF'}
-              </button>
-            </div>
-
-            {/* Dispatch Arcs */}
-            <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-app-text">
-                <span className="w-2 h-2 rounded bg-app-primary" />
-                <span>Dispatch Vectors</span>
-              </span>
-              <button
-                onClick={() => setShowArcs(!showArcs)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
-                  showArcs
-                    ? 'bg-teal-50 text-app-primary border-teal-200'
-                    : 'bg-slate-100 text-slate-400 border-slate-200'
-                }`}
-              >
-                {showArcs ? 'ON' : 'OFF'}
-              </button>
-            </div>
-
-            {/* Radar Sweep */}
-            <div className="flex items-center justify-between">
-              <span className="flex items-center space-x-1.5 text-app-text">
-                <span className="w-2 h-2 rounded-full border border-teal-600" />
-                <span>Radar Sweep</span>
-              </span>
-              <button
-                onClick={() => setShowRadar(!showRadar)}
-                className={`px-2 py-0.5 rounded text-[10px] font-semibold border font-mono transition ${
-                  showRadar
-                    ? 'bg-teal-50 text-app-primary border-teal-200'
-                    : 'bg-slate-100 text-slate-400 border-slate-200'
-                }`}
-              >
-                {showRadar ? 'ON' : 'OFF'}
-              </button>
-            </div>
-          </div>
-        )}
+        <div className="flex items-center space-x-2 text-[11px]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#C8201B]" />
+          <span>Critical Emergency Beacon</span>
+        </div>
+        <div className="flex items-center space-x-2 text-[11px]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#E27D14]" />
+          <span>High Urgency Incident</span>
+        </div>
+        <div className="flex items-center space-x-2 text-[11px]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#14284B] border border-blue-400" />
+          <span>Mobile Tactical Squad</span>
+        </div>
+        <div className="flex items-center space-x-2 text-[11px]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#2E7D5B]" />
+          <span>Relief Logistics Hub</span>
+        </div>
       </div>
     </div>
-  );
-};
-
-// Camera Controller for View Presets
-function CameraController({ preset }: { preset: CameraPreset }) {
-  const controlsRef = useRef<any>(null);
-
-  const targets = {
-    ISOMETRIC: { pos: [0, 28, 36] as [number, number, number], target: [0, 0, 0] as [number, number, number] },
-    OVERHEAD: { pos: [0, 48, 1] as [number, number, number], target: [0, 0, 0] as [number, number, number] },
-    COASTAL: { pos: [-24, 14, 12] as [number, number, number], target: [-6, 1, 4] as [number, number, number] },
-  };
-
-  useFrame((state, delta) => {
-    const desired = targets[preset];
-    state.camera.position.lerp(new THREE.Vector3(...desired.pos), delta * 2.5);
-    if (controlsRef.current) {
-      controlsRef.current.target.lerp(new THREE.Vector3(...desired.target), delta * 2.5);
-      controlsRef.current.update();
-    }
-  });
-
-  return (
-    <>
-      <PerspectiveCamera makeDefault position={targets.ISOMETRIC.pos} fov={45} />
-      <OrbitControls
-        ref={controlsRef}
-        enableDamping
-        dampingFactor={0.05}
-        maxPolarAngle={Math.PI / 2.05}
-        minDistance={8}
-        maxDistance={75}
-      />
-    </>
-  );
-}
-
-// 3D Disaster Hazard Zone Overlay (Orange Inundation Zone like Devpost reference)
-function DisasterHazardZone3D() {
-  const meshRef = useRef<THREE.Mesh>(null);
-
-  // Subtle breathing pulse on the hazard polygon
-  useFrame((state) => {
-    if (meshRef.current) {
-      const mat = meshRef.current.material as THREE.MeshStandardMaterial;
-      if (mat) {
-        mat.opacity = 0.35 + Math.sin(state.clock.getElapsedTime() * 2) * 0.08;
-      }
-    }
-  });
-
-  return (
-    <group position={[2, 0.12, -2]}>
-      {/* Semi-transparent highlighted flood impact polygon */}
-      <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[18, 14]} />
-        <meshStandardMaterial
-          color="#d97706"
-          emissive="#78350f"
-          roughness={0.5}
-          metalness={0.2}
-          transparent
-          opacity={0.35}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* Perimeter boundary highlight */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
-        <planeGeometry args={[18.1, 14.1]} />
-        <meshBasicMaterial
-          color="#fbbf24"
-          wireframe
-          transparent
-          opacity={0.5}
-        />
-      </mesh>
-
-      {/* Hazard Zone Label */}
-      <Html position={[0, 0.5, 0]} center distanceFactor={24} className="pointer-events-none select-none">
-        <div className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-white/95 border border-amber-300 text-app-high shadow-md uppercase tracking-wider">
-          Mithi Basin Flood Hazard Zone
-        </div>
-      </Html>
-    </group>
-  );
-}
-
-// 3D Depots Architectural Landmarks
-const Depots3D: React.FC<{ depots: Depot[] }> = ({ depots }) => {
-  return (
-    <group>
-      {depots.map((d) => {
-        const [x, y, z] = geoTo3D(d.latitude, d.longitude, 0.4);
-        return (
-          <group key={d.id} position={[x, y, z]}>
-            {/* Depot Architectural Solid */}
-            <mesh position={[0, 0.35, 0]}>
-              <boxGeometry args={[1.2, 0.7, 1.2]} />
-              <meshStandardMaterial
-                color="#0E555A"
-                roughness={0.7}
-                metalness={0.1}
-              />
-            </mesh>
-            {/* Ground Ring */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
-              <ringGeometry args={[0.8, 1.05, 24]} />
-              <meshBasicMaterial color="#146D73" transparent opacity={0.5} side={THREE.DoubleSide} />
-            </mesh>
-            {/* Label */}
-            <Html position={[0, 1.2, 0]} center distanceFactor={25} className="pointer-events-none select-none">
-              <div className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-white/95 border border-app-border text-app-text shadow-sm whitespace-nowrap">
-                {d.name.split(' ')[0]} Hub
-              </div>
-            </Html>
-          </group>
-        );
-      })}
-    </group>
   );
 };

@@ -243,7 +243,12 @@ export const CinematicLandingCanvas: React.FC = () => {
             <pointLight position={[15, 12, 15]} intensity={1.0} color="#D77A34" distance={40} />
 
             {/* Miniature 3D City Model */}
-            <TacticalCityScene showRadar={true} />
+            <TacticalCityScene
+              waterLevel={1.2}
+              interactive={false}
+              autoRotate={true}
+              cameraPreset="overview"
+            />
 
             {/* 3D Incident Beacons */}
             <EmergencyMarkers3D
