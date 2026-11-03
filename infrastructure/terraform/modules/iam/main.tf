@@ -1,4 +1,12 @@
-variable "s3_bucket_arn" {
+variable "evidence_bucket_arn" {
+  type = string
+}
+
+variable "reports_bucket_arn" {
+  type = string
+}
+
+variable "backups_bucket_arn" {
   type = string
 }
 
@@ -23,9 +31,11 @@ variable "environment" {
   default = "prod"
 }
 
-# EC2 Assume Role
-resource "aws_iam_role" "ec2_role" {
-  name = "resqgrid-ec2-instance-role-${var.environment}"
+# -------------------------------------------------------------
+# 1. EC2 Base & API Role: Least-Privilege Web/API Operations
+# -------------------------------------------------------------
+resource "aws_iam_role" "api_role" {
+  name = "resqgrid-api-role-${var.environment}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -41,21 +51,23 @@ resource "aws_iam_role" "ec2_role" {
   })
 
   tags = {
-    Project = "ResQGrid"
+    Role        = "API-Server"
+    Project     = "ResQGrid"
+    Environment = var.environment
   }
 }
 
-# Least-Privilege Application Policy
-resource "aws_iam_policy" "app_policy" {
-  name        = "resqgrid-least-privilege-policy-${var.environment}"
-  description = "Scoped permissions for S3, SQS, SNS, CloudWatch, and SSM"
+# One Policy for API Role: S3 Presigned, SQS Publish, CloudWatch, SSM
+resource "aws_iam_policy" "api_policy" {
+  name        = "resqgrid-api-policy-${var.environment}"
+  description = "Least privilege permissions strictly required by ResQGrid API service"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-      # S3 Access
+      # S3 Put/Get Object on Evidence and Reports buckets
       {
-        Sid    = "S3EvidenceStorageAccess"
+        Sid    = "S3IncidentStorageAccess"
         Effect = "Allow"
         Action = [
           "s3:PutObject",
@@ -63,26 +75,26 @@ resource "aws_iam_policy" "app_policy" {
           "s3:ListBucket"
         ]
         Resource = [
-          var.s3_bucket_arn,
-          "${var.s3_bucket_arn}/*"
+          var.evidence_bucket_arn,
+          "${var.evidence_bucket_arn}/*",
+          var.reports_bucket_arn,
+          "${var.reports_bucket_arn}/*"
         ]
       },
-      # SQS Queue Operations
+      # SQS Producer Access
       {
-        Sid    = "SQSEventProcessingAccess"
+        Sid    = "SQSEventPublishing"
         Effect = "Allow"
         Action = [
           "sqs:SendMessage",
-          "sqs:ReceiveMessage",
-          "sqs:DeleteMessage",
-          "sqs:GetQueueAttributes"
+          "sqs:GetQueueAttributes",
+          "sqs:GetQueueUrl"
         ]
         Resource = [
-          var.sqs_queue_arn,
-          var.sqs_dlq_arn
+          var.sqs_queue_arn
         ]
       },
-      # SNS Alerts
+      # SNS Escalation Alert Publishing
       {
         Sid    = "SNSTopicPublishing"
         Effect = "Allow"
@@ -106,9 +118,9 @@ resource "aws_iam_policy" "app_policy" {
         ]
         Resource = "*"
       },
-      # SSM Parameter Store Secrets
+      # SSM Parameter Store Secrets Read
       {
-        Sid    = "SSMParameterStoreAccess"
+        Sid    = "SSMSecretsAccess"
         Effect = "Allow"
         Action = [
           "ssm:GetParameter",
@@ -121,28 +133,164 @@ resource "aws_iam_policy" "app_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "attach_app_policy" {
-  role       = aws_iam_role.ec2_role.name
-  policy_arn = aws_iam_policy.app_policy.arn
+resource "aws_iam_role_policy_attachment" "attach_api_policy" {
+  role       = aws_iam_role.api_role.name
+  policy_arn = aws_iam_policy.api_policy.arn
 }
 
-# AWS Systems Manager Core policy for Session Manager (no public SSH port needed)
-resource "aws_iam_role_policy_attachment" "attach_ssm_core" {
-  role       = aws_iam_role.ec2_role.name
+resource "aws_iam_role_policy_attachment" "attach_api_ssm_core" {
+  role       = aws_iam_role.api_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-# Instance Profile for EC2
-resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "resqgrid-ec2-instance-profile-${var.environment}"
-  role = aws_iam_role.ec2_role.name
+resource "aws_iam_instance_profile" "api_profile" {
+  name = "resqgrid-api-profile-${var.environment}"
+  role = aws_iam_role.api_role.name
 }
 
-output "instance_profile_name" {
-  value = aws_iam_instance_profile.ec2_profile.name
+# -------------------------------------------------------------
+# 2. Worker Role: SQS Consume + Rekognition + Translate + Comprehend ONLY
+# -------------------------------------------------------------
+resource "aws_iam_role" "worker_role" {
+  name = "resqgrid-worker-role-${var.environment}"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Role        = "Background-Worker"
+    Project     = "ResQGrid"
+    Environment = var.environment
+  }
 }
 
-output "role_arn" {
-  value = aws_iam_role.ec2_role.arn
+# One Scoped Policy for Worker Role: SQS Consumer, ML Services, S3 Reads
+resource "aws_iam_policy" "worker_policy" {
+  name        = "resqgrid-worker-policy-${var.environment}"
+  description = "Least privilege permissions for background worker: SQS consume and AWS AI analysis only"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      # SQS Consumer Access (Receive & Delete, DLQ Routing)
+      {
+        Sid    = "SQSConsumerOperations"
+        Effect = "Allow"
+        Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes",
+          "sqs:ChangeMessageVisibility"
+        ]
+        Resource = [
+          var.sqs_queue_arn,
+          var.sqs_dlq_arn
+        ]
+      },
+      # S3 Read Evidence Photos
+      {
+        Sid    = "S3EvidenceInspection"
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject"
+        ]
+        Resource = [
+          "${var.evidence_bucket_arn}/*"
+        ]
+      },
+      # AWS Rekognition - Image Hazard Detection (Emergency Verification)
+      {
+        Sid    = "RekognitionDisasterImageAnalysis"
+        Effect = "Allow"
+        Action = [
+          "rekognition:DetectLabels",
+          "rekognition:DetectModerationLabels"
+        ]
+        Resource = "*"
+      },
+      # AWS Translate - Multilingual Citizen Report Translation (Hindi/Marathi to English)
+      {
+        Sid    = "TranslateCitizenReports"
+        Effect = "Allow"
+        Action = [
+          "translate:TranslateText"
+        ]
+        Resource = "*"
+      },
+      # AWS Comprehend - Emergency Sentiment & Urgency Extraction
+      {
+        Sid    = "ComprehendUrgencyAnalysis"
+        Effect = "Allow"
+        Action = [
+          "comprehend:DetectSentiment",
+          "comprehend:DetectKeyPhrases",
+          "comprehend:DetectEntities"
+        ]
+        Resource = "*"
+      },
+      # CloudWatch Logs & Metrics
+      {
+        Sid    = "WorkerLogs"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "cloudwatch:PutMetricData"
+        ]
+        Resource = "*"
+      },
+      # SSM Parameter Store Secrets Read
+      {
+        Sid    = "SSMWorkerSecretsAccess"
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters"
+        ]
+        Resource = "arn:aws:ssm:*:*:parameter/resqgrid/*"
+      }
+    ]
+  })
 }
 
+resource "aws_iam_role_policy_attachment" "attach_worker_policy" {
+  role       = aws_iam_role.worker_role.name
+  policy_arn = aws_iam_policy.worker_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "attach_worker_ssm_core" {
+  role       = aws_iam_role.worker_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "worker_profile" {
+  name = "resqgrid-worker-profile-${var.environment}"
+  role = aws_iam_role.worker_role.name
+}
+
+output "api_instance_profile_name" {
+  value = aws_iam_instance_profile.api_profile.name
+}
+
+output "worker_instance_profile_name" {
+  value = aws_iam_instance_profile.worker_profile.name
+}
+
+output "api_role_arn" {
+  value = aws_iam_role.api_role.arn
+}
+
+output "worker_role_arn" {
+  value = aws_iam_role.worker_role.arn
+}

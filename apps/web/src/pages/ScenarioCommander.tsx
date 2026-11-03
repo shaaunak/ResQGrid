@@ -27,7 +27,7 @@ export const ScenarioCommander: React.FC = () => {
   const [scenarioName, setScenarioName] = useState('Mumbai Urban Flood');
   const [incidentCount, setIncidentCount] = useState<number>(35);
   const [randomSeed, setRandomSeed] = useState<number>(42);
-  const [monteCarloSeeds, setMonteCarloSeeds] = useState<number>(10);
+  const [monteCarloSeeds, setMonteCarloSeeds] = useState<number>(30); // At least 30 seeds default for rigorous statistical power
   const [viewMode, setViewMode] = useState<'3D' | 'CHARTS'>('CHARTS');
 
   const [comparisonResult, setComparisonResult] = useState<any>(null);

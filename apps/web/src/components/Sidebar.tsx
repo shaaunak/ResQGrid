@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Radio,
+  Server,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { UserRole } from '../types';
@@ -31,6 +32,7 @@ export const Sidebar: React.FC = () => {
   const allNavItems = [
     { to: '/', label: 'Overview', icon: LayoutDashboard, roles: ['CITIZEN', 'RESPONDER', 'COORDINATOR', 'OPERATOR', 'ADMIN'] },
     { to: '/command', label: 'Command Center', icon: MapPin, roles: ['COORDINATOR', 'OPERATOR', 'ADMIN'] },
+    { to: '/mission-trace', label: 'Mission Trace', icon: Radio, roles: ['OPERATOR', 'ADMIN'] },
     { to: '/citizen', label: 'Citizen Portal', icon: Shield, roles: ['CITIZEN', 'OPERATOR', 'ADMIN'] },
     { to: '/track', label: 'Track Incident', icon: Search, roles: ['CITIZEN', 'RESPONDER', 'COORDINATOR', 'OPERATOR', 'ADMIN'] },
     { to: '/responder', label: 'Field Responder', icon: Truck, roles: ['RESPONDER', 'OPERATOR', 'ADMIN'] },
@@ -39,7 +41,8 @@ export const Sidebar: React.FC = () => {
     { to: '/analytics', label: 'Operational KPIs', icon: Activity, roles: ['COORDINATOR', 'OPERATOR', 'ADMIN'] },
     { to: '/evidence', label: 'Project Evidence', icon: FileCheck2, roles: ['OPERATOR', 'ADMIN', 'COORDINATOR'] },
     { to: '/audit', label: 'Audit Trail', icon: ScrollText, roles: ['OPERATOR', 'ADMIN'] },
-    { to: '/health', label: 'Cloud & Health', icon: FileText, roles: ['OPERATOR', 'ADMIN'] },
+    { to: '/health', label: 'Cloud & Health', icon: Server, roles: ['OPERATOR', 'ADMIN'] },
+    { to: '/docs', label: 'Architecture & Docs', icon: FileText, roles: ['OPERATOR', 'ADMIN', 'COORDINATOR', 'RESPONDER', 'CITIZEN'] },
   ];
 
   const currentRole = role || 'OPERATOR';
@@ -47,7 +50,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`h-[calc(100vh-3.5rem)] sticky top-14 bg-rq-surface border-r border-rq-border flex flex-col justify-between transition-all duration-200 z-20 font-sans select-none flex-shrink-0 ${
+      className={`h-[calc(100vh-3.5rem)] sticky top-14 bg-rq-surface border-r border-rq-border hidden md:flex flex-col justify-between transition-all duration-200 z-20 font-sans select-none flex-shrink-0 ${
         collapsed ? 'w-16' : 'w-56'
       }`}
     >

@@ -1,0 +1,5321 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "city": "Mumbai",
+    "study_areas": [
+      "Kurla",
+      "BKC",
+      "Dadar-Hindmata",
+      "Dharavi",
+      "Andheri"
+    ],
+    "total_buildings": 136,
+    "source": "OpenStreetMap extract / ResQGrid High-Fidelity Geography Engine"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-001",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.878246,
+              19.067887
+            ],
+            [
+              72.878754,
+              19.067887
+            ],
+            [
+              72.878754,
+              19.068313
+            ],
+            [
+              72.878246,
+              19.068313
+            ],
+            [
+              72.878246,
+              19.067887
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 1",
+        "sector": "Kurla",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-002",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.881185,
+              19.066988
+            ],
+            [
+              72.881805,
+              19.066988
+            ],
+            [
+              72.881805,
+              19.067411
+            ],
+            [
+              72.881185,
+              19.067411
+            ],
+            [
+              72.881185,
+              19.066988
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 2",
+        "sector": "Kurla",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-003",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.882822,
+              19.067467
+            ],
+            [
+              72.883471,
+              19.067467
+            ],
+            [
+              72.883471,
+              19.068017
+            ],
+            [
+              72.882822,
+              19.068017
+            ],
+            [
+              72.882822,
+              19.067467
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 3",
+        "sector": "Kurla",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-004",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.884851,
+              19.067558
+            ],
+            [
+              72.885438,
+              19.067558
+            ],
+            [
+              72.885438,
+              19.067988
+            ],
+            [
+              72.884851,
+              19.067988
+            ],
+            [
+              72.884851,
+              19.067558
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 4",
+        "sector": "Kurla",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-005",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.88817,
+              19.066971
+            ],
+            [
+              72.888623,
+              19.066971
+            ],
+            [
+              72.888623,
+              19.06739
+            ],
+            [
+              72.88817,
+              19.06739
+            ],
+            [
+              72.88817,
+              19.066971
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 5",
+        "sector": "Kurla",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-006",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.878741,
+              19.06883
+            ],
+            [
+              72.879154,
+              19.06883
+            ],
+            [
+              72.879154,
+              19.06938
+            ],
+            [
+              72.878741,
+              19.06938
+            ],
+            [
+              72.878741,
+              19.06883
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 6",
+        "sector": "Kurla",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-007",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.880167,
+              19.068896
+            ],
+            [
+              72.880725,
+              19.068896
+            ],
+            [
+              72.880725,
+              19.06933
+            ],
+            [
+              72.880167,
+              19.06933
+            ],
+            [
+              72.880167,
+              19.068896
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 7",
+        "sector": "Kurla",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-008",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.882649,
+              19.069467
+            ],
+            [
+              72.88329,
+              19.069467
+            ],
+            [
+              72.88329,
+              19.069882
+            ],
+            [
+              72.882649,
+              19.069882
+            ],
+            [
+              72.882649,
+              19.069467
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 8",
+        "sector": "Kurla",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-009",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.885922,
+              19.068492
+            ],
+            [
+              72.886557,
+              19.068492
+            ],
+            [
+              72.886557,
+              19.069042
+            ],
+            [
+              72.885922,
+              19.069042
+            ],
+            [
+              72.885922,
+              19.068492
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 9",
+        "sector": "Kurla",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-010",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.88802,
+              19.069441
+            ],
+            [
+              72.888563,
+              19.069441
+            ],
+            [
+              72.888563,
+              19.069878
+            ],
+            [
+              72.88802,
+              19.069878
+            ],
+            [
+              72.88802,
+              19.069441
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 10",
+        "sector": "Kurla",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-011",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.877708,
+              19.070332
+            ],
+            [
+              72.8781,
+              19.070332
+            ],
+            [
+              72.8781,
+              19.070744
+            ],
+            [
+              72.877708,
+              19.070744
+            ],
+            [
+              72.877708,
+              19.070332
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 11",
+        "sector": "Kurla",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-012",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.880674,
+              19.071159
+            ],
+            [
+              72.881146,
+              19.071159
+            ],
+            [
+              72.881146,
+              19.071708
+            ],
+            [
+              72.880674,
+              19.071708
+            ],
+            [
+              72.880674,
+              19.071159
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 12",
+        "sector": "Kurla",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-013",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.883594,
+              19.070308
+            ],
+            [
+              72.884193,
+              19.070308
+            ],
+            [
+              72.884193,
+              19.070748
+            ],
+            [
+              72.883594,
+              19.070748
+            ],
+            [
+              72.883594,
+              19.070308
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 13",
+        "sector": "Kurla",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-014",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.885212,
+              19.070879
+            ],
+            [
+              72.885862,
+              19.070879
+            ],
+            [
+              72.885862,
+              19.071287
+            ],
+            [
+              72.885212,
+              19.071287
+            ],
+            [
+              72.885212,
+              19.070879
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 14",
+        "sector": "Kurla",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-015",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.887243,
+              19.070824
+            ],
+            [
+              72.887853,
+              19.070824
+            ],
+            [
+              72.887853,
+              19.071373
+            ],
+            [
+              72.887243,
+              19.071373
+            ],
+            [
+              72.887243,
+              19.070824
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 15",
+        "sector": "Kurla",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-016",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.878601,
+              19.072795
+            ],
+            [
+              72.879093,
+              19.072795
+            ],
+            [
+              72.879093,
+              19.073239
+            ],
+            [
+              72.878601,
+              19.073239
+            ],
+            [
+              72.878601,
+              19.072795
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 16",
+        "sector": "Kurla",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-017",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.881155,
+              19.072229
+            ],
+            [
+              72.881526,
+              19.072229
+            ],
+            [
+              72.881526,
+              19.072632
+            ],
+            [
+              72.881155,
+              19.072632
+            ],
+            [
+              72.881155,
+              19.072229
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 17",
+        "sector": "Kurla",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-018",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.882576,
+              19.07218
+            ],
+            [
+              72.883102,
+              19.07218
+            ],
+            [
+              72.883102,
+              19.072729
+            ],
+            [
+              72.882576,
+              19.072729
+            ],
+            [
+              72.882576,
+              19.07218
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 18",
+        "sector": "Kurla",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-019",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.885064,
+              19.072779
+            ],
+            [
+              72.885692,
+              19.072779
+            ],
+            [
+              72.885692,
+              19.073227
+            ],
+            [
+              72.885064,
+              19.073227
+            ],
+            [
+              72.885064,
+              19.072779
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 19",
+        "sector": "Kurla",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-020",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.888321,
+              19.0719
+            ],
+            [
+              72.888966,
+              19.0719
+            ],
+            [
+              72.888966,
+              19.0723
+            ],
+            [
+              72.888321,
+              19.0723
+            ],
+            [
+              72.888321,
+              19.0719
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 20",
+        "sector": "Kurla",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-021",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.878347,
+              19.074118
+            ],
+            [
+              72.87892,
+              19.074118
+            ],
+            [
+              72.87892,
+              19.074666
+            ],
+            [
+              72.878347,
+              19.074666
+            ],
+            [
+              72.878347,
+              19.074118
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 21",
+        "sector": "Kurla",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-022",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.880086,
+              19.073651
+            ],
+            [
+              72.880519,
+              19.073651
+            ],
+            [
+              72.880519,
+              19.074102
+            ],
+            [
+              72.880086,
+              19.074102
+            ],
+            [
+              72.880086,
+              19.073651
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 22",
+        "sector": "Kurla",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-023",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.883104,
+              19.074568
+            ],
+            [
+              72.883536,
+              19.074568
+            ],
+            [
+              72.883536,
+              19.074964
+            ],
+            [
+              72.883104,
+              19.074964
+            ],
+            [
+              72.883104,
+              19.074568
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 23",
+        "sector": "Kurla",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-024",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.886006,
+              19.073582
+            ],
+            [
+              72.886578,
+              19.073582
+            ],
+            [
+              72.886578,
+              19.07413
+            ],
+            [
+              72.886006,
+              19.07413
+            ],
+            [
+              72.886006,
+              19.073582
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 24",
+        "sector": "Kurla",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-025",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.887605,
+              19.074198
+            ],
+            [
+              72.88825,
+              19.074198
+            ],
+            [
+              72.88825,
+              19.074652
+            ],
+            [
+              72.887605,
+              19.074652
+            ],
+            [
+              72.887605,
+              19.074198
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 25",
+        "sector": "Kurla",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-026",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.877661,
+              19.075239
+            ],
+            [
+              72.878289,
+              19.075239
+            ],
+            [
+              72.878289,
+              19.075631
+            ],
+            [
+              72.877661,
+              19.075631
+            ],
+            [
+              72.877661,
+              19.075239
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 26",
+        "sector": "Kurla",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-027",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.880992,
+              19.076082
+            ],
+            [
+              72.881519,
+              19.076082
+            ],
+            [
+              72.881519,
+              19.076629
+            ],
+            [
+              72.880992,
+              19.076629
+            ],
+            [
+              72.880992,
+              19.076082
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 27",
+        "sector": "Kurla",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-kurla-028",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.883548,
+              19.075527
+            ],
+            [
+              72.88392,
+              19.075527
+            ],
+            [
+              72.88392,
+              19.075985
+            ],
+            [
+              72.883548,
+              19.075985
+            ],
+            [
+              72.883548,
+              19.075527
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Kurla Sector Block 28",
+        "sector": "Kurla",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-029",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859755,
+              19.059306
+            ],
+            [
+              72.860245,
+              19.059306
+            ],
+            [
+              72.860245,
+              19.059694
+            ],
+            [
+              72.859755,
+              19.059694
+            ],
+            [
+              72.859755,
+              19.059306
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 29",
+        "sector": "BKC",
+        "building:levels": 20,
+        "height": 60.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-030",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86349,
+              19.058326
+            ],
+            [
+              72.8641,
+              19.058326
+            ],
+            [
+              72.8641,
+              19.058873
+            ],
+            [
+              72.86349,
+              19.058873
+            ],
+            [
+              72.86349,
+              19.058326
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 30",
+        "sector": "BKC",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-031",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865922,
+              19.058912
+            ],
+            [
+              72.866572,
+              19.058912
+            ],
+            [
+              72.866572,
+              19.059372
+            ],
+            [
+              72.865922,
+              19.059372
+            ],
+            [
+              72.865922,
+              19.058912
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 31",
+        "sector": "BKC",
+        "building:levels": 8,
+        "height": 24.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-032",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.868745,
+              19.058981
+            ],
+            [
+              72.869344,
+              19.058981
+            ],
+            [
+              72.869344,
+              19.059366
+            ],
+            [
+              72.868745,
+              19.059366
+            ],
+            [
+              72.868745,
+              19.058981
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 32",
+        "sector": "BKC",
+        "building:levels": 12,
+        "height": 36.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-033",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.87286,
+              19.058308
+            ],
+            [
+              72.873333,
+              19.058308
+            ],
+            [
+              72.873333,
+              19.058853
+            ],
+            [
+              72.87286,
+              19.058853
+            ],
+            [
+              72.87286,
+              19.058308
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 33",
+        "sector": "BKC",
+        "building:levels": 16,
+        "height": 48.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-034",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860252,
+              19.061006
+            ],
+            [
+              72.860643,
+              19.061006
+            ],
+            [
+              72.860643,
+              19.06147
+            ],
+            [
+              72.860252,
+              19.06147
+            ],
+            [
+              72.860252,
+              19.061006
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 34",
+        "sector": "BKC",
+        "building:levels": 20,
+        "height": 60.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-035",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.862475,
+              19.061056
+            ],
+            [
+              72.863017,
+              19.061056
+            ],
+            [
+              72.863017,
+              19.061437
+            ],
+            [
+              72.862475,
+              19.061437
+            ],
+            [
+              72.862475,
+              19.061056
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 35",
+        "sector": "BKC",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-036",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865752,
+              19.061535
+            ],
+            [
+              72.866387,
+              19.061535
+            ],
+            [
+              72.866387,
+              19.06208
+            ],
+            [
+              72.865752,
+              19.06208
+            ],
+            [
+              72.865752,
+              19.061535
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 36",
+        "sector": "BKC",
+        "building:levels": 8,
+        "height": 24.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-037",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.869819,
+              19.060667
+            ],
+            [
+              72.87046,
+              19.060667
+            ],
+            [
+              72.87046,
+              19.061134
+            ],
+            [
+              72.869819,
+              19.061134
+            ],
+            [
+              72.869819,
+              19.060667
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 37",
+        "sector": "BKC",
+        "building:levels": 12,
+        "height": 36.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-038",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.872712,
+              19.061605
+            ],
+            [
+              72.873271,
+              19.061605
+            ],
+            [
+              72.873271,
+              19.061981
+            ],
+            [
+              72.872712,
+              19.061981
+            ],
+            [
+              72.872712,
+              19.061605
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 38",
+        "sector": "BKC",
+        "building:levels": 16,
+        "height": 48.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-039",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859197,
+              19.063132
+            ],
+            [
+              72.859611,
+              19.063132
+            ],
+            [
+              72.859611,
+              19.063677
+            ],
+            [
+              72.859197,
+              19.063677
+            ],
+            [
+              72.859197,
+              19.063132
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 39",
+        "sector": "BKC",
+        "building:levels": 20,
+        "height": 60.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-040",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.862984,
+              19.064065
+            ],
+            [
+              72.863436,
+              19.064065
+            ],
+            [
+              72.863436,
+              19.064535
+            ],
+            [
+              72.862984,
+              19.064535
+            ],
+            [
+              72.862984,
+              19.064065
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 40",
+        "sector": "BKC",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-041",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.866701,
+              19.063208
+            ],
+            [
+              72.867286,
+              19.063208
+            ],
+            [
+              72.867286,
+              19.063581
+            ],
+            [
+              72.866701,
+              19.063581
+            ],
+            [
+              72.866701,
+              19.063208
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 41",
+        "sector": "BKC",
+        "building:levels": 8,
+        "height": 24.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-042",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.869113,
+              19.063678
+            ],
+            [
+              72.869761,
+              19.063678
+            ],
+            [
+              72.869761,
+              19.064221
+            ],
+            [
+              72.869113,
+              19.064221
+            ],
+            [
+              72.869113,
+              19.063678
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 42",
+        "sector": "BKC",
+        "building:levels": 12,
+        "height": 36.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-043",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.871938,
+              19.063729
+            ],
+            [
+              72.872558,
+              19.063729
+            ],
+            [
+              72.872558,
+              19.064202
+            ],
+            [
+              72.871938,
+              19.064202
+            ],
+            [
+              72.871938,
+              19.063729
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 43",
+        "sector": "BKC",
+        "building:levels": 16,
+        "height": 48.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-044",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860092,
+              19.066433
+            ],
+            [
+              72.860602,
+              19.066433
+            ],
+            [
+              72.860602,
+              19.066802
+            ],
+            [
+              72.860092,
+              19.066802
+            ],
+            [
+              72.860092,
+              19.066433
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 44",
+        "sector": "BKC",
+        "building:levels": 20,
+        "height": 60.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-045",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.863465,
+              19.065759
+            ],
+            [
+              72.863816,
+              19.065759
+            ],
+            [
+              72.863816,
+              19.066301
+            ],
+            [
+              72.863465,
+              19.066301
+            ],
+            [
+              72.863465,
+              19.065759
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 45",
+        "sector": "BKC",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-046",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865685,
+              19.065816
+            ],
+            [
+              72.866193,
+              19.065816
+            ],
+            [
+              72.866193,
+              19.066292
+            ],
+            [
+              72.865685,
+              19.066292
+            ],
+            [
+              72.865685,
+              19.065816
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 46",
+        "sector": "BKC",
+        "building:levels": 8,
+        "height": 24.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-047",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.868969,
+              19.066421
+            ],
+            [
+              72.869588,
+              19.066421
+            ],
+            [
+              72.869588,
+              19.066785
+            ],
+            [
+              72.868969,
+              19.066785
+            ],
+            [
+              72.868969,
+              19.066421
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 47",
+        "sector": "BKC",
+        "building:levels": 12,
+        "height": 36.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-048",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.873019,
+              19.06543
+            ],
+            [
+              72.873668,
+              19.06543
+            ],
+            [
+              72.873668,
+              19.065971
+            ],
+            [
+              72.873019,
+              19.065971
+            ],
+            [
+              72.873019,
+              19.06543
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 48",
+        "sector": "BKC",
+        "building:levels": 16,
+        "height": 48.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-049",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85984,
+              19.068486
+            ],
+            [
+              72.860427,
+              19.068486
+            ],
+            [
+              72.860427,
+              19.068965
+            ],
+            [
+              72.85984,
+              19.068965
+            ],
+            [
+              72.85984,
+              19.068486
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 49",
+        "sector": "BKC",
+        "building:levels": 20,
+        "height": 60.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-050",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.862376,
+              19.06803
+            ],
+            [
+              72.86283,
+              19.06803
+            ],
+            [
+              72.86283,
+              19.06839
+            ],
+            [
+              72.862376,
+              19.06839
+            ],
+            [
+              72.862376,
+              19.06803
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 50",
+        "sector": "BKC",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-051",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.866215,
+              19.06883
+            ],
+            [
+              72.866626,
+              19.06883
+            ],
+            [
+              72.866626,
+              19.06937
+            ],
+            [
+              72.866215,
+              19.06937
+            ],
+            [
+              72.866215,
+              19.06883
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 51",
+        "sector": "BKC",
+        "building:levels": 8,
+        "height": 24.0,
+        "building": "infrastructure",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-bkc-052",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.869913,
+              19.067949
+            ],
+            [
+              72.870471,
+              19.067949
+            ],
+            [
+              72.870471,
+              19.068431
+            ],
+            [
+              72.869913,
+              19.068431
+            ],
+            [
+              72.869913,
+              19.067949
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "BKC Sector Block 52",
+        "sector": "BKC",
+        "building:levels": 12,
+        "height": 36.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-053",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.84248,
+              19.013122
+            ],
+            [
+              72.84312,
+              19.013122
+            ],
+            [
+              72.84312,
+              19.013478
+            ],
+            [
+              72.84248,
+              19.013478
+            ],
+            [
+              72.84248,
+              19.013122
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 53",
+        "sector": "Dadar",
+        "building:levels": 7,
+        "height": 21.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-054",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.845077,
+              19.01213
+            ],
+            [
+              72.845713,
+              19.01213
+            ],
+            [
+              72.845713,
+              19.012669
+            ],
+            [
+              72.845077,
+              19.012669
+            ],
+            [
+              72.845077,
+              19.01213
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 54",
+        "sector": "Dadar",
+        "building:levels": 10,
+        "height": 30.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-055",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.846375,
+              19.012699
+            ],
+            [
+              72.846919,
+              19.012699
+            ],
+            [
+              72.846919,
+              19.013184
+            ],
+            [
+              72.846375,
+              19.013184
+            ],
+            [
+              72.846375,
+              19.012699
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 55",
+        "sector": "Dadar",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-056",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.848048,
+              19.012797
+            ],
+            [
+              72.848441,
+              19.012797
+            ],
+            [
+              72.848441,
+              19.013149
+            ],
+            [
+              72.848048,
+              19.013149
+            ],
+            [
+              72.848048,
+              19.012797
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 56",
+        "sector": "Dadar",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-057",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850861,
+              19.012112
+            ],
+            [
+              72.851332,
+              19.012112
+            ],
+            [
+              72.851332,
+              19.012649
+            ],
+            [
+              72.850861,
+              19.012649
+            ],
+            [
+              72.850861,
+              19.012112
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 57",
+        "sector": "Dadar",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-058",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.842949,
+              19.014061
+            ],
+            [
+              72.843546,
+              19.014061
+            ],
+            [
+              72.843546,
+              19.014549
+            ],
+            [
+              72.842949,
+              19.014549
+            ],
+            [
+              72.842949,
+              19.014061
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 58",
+        "sector": "Dadar",
+        "building:levels": 7,
+        "height": 21.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-059",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.844021,
+              19.014139
+            ],
+            [
+              72.844671,
+              19.014139
+            ],
+            [
+              72.844671,
+              19.014487
+            ],
+            [
+              72.844021,
+              19.014487
+            ],
+            [
+              72.844021,
+              19.014139
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 59",
+        "sector": "Dadar",
+        "building:levels": 10,
+        "height": 30.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-060",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.846164,
+              19.014607
+            ],
+            [
+              72.846775,
+              19.014607
+            ],
+            [
+              72.846775,
+              19.015143
+            ],
+            [
+              72.846164,
+              19.015143
+            ],
+            [
+              72.846164,
+              19.014607
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 60",
+        "sector": "Dadar",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-061",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.849093,
+              19.013722
+            ],
+            [
+              72.849585,
+              19.013722
+            ],
+            [
+              72.849585,
+              19.014212
+            ],
+            [
+              72.849093,
+              19.014212
+            ],
+            [
+              72.849093,
+              19.013722
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 61",
+        "sector": "Dadar",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-062",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850807,
+              19.014688
+            ],
+            [
+              72.851176,
+              19.014688
+            ],
+            [
+              72.851176,
+              19.015032
+            ],
+            [
+              72.850807,
+              19.015032
+            ],
+            [
+              72.850807,
+              19.014688
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 62",
+        "sector": "Dadar",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-063",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.841941,
+              19.015471
+            ],
+            [
+              72.842466,
+              19.015471
+            ],
+            [
+              72.842466,
+              19.016005
+            ],
+            [
+              72.841941,
+              19.016005
+            ],
+            [
+              72.841941,
+              19.015471
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 63",
+        "sector": "Dadar",
+        "building:levels": 7,
+        "height": 21.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-064",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.844496,
+              19.016387
+            ],
+            [
+              72.845124,
+              19.016387
+            ],
+            [
+              72.845124,
+              19.01688
+            ],
+            [
+              72.844496,
+              19.01688
+            ],
+            [
+              72.844496,
+              19.016387
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 64",
+        "sector": "Dadar",
+        "building:levels": 10,
+        "height": 30.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-065",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.847071,
+              19.015558
+            ],
+            [
+              72.847716,
+              19.015558
+            ],
+            [
+              72.847716,
+              19.015898
+            ],
+            [
+              72.847071,
+              19.015898
+            ],
+            [
+              72.847071,
+              19.015558
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 65",
+        "sector": "Dadar",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-066",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.84835,
+              19.016017
+            ],
+            [
+              72.848924,
+              19.016017
+            ],
+            [
+              72.848924,
+              19.01655
+            ],
+            [
+              72.84835,
+              19.01655
+            ],
+            [
+              72.84835,
+              19.016017
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 66",
+        "sector": "Dadar",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-067",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850031,
+              19.016051
+            ],
+            [
+              72.850466,
+              19.016051
+            ],
+            [
+              72.850466,
+              19.016547
+            ],
+            [
+              72.850031,
+              19.016547
+            ],
+            [
+              72.850031,
+              19.016051
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 67",
+        "sector": "Dadar",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-068",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.842932,
+              19.01805
+            ],
+            [
+              72.843362,
+              19.01805
+            ],
+            [
+              72.843362,
+              19.018385
+            ],
+            [
+              72.842932,
+              19.018385
+            ],
+            [
+              72.842932,
+              19.01805
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 68",
+        "sector": "Dadar",
+        "building:levels": 7,
+        "height": 21.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-069",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.844955,
+              19.017365
+            ],
+            [
+              72.845526,
+              19.017365
+            ],
+            [
+              72.845526,
+              19.017896
+            ],
+            [
+              72.844955,
+              19.017896
+            ],
+            [
+              72.844955,
+              19.017365
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 69",
+        "sector": "Dadar",
+        "building:levels": 10,
+        "height": 30.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-070",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.846017,
+              19.017405
+            ],
+            [
+              72.846662,
+              19.017405
+            ],
+            [
+              72.846662,
+              19.017903
+            ],
+            [
+              72.846017,
+              19.017903
+            ],
+            [
+              72.846017,
+              19.017405
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 70",
+        "sector": "Dadar",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-071",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.848164,
+              19.018037
+            ],
+            [
+              72.848793,
+              19.018037
+            ],
+            [
+              72.848793,
+              19.018369
+            ],
+            [
+              72.848164,
+              19.018369
+            ],
+            [
+              72.848164,
+              19.018037
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 71",
+        "sector": "Dadar",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-072",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85108,
+              19.017035
+            ],
+            [
+              72.851608,
+              19.017035
+            ],
+            [
+              72.851608,
+              19.017565
+            ],
+            [
+              72.85108,
+              19.017565
+            ],
+            [
+              72.85108,
+              19.017035
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 72",
+        "sector": "Dadar",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-073",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.842747,
+              19.019342
+            ],
+            [
+              72.84312,
+              19.019342
+            ],
+            [
+              72.84312,
+              19.019843
+            ],
+            [
+              72.842747,
+              19.019843
+            ],
+            [
+              72.842747,
+              19.019342
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 73",
+        "sector": "Dadar",
+        "building:levels": 7,
+        "height": 21.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-074",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.843958,
+              19.018913
+            ],
+            [
+              72.844447,
+              19.018913
+            ],
+            [
+              72.844447,
+              19.01924
+            ],
+            [
+              72.843958,
+              19.01924
+            ],
+            [
+              72.843958,
+              19.018913
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 74",
+        "sector": "Dadar",
+        "building:levels": 10,
+        "height": 30.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-075",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.846516,
+              19.019702
+            ],
+            [
+              72.847125,
+              19.019702
+            ],
+            [
+              72.847125,
+              19.020231
+            ],
+            [
+              72.846516,
+              19.020231
+            ],
+            [
+              72.846516,
+              19.019702
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 75",
+        "sector": "Dadar",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-076",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.849067,
+              19.018805
+            ],
+            [
+              72.849717,
+              19.018805
+            ],
+            [
+              72.849717,
+              19.019308
+            ],
+            [
+              72.849067,
+              19.019308
+            ],
+            [
+              72.849067,
+              19.018805
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 76",
+        "sector": "Dadar",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-077",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850327,
+              19.019463
+            ],
+            [
+              72.850927,
+              19.019463
+            ],
+            [
+              72.850927,
+              19.019786
+            ],
+            [
+              72.850327,
+              19.019786
+            ],
+            [
+              72.850327,
+              19.019463
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 77",
+        "sector": "Dadar",
+        "building:levels": 5,
+        "height": 15.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dadar-078",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.842038,
+              19.020372
+            ],
+            [
+              72.842512,
+              19.020372
+            ],
+            [
+              72.842512,
+              19.020898
+            ],
+            [
+              72.842038,
+              19.020898
+            ],
+            [
+              72.842038,
+              19.020372
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dadar Sector Block 78",
+        "sector": "Dadar",
+        "building:levels": 7,
+        "height": 21.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-079",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850505,
+              19.038647
+            ],
+            [
+              72.850895,
+              19.038647
+            ],
+            [
+              72.850895,
+              19.039153
+            ],
+            [
+              72.850505,
+              19.039153
+            ],
+            [
+              72.850505,
+              19.038647
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 79",
+        "sector": "Dharavi",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-080",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.853424,
+              19.03784
+            ],
+            [
+              72.853966,
+              19.03784
+            ],
+            [
+              72.853966,
+              19.038159
+            ],
+            [
+              72.853424,
+              19.038159
+            ],
+            [
+              72.853424,
+              19.03784
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 80",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-081",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.855029,
+              19.038279
+            ],
+            [
+              72.855664,
+              19.038279
+            ],
+            [
+              72.855664,
+              19.038804
+            ],
+            [
+              72.855029,
+              19.038804
+            ],
+            [
+              72.855029,
+              19.038279
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 81",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-082",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.857024,
+              19.038319
+            ],
+            [
+              72.857665,
+              19.038319
+            ],
+            [
+              72.857665,
+              19.038827
+            ],
+            [
+              72.857024,
+              19.038827
+            ],
+            [
+              72.857024,
+              19.038319
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 82",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-083",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860316,
+              19.037823
+            ],
+            [
+              72.860877,
+              19.037823
+            ],
+            [
+              72.860877,
+              19.038138
+            ],
+            [
+              72.860316,
+              19.038138
+            ],
+            [
+              72.860316,
+              19.037823
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 83",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-084",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85094,
+              19.039406
+            ],
+            [
+              72.851355,
+              19.039406
+            ],
+            [
+              72.851355,
+              19.039928
+            ],
+            [
+              72.85094,
+              19.039928
+            ],
+            [
+              72.85094,
+              19.039406
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 84",
+        "sector": "Dharavi",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-085",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.852421,
+              19.03942
+            ],
+            [
+              72.852871,
+              19.03942
+            ],
+            [
+              72.852871,
+              19.03993
+            ],
+            [
+              72.852421,
+              19.03993
+            ],
+            [
+              72.852421,
+              19.03942
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 85",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-086",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.854877,
+              19.040081
+            ],
+            [
+              72.855462,
+              19.040081
+            ],
+            [
+              72.855462,
+              19.040392
+            ],
+            [
+              72.854877,
+              19.040392
+            ],
+            [
+              72.854877,
+              19.040081
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 86",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-087",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.858115,
+              19.039068
+            ],
+            [
+              72.858763,
+              19.039068
+            ],
+            [
+              72.858763,
+              19.039589
+            ],
+            [
+              72.858115,
+              19.039589
+            ],
+            [
+              72.858115,
+              19.039068
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 87",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-088",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860181,
+              19.039965
+            ],
+            [
+              72.860802,
+              19.039965
+            ],
+            [
+              72.860802,
+              19.040478
+            ],
+            [
+              72.860181,
+              19.040478
+            ],
+            [
+              72.860181,
+              19.039965
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 88",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-089",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.849848,
+              19.040709
+            ],
+            [
+              72.850359,
+              19.040709
+            ],
+            [
+              72.850359,
+              19.041015
+            ],
+            [
+              72.849848,
+              19.041015
+            ],
+            [
+              72.849848,
+              19.040709
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 89",
+        "sector": "Dharavi",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-090",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.852934,
+              19.041498
+            ],
+            [
+              72.853286,
+              19.041498
+            ],
+            [
+              72.853286,
+              19.042017
+            ],
+            [
+              72.852934,
+              19.042017
+            ],
+            [
+              72.852934,
+              19.041498
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 90",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-091",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85584,
+              19.040594
+            ],
+            [
+              72.856347,
+              19.040594
+            ],
+            [
+              72.856347,
+              19.041109
+            ],
+            [
+              72.85584,
+              19.041109
+            ],
+            [
+              72.85584,
+              19.040594
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 91",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-092",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.857428,
+              19.041256
+            ],
+            [
+              72.858046,
+              19.041256
+            ],
+            [
+              72.858046,
+              19.041558
+            ],
+            [
+              72.857428,
+              19.041558
+            ],
+            [
+              72.857428,
+              19.041256
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 92",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-093",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859424,
+              19.041164
+            ],
+            [
+              72.860073,
+              19.041164
+            ],
+            [
+              72.860073,
+              19.041681
+            ],
+            [
+              72.859424,
+              19.041681
+            ],
+            [
+              72.859424,
+              19.041164
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 93",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-094",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850753,
+              19.042845
+            ],
+            [
+              72.851341,
+              19.042845
+            ],
+            [
+              72.851341,
+              19.043362
+            ],
+            [
+              72.850753,
+              19.043362
+            ],
+            [
+              72.850753,
+              19.042845
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 94",
+        "sector": "Dharavi",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-095",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.853313,
+              19.042365
+            ],
+            [
+              72.853768,
+              19.042365
+            ],
+            [
+              72.853768,
+              19.042667
+            ],
+            [
+              72.853313,
+              19.042667
+            ],
+            [
+              72.853313,
+              19.042365
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 95",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-096",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.854835,
+              19.042283
+            ],
+            [
+              72.855244,
+              19.042283
+            ],
+            [
+              72.855244,
+              19.042797
+            ],
+            [
+              72.854835,
+              19.042797
+            ],
+            [
+              72.854835,
+              19.042283
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 96",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-097",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.8573,
+              19.042829
+            ],
+            [
+              72.857856,
+              19.042829
+            ],
+            [
+              72.857856,
+              19.043348
+            ],
+            [
+              72.8573,
+              19.043348
+            ],
+            [
+              72.8573,
+              19.042829
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 97",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-098",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860523,
+              19.042033
+            ],
+            [
+              72.861164,
+              19.042033
+            ],
+            [
+              72.861164,
+              19.042339
+            ],
+            [
+              72.860523,
+              19.042339
+            ],
+            [
+              72.860523,
+              19.042033
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 98",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-099",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850516,
+              19.043984
+            ],
+            [
+              72.851152,
+              19.043984
+            ],
+            [
+              72.851152,
+              19.044496
+            ],
+            [
+              72.850516,
+              19.044496
+            ],
+            [
+              72.850516,
+              19.043984
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 99",
+        "sector": "Dharavi",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-100",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85223,
+              19.043464
+            ],
+            [
+              72.852775,
+              19.043464
+            ],
+            [
+              72.852775,
+              19.043984
+            ],
+            [
+              72.85223,
+              19.043984
+            ],
+            [
+              72.85223,
+              19.043464
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 100",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-101",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.855323,
+              19.044459
+            ],
+            [
+              72.855718,
+              19.044459
+            ],
+            [
+              72.855718,
+              19.044769
+            ],
+            [
+              72.855323,
+              19.044769
+            ],
+            [
+              72.855323,
+              19.044459
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 101",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-102",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.858257,
+              19.043449
+            ],
+            [
+              72.858727,
+              19.043449
+            ],
+            [
+              72.858727,
+              19.043959
+            ],
+            [
+              72.858257,
+              19.043959
+            ],
+            [
+              72.858257,
+              19.043449
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 102",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-103",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859829,
+              19.044011
+            ],
+            [
+              72.860426,
+              19.044011
+            ],
+            [
+              72.860426,
+              19.044534
+            ],
+            [
+              72.859829,
+              19.044534
+            ],
+            [
+              72.859829,
+              19.044011
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 103",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-104",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.84985,
+              19.044887
+            ],
+            [
+              72.8505,
+              19.044887
+            ],
+            [
+              72.8505,
+              19.045202
+            ],
+            [
+              72.84985,
+              19.045202
+            ],
+            [
+              72.84985,
+              19.044887
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 104",
+        "sector": "Dharavi",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-105",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85315,
+              19.045711
+            ],
+            [
+              72.853761,
+              19.045711
+            ],
+            [
+              72.853761,
+              19.046219
+            ],
+            [
+              72.85315,
+              19.046219
+            ],
+            [
+              72.85315,
+              19.045711
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 105",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-106",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.855687,
+              19.045103
+            ],
+            [
+              72.856181,
+              19.045103
+            ],
+            [
+              72.856181,
+              19.045628
+            ],
+            [
+              72.855687,
+              19.045628
+            ],
+            [
+              72.855687,
+              19.045103
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 106",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-107",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.857249,
+              19.045246
+            ],
+            [
+              72.857617,
+              19.045246
+            ],
+            [
+              72.857617,
+              19.045565
+            ],
+            [
+              72.857249,
+              19.045565
+            ],
+            [
+              72.857249,
+              19.045246
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 107",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-108",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859725,
+              19.045688
+            ],
+            [
+              72.860248,
+              19.045688
+            ],
+            [
+              72.860248,
+              19.046194
+            ],
+            [
+              72.859725,
+              19.046194
+            ],
+            [
+              72.859725,
+              19.045688
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 108",
+        "sector": "Dharavi",
+        "building:levels": 3,
+        "height": 9.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-109",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850953,
+              19.046905
+            ],
+            [
+              72.85158,
+              19.046905
+            ],
+            [
+              72.85158,
+              19.047431
+            ],
+            [
+              72.850953,
+              19.047431
+            ],
+            [
+              72.850953,
+              19.046905
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 109",
+        "sector": "Dharavi",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-dharavi-110",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.852901,
+              19.046927
+            ],
+            [
+              72.853547,
+              19.046927
+            ],
+            [
+              72.853547,
+              19.047251
+            ],
+            [
+              72.852901,
+              19.047251
+            ],
+            [
+              72.852901,
+              19.046927
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Dharavi Sector Block 110",
+        "sector": "Dharavi",
+        "building:levels": 2,
+        "height": 6.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-111",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.862412,
+              19.107848
+            ],
+            [
+              72.862988,
+              19.107848
+            ],
+            [
+              72.862988,
+              19.108352
+            ],
+            [
+              72.862412,
+              19.108352
+            ],
+            [
+              72.862412,
+              19.107848
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 111",
+        "sector": "Andheri",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-112",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865877,
+              19.106935
+            ],
+            [
+              72.866313,
+              19.106935
+            ],
+            [
+              72.866313,
+              19.107464
+            ],
+            [
+              72.865877,
+              19.107464
+            ],
+            [
+              72.865877,
+              19.106935
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 112",
+        "sector": "Andheri",
+        "building:levels": 8,
+        "height": 24.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-113",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.867932,
+              19.107578
+            ],
+            [
+              72.868361,
+              19.107578
+            ],
+            [
+              72.868361,
+              19.107906
+            ],
+            [
+              72.867932,
+              19.107906
+            ],
+            [
+              72.867932,
+              19.107578
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 113",
+        "sector": "Andheri",
+        "building:levels": 10,
+        "height": 30.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-114",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.870259,
+              19.107523
+            ],
+            [
+              72.87083,
+              19.107523
+            ],
+            [
+              72.87083,
+              19.108024
+            ],
+            [
+              72.870259,
+              19.108024
+            ],
+            [
+              72.870259,
+              19.107523
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 114",
+        "sector": "Andheri",
+        "building:levels": 14,
+        "height": 42.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-115",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.873874,
+              19.106915
+            ],
+            [
+              72.874519,
+              19.106915
+            ],
+            [
+              72.874519,
+              19.107445
+            ],
+            [
+              72.873874,
+              19.107445
+            ],
+            [
+              72.873874,
+              19.106915
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 115",
+        "sector": "Andheri",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-116",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.862833,
+              19.109273
+            ],
+            [
+              72.863462,
+              19.109273
+            ],
+            [
+              72.863462,
+              19.109604
+            ],
+            [
+              72.862833,
+              19.109604
+            ],
+            [
+              72.862833,
+              19.109273
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 116",
+        "sector": "Andheri",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-117",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864781,
+              19.109197
+            ],
+            [
+              72.86531,
+              19.109197
+            ],
+            [
+              72.86531,
+              19.109695
+            ],
+            [
+              72.864781,
+              19.109695
+            ],
+            [
+              72.864781,
+              19.109197
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 117",
+        "sector": "Andheri",
+        "building:levels": 8,
+        "height": 24.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-118",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.867782,
+              19.109742
+            ],
+            [
+              72.868157,
+              19.109742
+            ],
+            [
+              72.868157,
+              19.110274
+            ],
+            [
+              72.867782,
+              19.110274
+            ],
+            [
+              72.867782,
+              19.109742
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 118",
+        "sector": "Andheri",
+        "building:levels": 10,
+        "height": 30.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-119",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.871395,
+              19.108932
+            ],
+            [
+              72.871883,
+              19.108932
+            ],
+            [
+              72.871883,
+              19.109268
+            ],
+            [
+              72.871395,
+              19.109268
+            ],
+            [
+              72.871395,
+              19.108932
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 119",
+        "sector": "Andheri",
+        "building:levels": 14,
+        "height": 42.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-120",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.873787,
+              19.109745
+            ],
+            [
+              72.874395,
+              19.109745
+            ],
+            [
+              72.874395,
+              19.110241
+            ],
+            [
+              72.873787,
+              19.110241
+            ],
+            [
+              72.873787,
+              19.109745
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 120",
+        "sector": "Andheri",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-121",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.861779,
+              19.110938
+            ],
+            [
+              72.862429,
+              19.110938
+            ],
+            [
+              72.862429,
+              19.111471
+            ],
+            [
+              72.861779,
+              19.111471
+            ],
+            [
+              72.861779,
+              19.110938
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 121",
+        "sector": "Andheri",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-122",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86521,
+              19.11193
+            ],
+            [
+              72.86581,
+              19.11193
+            ],
+            [
+              72.86581,
+              19.11227
+            ],
+            [
+              72.86521,
+              19.11227
+            ],
+            [
+              72.86521,
+              19.11193
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 122",
+        "sector": "Andheri",
+        "building:levels": 8,
+        "height": 24.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-123",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.868656,
+              19.110948
+            ],
+            [
+              72.869131,
+              19.110948
+            ],
+            [
+              72.869131,
+              19.111441
+            ],
+            [
+              72.868656,
+              19.111441
+            ],
+            [
+              72.868656,
+              19.110948
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 123",
+        "sector": "Andheri",
+        "building:levels": 10,
+        "height": 30.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-124",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.870743,
+              19.111483
+            ],
+            [
+              72.871131,
+              19.111483
+            ],
+            [
+              72.871131,
+              19.112017
+            ],
+            [
+              72.870743,
+              19.112017
+            ],
+            [
+              72.870743,
+              19.111483
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 124",
+        "sector": "Andheri",
+        "building:levels": 14,
+        "height": 42.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-125",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.873078,
+              19.111593
+            ],
+            [
+              72.873618,
+              19.111593
+            ],
+            [
+              72.873618,
+              19.111937
+            ],
+            [
+              72.873078,
+              19.111937
+            ],
+            [
+              72.873078,
+              19.111593
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 125",
+        "sector": "Andheri",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-126",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86273,
+              19.113772
+            ],
+            [
+              72.863364,
+              19.113772
+            ],
+            [
+              72.863364,
+              19.114262
+            ],
+            [
+              72.86273,
+              19.114262
+            ],
+            [
+              72.86273,
+              19.113772
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 126",
+        "sector": "Andheri",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-127",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86562,
+              19.113162
+            ],
+            [
+              72.866262,
+              19.113162
+            ],
+            [
+              72.866262,
+              19.113698
+            ],
+            [
+              72.86562,
+              19.113698
+            ],
+            [
+              72.86562,
+              19.113162
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 127",
+        "sector": "Andheri",
+        "building:levels": 8,
+        "height": 24.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-128",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.867559,
+              19.11328
+            ],
+            [
+              72.86812,
+              19.11328
+            ],
+            [
+              72.86812,
+              19.113628
+            ],
+            [
+              72.867559,
+              19.113628
+            ],
+            [
+              72.867559,
+              19.11328
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 128",
+        "sector": "Andheri",
+        "building:levels": 10,
+        "height": 30.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-129",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.87057,
+              19.113759
+            ],
+            [
+              72.870986,
+              19.113759
+            ],
+            [
+              72.870986,
+              19.114247
+            ],
+            [
+              72.87057,
+              19.114247
+            ],
+            [
+              72.87057,
+              19.113759
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 129",
+        "sector": "Andheri",
+        "building:levels": 14,
+        "height": 42.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-130",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.874219,
+              19.112831
+            ],
+            [
+              72.874668,
+              19.112831
+            ],
+            [
+              72.874668,
+              19.113369
+            ],
+            [
+              72.874219,
+              19.113369
+            ],
+            [
+              72.874219,
+              19.112831
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 130",
+        "sector": "Andheri",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-131",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.862542,
+              19.115549
+            ],
+            [
+              72.863126,
+              19.115549
+            ],
+            [
+              72.863126,
+              19.115902
+            ],
+            [
+              72.862542,
+              19.115902
+            ],
+            [
+              72.862542,
+              19.115549
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 131",
+        "sector": "Andheri",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-132",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864579,
+              19.114967
+            ],
+            [
+              72.865227,
+              19.114967
+            ],
+            [
+              72.865227,
+              19.115452
+            ],
+            [
+              72.864579,
+              19.115452
+            ],
+            [
+              72.864579,
+              19.114967
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 132",
+        "sector": "Andheri",
+        "building:levels": 8,
+        "height": 24.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-133",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86801,
+              19.11583
+            ],
+            [
+              72.868631,
+              19.11583
+            ],
+            [
+              72.868631,
+              19.116369
+            ],
+            [
+              72.86801,
+              19.116369
+            ],
+            [
+              72.86801,
+              19.11583
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 133",
+        "sector": "Andheri",
+        "building:levels": 10,
+        "height": 30.0,
+        "building": "residential",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-134",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.871436,
+              19.115011
+            ],
+            [
+              72.871948,
+              19.115011
+            ],
+            [
+              72.871948,
+              19.115368
+            ],
+            [
+              72.871436,
+              19.115368
+            ],
+            [
+              72.871436,
+              19.115011
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 134",
+        "sector": "Andheri",
+        "building:levels": 14,
+        "height": 42.0,
+        "building": "hospital",
+        "amenity": "hospital"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-135",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.87355,
+              19.115517
+            ],
+            [
+              72.873904,
+              19.115517
+            ],
+            [
+              72.873904,
+              19.115999
+            ],
+            [
+              72.87355,
+              19.115999
+            ],
+            [
+              72.87355,
+              19.115517
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 135",
+        "sector": "Andheri",
+        "building:levels": 4,
+        "height": 12.0,
+        "building": "commercial",
+        "amenity": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "bldg-andheri-136",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.861922,
+              19.116831
+            ],
+            [
+              72.862428,
+              19.116831
+            ],
+            [
+              72.862428,
+              19.117371
+            ],
+            [
+              72.861922,
+              19.117371
+            ],
+            [
+              72.861922,
+              19.116831
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Andheri Sector Block 136",
+        "sector": "Andheri",
+        "building:levels": 6,
+        "height": 18.0,
+        "building": "residential",
+        "amenity": null
+      }
+    }
+  ]
+}

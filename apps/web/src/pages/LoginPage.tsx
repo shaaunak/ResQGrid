@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Radio, Lock, Mail, ArrowRight, UserCheck } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Shield, Lock, Mail, ArrowRight, UserCheck, AlertCircle } from 'lucide-react';
 import { useAuth, PERSONA_CREDENTIALS } from '../context/AuthContext';
 import { UserRole } from '../types';
 
 export const LoginPage: React.FC = () => {
-  const { login, loginAsPersona } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  // Redirect destination if bounced by ProtectedRoute
+  const from = (location.state as any)?.from?.pathname || '/';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,82 +23,79 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
     try {
       const user = await login(email, password);
-      if (user.role === 'CITIZEN') navigate('/citizen');
-      else if (user.role === 'OPERATOR') navigate('/command');
-      else if (user.role === 'RESPONDER') navigate('/responder');
-      else if (user.role === 'COORDINATOR') navigate('/inventory');
-      else navigate('/command');
+      if (from !== '/' && from !== '/login') {
+        navigate(from, { replace: true });
+      } else {
+        if (user.role === 'CITIZEN') navigate('/citizen', { replace: true });
+        else if (user.role === 'OPERATOR') navigate('/command', { replace: true });
+        else if (user.role === 'RESPONDER') navigate('/responder', { replace: true });
+        else if (user.role === 'COORDINATOR') navigate('/inventory', { replace: true });
+        else navigate('/command', { replace: true });
+      }
     } catch (err: any) {
-      setErrorMsg(err.message || 'Authentication failed');
+      setErrorMsg(err.message || 'Authentication failed: Invalid credentials');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleQuickPersona = async (role: UserRole) => {
-    setLoading(true);
-    try {
-      await loginAsPersona(role);
-      if (role === 'CITIZEN') navigate('/citizen');
-      else if (role === 'OPERATOR') navigate('/command');
-      else if (role === 'RESPONDER') navigate('/responder');
-      else if (role === 'COORDINATOR') navigate('/inventory');
-      else navigate('/command');
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Persona switch failed');
-    } finally {
-      setLoading(false);
-    }
+  // Preset filler for evaluation convenience (fills fields, requires genuine authentication button click)
+  const handlePrefillCredentials = (role: UserRole) => {
+    const creds = PERSONA_CREDENTIALS[role];
+    setEmail(creds.email);
+    setPassword(creds.pass);
+    setErrorMsg('');
   };
 
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center p-4 bg-app-bg font-sans">
-      <div className="max-w-md w-full bg-white border border-app-border rounded-xl p-6 shadow-sm space-y-6 text-xs font-sans">
-        <div className="text-center space-y-1">
-          <div className="w-10 h-10 rounded-lg bg-teal-50 border border-teal-200 flex items-center justify-center mx-auto text-app-primary mb-2">
-            <Radio className="w-5 h-5 animate-pulse" />
+    <div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center p-4 bg-rq-bg font-sans">
+      <div className="max-w-md w-full bg-white border border-rq-border rounded-xl p-6 sm:p-8 shadow-sm space-y-6 text-xs font-sans">
+        <div className="text-center space-y-2">
+          <div className="w-12 h-12 rounded-xl bg-rq-surface2 border border-rq-border flex items-center justify-center mx-auto text-[#14284B] mb-2 shadow-subtle">
+            <Shield className="w-6 h-6 text-[#14284B]" />
           </div>
-          <h2 className="text-base font-bold text-app-text uppercase tracking-wider font-mono">
+          <h1 className="text-lg font-bold text-rq-ink font-mono uppercase tracking-wider">
             Sign In to ResQGrid
-          </h2>
-          <p className="text-xs text-app-text-secondary">
-            Emergency Operations & Multi-Role Authorization
+          </h1>
+          <p className="text-xs text-rq-muted">
+            Emergency Management & Role-Based Authorization
           </p>
         </div>
 
         {errorMsg && (
-          <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-app-critical text-xs">
-            {errorMsg}
+          <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-[#C8201B] text-xs flex items-center space-x-2">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span>{errorMsg}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-app-text-secondary mb-1 font-semibold">Email Address</label>
+            <label className="block text-rq-ink mb-1.5 font-semibold">Operational Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-app-text-secondary absolute left-3 top-2.5" />
+              <Mail className="w-4 h-4 text-rq-muted absolute left-3 top-2.5" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@resqgrid.org"
-                className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-app-border rounded-lg text-app-text text-xs focus:bg-white focus:outline-none focus:border-app-primary font-mono"
+                placeholder="operator@resqgrid.org"
+                className="w-full pl-9 pr-3 py-2 bg-rq-surface2 border border-rq-border rounded-lg text-rq-ink text-xs focus:bg-white focus:outline-none focus:border-[#14284B] font-mono"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-app-text-secondary mb-1 font-semibold">Security Password</label>
+            <label className="block text-rq-ink mb-1.5 font-semibold">Account Password</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-app-text-secondary absolute left-3 top-2.5" />
+              <Lock className="w-4 h-4 text-rq-muted absolute left-3 top-2.5" />
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-app-border rounded-lg text-app-text text-xs focus:bg-white focus:outline-none focus:border-app-primary font-mono"
+                className="w-full pl-9 pr-3 py-2 bg-rq-surface2 border border-rq-border rounded-lg text-rq-ink text-xs focus:bg-white focus:outline-none focus:border-[#14284B] font-mono"
               />
             </div>
           </div>
@@ -103,46 +103,80 @@ export const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 bg-app-primary hover:bg-[#0E555A] text-white font-semibold rounded-lg shadow-sm transition flex items-center justify-center space-x-2"
+            className="w-full py-2.5 bg-[#14284B] hover:bg-[#1E3A8A] disabled:opacity-50 text-white font-bold rounded-lg shadow-sm transition flex items-center justify-center space-x-2 font-mono"
           >
-            <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
+            <span>{loading ? 'Authenticating with Backend...' : 'Authenticate & Sign In'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        {/* Quick Demo Access Bar */}
-        <div className="pt-4 border-t border-app-border space-y-2">
-          <span className="text-xs text-app-text-secondary uppercase tracking-wider block font-semibold text-center font-mono">
-            Evaluator 1-Click Fast Login
-          </span>
-          <div className="grid grid-cols-2 gap-2 text-xs font-sans">
+        {/* Evaluation Pre-fill Selector */}
+        <div className="pt-4 border-t border-rq-border space-y-2.5">
+          <div className="flex items-center justify-between text-xs text-rq-muted">
+            <span className="font-mono uppercase font-semibold">Academic Evaluation Accounts</span>
+            <span className="text-[10px] text-rq-muted font-mono">Click to prefill</span>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2 text-xs">
             <button
-              onClick={() => handleQuickPersona('OPERATOR')}
-              className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-app-text border border-app-border transition text-left shadow-sm"
+              type="button"
+              onClick={() => handlePrefillCredentials('OPERATOR')}
+              className={`p-2.5 rounded-lg border text-left transition ${
+                email === PERSONA_CREDENTIALS.OPERATOR.email
+                  ? 'bg-rq-surface2 border-[#14284B] font-semibold'
+                  : 'bg-white hover:bg-slate-50 border-rq-border'
+              }`}
             >
-              <div className="font-semibold text-app-text">Operator</div>
-              <div className="text-xs text-app-primary font-mono font-medium">Command Center</div>
+              <div className="font-bold text-rq-ink">Operator</div>
+              <div className="text-[11px] text-rq-muted font-mono">Command Center</div>
             </button>
+
             <button
-              onClick={() => handleQuickPersona('RESPONDER')}
-              className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-app-text border border-app-border transition text-left shadow-sm"
+              type="button"
+              onClick={() => handlePrefillCredentials('RESPONDER')}
+              className={`p-2.5 rounded-lg border text-left transition ${
+                email === PERSONA_CREDENTIALS.RESPONDER.email
+                  ? 'bg-rq-surface2 border-[#14284B] font-semibold'
+                  : 'bg-white hover:bg-slate-50 border-rq-border'
+              }`}
             >
-              <div className="font-semibold text-app-text">Responder</div>
-              <div className="text-xs text-sky-700 font-mono font-medium">Field Missions</div>
+              <div className="font-bold text-rq-ink">Responder</div>
+              <div className="text-[11px] text-rq-muted font-mono">Field Squads</div>
             </button>
+
             <button
-              onClick={() => handleQuickPersona('COORDINATOR')}
-              className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-app-text border border-app-border transition text-left shadow-sm"
+              type="button"
+              onClick={() => handlePrefillCredentials('COORDINATOR')}
+              className={`p-2.5 rounded-lg border text-left transition ${
+                email === PERSONA_CREDENTIALS.COORDINATOR.email
+                  ? 'bg-rq-surface2 border-[#14284B] font-semibold'
+                  : 'bg-white hover:bg-slate-50 border-rq-border'
+              }`}
             >
-              <div className="font-semibold text-app-text">Coordinator</div>
-              <div className="text-xs text-emerald-700 font-mono font-medium">Relief Depots</div>
+              <div className="font-bold text-rq-ink">Coordinator</div>
+              <div className="text-[11px] text-rq-muted font-mono">Relief Depots</div>
             </button>
+
             <button
-              onClick={() => handleQuickPersona('CITIZEN')}
-              className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-app-text border border-app-border transition text-left shadow-sm"
+              type="button"
+              onClick={() => handlePrefillCredentials('ADMIN')}
+              className={`p-2.5 rounded-lg border text-left transition ${
+                email === PERSONA_CREDENTIALS.ADMIN.email
+                  ? 'bg-rq-surface2 border-[#14284B] font-semibold'
+                  : 'bg-white hover:bg-slate-50 border-rq-border'
+              }`}
             >
-              <div className="font-semibold text-app-text">Citizen</div>
-              <div className="text-xs text-app-high font-mono font-medium">Emergency Report</div>
+              <div className="font-bold text-rq-ink">Administrator</div>
+              <div className="text-[11px] text-rq-muted font-mono">Health & Telemetry</div>
+            </button>
+          </div>
+          <div className="text-center pt-1">
+            <button
+              type="button"
+              onClick={() => handlePrefillCredentials('CITIZEN')}
+              className="text-xs text-rq-muted hover:text-rq-ink font-mono underline"
+            >
+              Or prefill Citizen Requester account
             </button>
           </div>
         </div>
@@ -150,4 +184,3 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
-

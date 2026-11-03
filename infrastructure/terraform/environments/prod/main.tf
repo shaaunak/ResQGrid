@@ -24,36 +24,39 @@ provider "aws" {
   }
 }
 
-# 1. Custom VPC (10.20.0.0/16)
+# 1. Custom VPC (10.0.0.0/16) with 2 Public & 2 Private Subnets, IGW, SGs, S3 Gateway Endpoint, NO NAT Gateway
 module "vpc" {
   source      = "../../modules/vpc"
   environment = var.environment
+  vpc_cidr    = "10.0.0.0/16"
 }
 
-# 2. Private S3 Evidence Storage
+# 2. S3 Encrypted Private Buckets (Evidence, Reports, Backups)
 module "s3" {
   source      = "../../modules/s3"
   environment = var.environment
 }
 
-# 3. Asynchronous Messaging (SQS + DLQ + SNS)
+# 3. Asynchronous Messaging Pipeline (SQS Standard + DLQ + SNS Topics)
 module "sqs_sns" {
   source      = "../../modules/sqs_sns"
   environment = var.environment
 }
 
-# 4. IAM Least-Privilege Roles & Profiles
+# 4. IAM Least Privilege Roles (EC2 API Server vs. Background Worker with Rekognition/Translate/Comprehend)
 module "iam" {
   source                   = "../../modules/iam"
   environment              = var.environment
-  s3_bucket_arn            = module.s3.bucket_arn
+  evidence_bucket_arn      = module.s3.evidence_bucket_arn
+  reports_bucket_arn       = module.s3.reports_bucket_arn
+  backups_bucket_arn       = module.s3.backups_bucket_arn
   sqs_queue_arn            = module.sqs_sns.queue_arn
   sqs_dlq_arn              = module.sqs_sns.dlq_arn
   sns_escalation_topic_arn = module.sqs_sns.escalation_topic_arn
   sns_shortage_topic_arn   = module.sqs_sns.shortage_topic_arn
 }
 
-# 5. Private Amazon RDS PostgreSQL (Single-AZ)
+# 5. Private Amazon RDS PostgreSQL (Single-AZ, db.t3.micro)
 module "rds" {
   source               = "../../modules/rds"
   environment          = var.environment
@@ -62,36 +65,40 @@ module "rds" {
   db_password          = var.db_password
 }
 
-# 6. EC2 Compute Host
-module "ec2" {
-  source                = "../../modules/ec2"
+# 6. ALB & Auto Scaling Group (Min 1, Max 2 of t3.micro running container stack)
+module "asg_alb" {
+  source                = "../../modules/asg_alb"
   environment           = var.environment
-  subnet_id             = module.vpc.public_subnet_id
-  security_group_id     = module.vpc.app_security_group_id
-  instance_profile_name = module.iam.instance_profile_name
+  vpc_id                = module.vpc.vpc_id
+  public_subnet_ids     = module.vpc.public_subnet_ids
+  alb_security_group_id = module.vpc.alb_security_group_id
+  app_security_group_id = module.vpc.app_security_group_id
+  instance_profile_name = module.iam.api_instance_profile_name
+  instance_type         = "t3.micro"
 }
 
-# 7. CloudWatch Observability & SQS Oldest Message Age Alarm
+# 7. CloudWatch Observability & Alarms (SQS Oldest Message Age, ALB 5xx, Low Inventory)
 module "cloudwatch" {
   source              = "../../modules/cloudwatch"
   environment         = var.environment
   sqs_queue_name      = "resqgrid-incident-events-${var.environment}"
   sns_alarm_topic_arn = module.sqs_sns.escalation_topic_arn
+  alb_arn_suffix      = module.asg_alb.alb_arn
 }
 
-# 8. AWS Budgets Cost Cap ($20.00/mo)
+# 8. AWS Budgets Cost Cap ($20.00/mo with 50%, 80%, 100% threshold notifications)
 module "budgets" {
-  source        = "../../modules/budgets"
-  alert_emails  = var.budget_alert_emails
+  source       = "../../modules/budgets"
+  alert_emails = var.budget_alert_emails
 }
 
-# 9. Amazon ECR Container Repositories
+# 9. Amazon ECR Container Registries
 module "ecr" {
   source      = "../../modules/ecr"
   environment = var.environment
 }
 
-# 10. Secure Systems Manager (SSM) Parameter Store Secrets
+# 10. Secure Systems Manager (SSM) Parameter Store Configuration
 resource "aws_ssm_parameter" "database_url" {
   name        = "/resqgrid/${var.environment}/database_url"
   description = "Async PostgreSQL Connection String for ResQGrid Core API"
@@ -99,17 +106,37 @@ resource "aws_ssm_parameter" "database_url" {
   value       = "postgresql+asyncpg://resqgrid_admin:${var.db_password}@${module.rds.endpoint}/resqgrid_db"
 }
 
-resource "aws_ssm_parameter" "s3_bucket" {
-  name        = "/resqgrid/${var.environment}/s3_bucket"
-  description = "S3 Bucket Name for Incident Evidence"
+resource "aws_ssm_parameter" "s3_evidence_bucket" {
+  name        = "/resqgrid/${var.environment}/s3_evidence_bucket"
+  description = "Evidence S3 Bucket Name"
   type        = "String"
-  value       = module.s3.bucket_name
+  value       = module.s3.evidence_bucket_name
+}
+
+resource "aws_ssm_parameter" "s3_reports_bucket" {
+  name        = "/resqgrid/${var.environment}/s3_reports_bucket"
+  description = "Reports S3 Bucket Name"
+  type        = "String"
+  value       = module.s3.reports_bucket_name
+}
+
+resource "aws_ssm_parameter" "s3_backups_bucket" {
+  name        = "/resqgrid/${var.environment}/s3_backups_bucket"
+  description = "Database Backups S3 Bucket Name"
+  type        = "String"
+  value       = module.s3.backups_bucket_name
 }
 
 resource "aws_ssm_parameter" "sqs_queue_url" {
   name        = "/resqgrid/${var.environment}/sqs_queue_url"
-  description = "SQS Queue URL for Asynchronous Dispatch Jobs"
+  description = "Active Incident Pipeline SQS Queue URL"
   type        = "String"
   value       = module.sqs_sns.queue_url
 }
 
+resource "aws_ssm_parameter" "sns_escalation_topic" {
+  name        = "/resqgrid/${var.environment}/sns_escalation_topic"
+  description = "Emergency Escalation SNS Topic ARN"
+  type        = "String"
+  value       = module.sqs_sns.escalation_topic_arn
+}

@@ -103,6 +103,23 @@ export interface Incident {
   version?: number;
   report_count?: number;
   parent_incident_id?: string;
+  merged_reports?: Array<{
+    id: string;
+    tracking_id: string;
+    title: string;
+    description: string;
+    affected_people: number;
+    created_at: string;
+  }>;
+  active_assignment?: {
+    assignment_id: string;
+    status: string;
+    team_id: string;
+    team_name: string;
+    team_type: string;
+    current_latitude: number;
+    current_longitude: number;
+  };
   created_at: string;
   updated_at: string;
   events?: IncidentEvent[];
@@ -256,4 +273,199 @@ export interface OperationalKPIs {
   active_teams: number;
   average_response_time_minutes: number;
   supplies_critical_alerts: number;
+}
+
+// Mission Trace Types
+export interface TraceOriginEvidence {
+  id: string;
+  evidence_type: string;
+  s3_key: string;
+  file_name: string;
+  file_size: number;
+  mime_type: string;
+  file_url?: string;
+  created_at: string;
+}
+
+export interface TraceOriginMergedReport {
+  id: string;
+  tracking_id: string;
+  title: string;
+  description: string;
+  affected_people: number;
+  created_at: string;
+}
+
+export interface TraceOrigin {
+  incident_id: string;
+  tracking_id: string;
+  title: string;
+  description: string;
+  category: IncidentCategory;
+  severity: IncidentSeverity;
+  status: IncidentStatus;
+  affected_people: number;
+  latitude: number;
+  longitude: number;
+  address: string;
+  reporter_id?: string;
+  reporter_phone?: string;
+  is_simulated: boolean;
+  is_escalated: boolean;
+  escalation_reason?: string;
+  report_count: number;
+  created_at: string;
+  updated_at: string;
+  verified_by_id?: string;
+  verified_by_name?: string;
+  verified_at?: string;
+  rejection_reason?: string;
+  evidence: TraceOriginEvidence[];
+  merged_reports: TraceOriginMergedReport[];
+}
+
+export interface TracePriority {
+  severity_factor: number;
+  impact_factor: number;
+  wait_time_factor: number;
+  vulnerability_factor: number;
+  total_score: number;
+  explanation: string;
+  config_version: string;
+  scoring_timestamp?: string;
+  input_snapshot?: Record<string, any>;
+  academic_disclaimer?: string;
+}
+
+export interface TraceCandidateSquad {
+  team_id: string;
+  team_name: string;
+  team_type: string;
+  base_location: string;
+  distance_km?: number;
+  suitability_score: number;
+  is_recommended: boolean;
+  is_eligible: boolean;
+  active_assignments_count: number;
+  capacity: number;
+  qualifications: string[];
+}
+
+export interface TraceAssignment {
+  assignment_id: string;
+  team_id: string;
+  team_name: string;
+  team_type: string;
+  assigned_by_id: string;
+  assigned_by_name?: string;
+  status: AssignmentStatus;
+  is_operator_override: boolean;
+  override_reason?: string;
+  operator_notes?: string;
+  responder_notes?: string;
+  declination_reason?: string;
+  recommended_team_id?: string;
+  recommended_team_name?: string;
+  candidate_snapshots: TraceCandidateSquad[];
+  assigned_at: string;
+  accepted_at?: string;
+  declined_at?: string;
+  en_route_at?: string;
+  on_scene_at?: string;
+  completed_at?: string;
+  cancelled_at?: string;
+  reassigned_at?: string;
+  team_base_latitude: number;
+  team_base_longitude: number;
+  team_current_latitude: number;
+  team_current_longitude: number;
+}
+
+export interface TraceInventoryItem {
+  reservation_id: string;
+  assignment_id: string;
+  depot_id: string;
+  depot_name: string;
+  depot_location: string;
+  item_id: string;
+  item_name: string;
+  item_sku: string;
+  unit: string;
+  quantity_reserved: number;
+  quantity_consumed: number;
+  quantity_released: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TraceStockMovement {
+  id: string;
+  item_name: string;
+  quantity: number;
+  movement_type: string;
+  from_depot_name?: string;
+  to_depot_name?: string;
+  actor_name?: string;
+  notes?: string;
+  created_at: string;
+}
+
+export interface TraceCloudOutboxEvent {
+  id: string;
+  event_type: string;
+  status: string;
+  idempotency_key: string;
+  retry_count: number;
+  last_error?: string;
+  created_at: string;
+  processed_at?: string;
+  correlation_id: string;
+  cloud_delivery_status: string;
+  sqs_message_id?: string;
+  worker_notes?: string;
+  payload: Record<string, any>;
+}
+
+export interface TraceTimelineEvent {
+  id: string;
+  category: 'INCIDENT' | 'ASSIGNMENT' | 'INVENTORY' | 'OUTBOX' | 'AUDIT';
+  event_type: string;
+  title: string;
+  description: string;
+  previous_state?: string;
+  new_state?: string;
+  actor_id?: string;
+  actor_name?: string;
+  actor_role?: string;
+  timestamp: string;
+  relative_time: string;
+  latitude?: number;
+  longitude?: number;
+  metadata: Record<string, any>;
+}
+
+export interface TraceDurations {
+  incident_age_seconds: number;
+  time_to_verification_seconds?: number;
+  time_to_assignment_seconds?: number;
+  time_to_acceptance_seconds?: number;
+  time_to_resolution_seconds?: number;
+  incident_age_display: string;
+  time_to_verification_display?: string;
+  time_to_assignment_display?: string;
+  time_to_acceptance_display?: string;
+  time_to_resolution_display?: string;
+}
+
+export interface MissionTraceResponse {
+  incident: TraceOrigin;
+  priority: TracePriority;
+  assignments: TraceAssignment[];
+  inventory_reservations: TraceInventoryItem[];
+  stock_movements: TraceStockMovement[];
+  cloud_outbox_events: TraceCloudOutboxEvent[];
+  timeline: TraceTimelineEvent[];
+  durations: TraceDurations;
+  export_url?: string;
 }

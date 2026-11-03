@@ -45,7 +45,7 @@ export const CommandCenter3D: React.FC<CommandCenter3DProps> = ({
 
       {/* Floating Top Header Info */}
       <div className="absolute top-3 right-3 flex items-center space-x-2 z-10">
-        <div className="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded text-white text-[11px] font-mono border border-white/10 flex items-center space-x-1.5">
+        <div className="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded text-white text-xs font-mono border border-white/10 flex items-center space-x-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span>REAL-TIME 3D DIGITAL TWIN</span>
         </div>
@@ -61,24 +61,24 @@ export const CommandCenter3D: React.FC<CommandCenter3DProps> = ({
 
       {/* Tactical Legend */}
       <div className="absolute bottom-3 left-3 p-3 bg-black/60 backdrop-blur-md rounded-card border border-white/10 text-white text-xs z-10 font-sans space-y-1.5 hidden md:block">
-        <div className="font-semibold text-[11px] text-slate-300 uppercase font-mono mb-1">
+        <div className="font-semibold text-xs text-slate-300 uppercase font-mono mb-1">
           Tactical Legend
         </div>
-        <div className="flex items-center space-x-2 text-[11px]">
+        <div className="flex items-center space-x-2 text-xs">
           <span className="w-2.5 h-2.5 rounded-full bg-[#C8201B]" />
           <span>Critical Emergency Beacon</span>
         </div>
-        <div className="flex items-center space-x-2 text-[11px]">
+        <div className="flex items-center space-x-2 text-xs">
           <span className="w-2.5 h-2.5 rounded-full bg-[#E27D14]" />
           <span>High Urgency Incident</span>
         </div>
-        <div className="flex items-center space-x-2 text-[11px]">
+        <div className="flex items-center space-x-2 text-xs">
           <span className="w-2.5 h-2.5 rounded-full bg-[#14284B] border border-blue-400" />
           <span>Mobile Tactical Squad</span>
         </div>
-        <div className="flex items-center space-x-2 text-[11px]">
+        <div className="flex items-center space-x-2 text-xs">
           <span className="w-2.5 h-2.5 rounded-full bg-[#2E7D5B]" />
-          <span>Relief Logistics Hub</span>
+          <span>Relief Depot & Stock Ring</span>
         </div>
       </div>
     </div>

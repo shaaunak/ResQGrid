@@ -16,6 +16,7 @@ from app.api.v1.notifications import router as notifications_router
 from app.api.v1.simulations import router as simulations_router
 from app.api.v1.teams import router as teams_router
 from app.api.v1.users import router as users_router
+from app.api.v1.mission_trace import router as mission_trace_router
 from app.core.config import settings
 from app.core.database import Base, engine
 
@@ -74,6 +75,7 @@ app.include_router(simulations_router, prefix=api_v1_prefix)
 app.include_router(intelligence_router, prefix=api_v1_prefix)
 app.include_router(analytics_router, prefix=api_v1_prefix)
 app.include_router(admin_router, prefix=api_v1_prefix)
+app.include_router(mission_trace_router, prefix=api_v1_prefix)
 
 
 @app.get("/")

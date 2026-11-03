@@ -8,6 +8,7 @@ import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
 import { CommandPalette } from './components/CommandPalette';
 import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { OverviewPage } from './pages/OverviewPage';
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
@@ -21,6 +22,8 @@ import { AnalyticsPage } from './pages/AnalyticsPage';
 import { SystemHealthPage } from './pages/SystemHealthPage';
 import { EvidencePage } from './pages/EvidencePage';
 import { AuditLogPage } from './pages/AuditLogPage';
+import { DocsPage } from './pages/DocsPage';
+import { MissionTracePage } from './pages/MissionTracePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,13 +68,15 @@ export const App: React.FC = () => {
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/login" element={<LoginPage />} />
 
-                {/* Operational Core Routes */}
+                {/* Operational Core Routes - Protected by Real RBAC */}
                 <Route
                   path="/command"
                   element={
-                    <AppLayout>
-                      <CommandCenter />
-                    </AppLayout>
+                    <ProtectedRoute allowedRoles={['OPERATOR', 'ADMIN']}>
+                      <AppLayout>
+                        <CommandCenter />
+                      </AppLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
@@ -91,66 +96,120 @@ export const App: React.FC = () => {
                   }
                 />
                 <Route
+                  path="/trace"
+                  element={
+                    <ProtectedRoute allowedRoles={['OPERATOR', 'ADMIN']}>
+                      <AppLayout>
+                        <MissionTracePage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/mission-trace/:incidentId"
+                  element={
+                    <ProtectedRoute allowedRoles={['OPERATOR', 'ADMIN']}>
+                      <AppLayout>
+                        <MissionTracePage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/mission-trace"
+                  element={
+                    <ProtectedRoute allowedRoles={['OPERATOR', 'ADMIN']}>
+                      <AppLayout>
+                        <MissionTracePage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/responder"
                   element={
-                    <AppLayout>
-                      <ResponderPortal />
-                    </AppLayout>
+                    <ProtectedRoute allowedRoles={['RESPONDER', 'OPERATOR', 'ADMIN']}>
+                      <AppLayout>
+                        <ResponderPortal />
+                      </AppLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/inventory"
                   element={
-                    <AppLayout>
-                      <InventoryPortal />
-                    </AppLayout>
+                    <ProtectedRoute allowedRoles={['COORDINATOR', 'OPERATOR', 'ADMIN']}>
+                      <AppLayout>
+                        <InventoryPortal />
+                      </AppLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/scenarios"
                   element={
-                    <AppLayout>
-                      <ScenarioCommander />
-                    </AppLayout>
+                    <ProtectedRoute allowedRoles={['OPERATOR', 'ADMIN']}>
+                      <AppLayout>
+                        <ScenarioCommander />
+                      </AppLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/scenario"
                   element={
-                    <AppLayout>
-                      <ScenarioCommander />
-                    </AppLayout>
+                    <ProtectedRoute allowedRoles={['OPERATOR', 'ADMIN']}>
+                      <AppLayout>
+                        <ScenarioCommander />
+                      </AppLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/analytics"
                   element={
-                    <AppLayout>
-                      <AnalyticsPage />
-                    </AppLayout>
+                    <ProtectedRoute allowedRoles={['OPERATOR', 'ADMIN', 'COORDINATOR']}>
+                      <AppLayout>
+                        <AnalyticsPage />
+                      </AppLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/evidence"
                   element={
-                    <AppLayout>
-                      <EvidencePage />
-                    </AppLayout>
+                    <ProtectedRoute allowedRoles={['OPERATOR', 'ADMIN', 'COORDINATOR']}>
+                      <AppLayout>
+                        <EvidencePage />
+                      </AppLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/audit"
                   element={
-                    <AppLayout>
-                      <AuditLogPage />
-                    </AppLayout>
+                    <ProtectedRoute allowedRoles={['OPERATOR', 'ADMIN']}>
+                      <AppLayout>
+                        <AuditLogPage />
+                      </AppLayout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/health"
                   element={
+                    <ProtectedRoute allowedRoles={['OPERATOR', 'ADMIN']}>
+                      <AppLayout>
+                        <SystemHealthPage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/docs"
+                  element={
                     <AppLayout>
-                      <SystemHealthPage />
+                      <DocsPage />
                     </AppLayout>
                   }
                 />

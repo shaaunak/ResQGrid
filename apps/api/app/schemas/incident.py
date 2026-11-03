@@ -61,6 +61,32 @@ class IncidentEvidenceResponse(BaseModel):
     created_at: datetime
 
 
+class ActiveAssignmentInfo(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    assignment_id: str
+    status: str
+    team_id: str
+    team_name: str
+    team_type: str
+    current_latitude: float
+    current_longitude: float
+    assigned_at: Optional[datetime] = None
+    en_route_at: Optional[datetime] = None
+    on_scene_at: Optional[datetime] = None
+
+
+class MergedReportSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    tracking_id: str
+    title: str
+    description: str
+    affected_people: int
+    created_at: datetime
+
+
 class IncidentResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -103,3 +129,5 @@ class IncidentResponse(BaseModel):
 
     events: Optional[List[IncidentEventResponse]] = []
     evidence: Optional[List[IncidentEvidenceResponse]] = []
+    active_assignment: Optional[ActiveAssignmentInfo] = None
+    merged_reports: Optional[List[MergedReportSummary]] = []

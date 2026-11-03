@@ -4,340 +4,341 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-teal.svg)](https://fastapi.tiangolo.com)
 [![React 18](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev)
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org)
-[![AWS Services](https://img.shields.io/badge/AWS-8%20Services-orange.svg)](https://aws.amazon.com)
+[![AWS Cloud](https://img.shields.io/badge/AWS-8%20Services-orange.svg)](https://aws.amazon.com)
 [![Terraform IaC](https://img.shields.io/badge/Terraform-1.5+-purple.svg)](https://www.terraform.io)
-[![Test Suite](https://img.shields.io/badge/Pytest-100%25%20Passing-brightgreen.svg)](https://docs.pytest.org)
+[![Test Suite](https://img.shields.io/badge/Pytest-27%2F27%20Passing%20(100%25)-brightgreen.svg)](https://docs.pytest.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue.svg)](https://www.typescriptlang.org)
 
-> **Tagline:** Intelligent Emergency Coordination. Faster Response. Smarter Resource Allocation.  
-> **Demonstration Focus:** Mumbai Urban Flood Response & Coordinated Relief Simulation  
-> **Academic Scope:** 3-Member Cloud Computing Engineering Mini Project (Semester VI)
+> **Mission:** Intelligent Emergency Coordination. Deterministic Dispatch. Explainable Resource Allocation.  
+> **Demonstration Focus:** Mumbai Urban Multi-Hazard Disaster Response (Floods, Earthquakes, Cyclones, Industrial Fires)  
+> **Engineering Scope:** Academic Cloud Computing Engineering Project
 
 ---
 
 ## Academic & Simulation Disclaimer
-*All emergency reports, victims, responder squads, depot inventories, and flood inundation boundaries in this project are strictly simulated for academic evaluation in Cloud Computing. ResQGrid is not certified or positioned as an active public emergency dispatch service.*
+*All emergency incidents, victim reports, responder squads, depot inventories, and flood inundation boundaries in this project are strictly simulated for academic evaluation in Cloud Computing. ResQGrid is not certified or positioned as an active public emergency dispatch service.*
 
 ---
 
-## 1. Executive Summary & Architecture
+## 1. Project Overview & Architecture
 
-ResQGrid is an end-to-end, cloud-native operational coordination system that models the complete operational lifecycle of simulated disaster incidents—from citizen reporting and operator triage to heuristic team matching, atomic supply reservation, and field responder completion.
+ResQGrid is an end-to-end, cloud-native operational coordination system engineered to survive the worst operational hour of a metropolitan disaster. When sudden emergencies trigger high volumes of citizen reports, ResQGrid guarantees transactional integrity, zero over-allocation of critical supplies, transparent algorithmic ranking, and full state-machine auditability with cryptographic AWS S3 evidence hashing.
 
 ### Cloud-Native AWS Infrastructure Architecture
 
 ```mermaid
 graph TD
     Client["Citizens / Operators / Responders<br/>(HTTPS Web Client)"]
-    IGW["Internet Gateway<br/>(VPC: 10.20.0.0/16)"]
-
-    subgraph VPC ["Custom Amazon VPC (10.20.0.0/16)"]
-        subgraph PublicSubnet ["Public Subnet A (10.20.1.0/24)"]
-            EC2Host["Amazon EC2 (t3.small)<br/>- Nginx Reverse Proxy (Port 80/443)<br/>- React Tactical SPA<br/>- FastAPI REST Application (Port 8000)<br/>- SQS / Outbox Event Worker"]
+    ALB["AWS Application Load Balancer (ALB)<br/>SSL / TLS Termination & Health Checks"]
+    
+    subgraph VPC ["Amazon VPC (10.0.0.0/16, ap-south-1)"]
+        subgraph PublicSubnets ["Public Subnets (Dual-AZ)"]
+            NAT["Internet Gateway (IGW)<br/>(Strictly No Costly NAT Gateway)"]
+            ALB
         end
 
-        subgraph PrivateDBSubnets ["Private Database Subnets (Dual AZ)"]
-            RDSPostgres["Amazon RDS PostgreSQL 16<br/>(db.t4g.micro, Single-AZ)<br/>Private TCP 5432 Only<br/>Encrypted Storage (20GB gp3)"]
+        subgraph AppSubnets ["Auto Scaling App Tier"]
+            ASG["Auto Scaling Group (t3.micro EC2)<br/>Docker: React Web + FastAPI Monolith"]
+            Worker["SQS Background Consumer<br/>Transactional Outbox Poller"]
+        end
+
+        subgraph PrivateDataSubnet ["Private Isolated Subnets (Dual-AZ)"]
+            RDS["Amazon RDS PostgreSQL 16<br/>(db.t3.micro, Single-AZ)<br/>Encrypted gp3 Storage (TCP 5432 Only)"]
         end
     end
 
-    subgraph AWSServices ["AWS Managed Cloud Services (ap-south-1)"]
-        S3Bucket["Amazon S3 Private Bucket<br/>- Public Access Blocked<br/>- AES-256 SSE<br/>- Presigned Upload/Download URLs"]
-        SQSQueue["Amazon SQS Queue<br/>- MaxReceiveCount = 3<br/>- Long Polling (20s)"]
-        DLQ["Amazon SQS Dead-Letter Queue (DLQ)"]
-        SNSTopics["Amazon SNS Topics<br/>- Incident Escalation<br/>- Resource Shortage"]
-        SSM["AWS Systems Manager<br/>Parameter Store (SecureString)"]
-        CloudWatch["Amazon CloudWatch<br/>- Logs: /resqgrid/app-logs<br/>- Alarm: ApproximateAgeOfOldestMessage > 120s"]
-        Budgets["AWS Budgets<br/>- $20.00 Monthly Limit<br/>- 50%, 80%, 100% Alerts"]
+    subgraph AWSServices ["AWS Managed Services (ap-south-1)"]
+        S3Bucket["Amazon S3 Evidence Bucket<br/>- SHA-256 Checksums<br/>- Presigned URLs & SSE-S3"]
+        SQSQueue["Amazon SQS Operational Queue<br/>- MaxReceiveCount = 3<br/>- SQS Dead-Letter Queue (DLQ)"]
+        SNSTopics["Amazon SNS Alert Topics<br/>- SLA Escalations & Stock Deficits"]
+        CloudWatch["Amazon CloudWatch<br/>- Logs: /resqgrid/production<br/>- Alarms: AgeOfOldestMessage > 120s"]
+        SSM["AWS SSM Parameter Store<br/>SecureString Secrets"]
+        Budgets["AWS Budgets ($20 Cap)<br/>Alerts at 50%, 80%, 100%"]
     end
 
-    Client -->|HTTPS| IGW
-    IGW --> EC2Host
-    EC2Host -->|Private TCP 5432| RDSPostgres
-    EC2Host -->|Presigned Media PUT/GET| S3Bucket
-    EC2Host -->|Publish Events / SQS Polling| SQSQueue
-    SQSQueue -->|Exceeds 3 Retries| DLQ
-    EC2Host -->|Emergency Alerts| SNSTopics
-    EC2Host -->|Load Secrets on Boot| SSM
-    EC2Host -->|Application Logs & Metrics| CloudWatch
-    CloudWatch -->|Trigger Alarm| SNSTopics
-    Budgets -.->|Cost Forecast Alerts| Client
+    Client -->|HTTPS :443| ALB
+    ALB -->|HTTP :8000 / :80| ASG
+    ASG -->|SQL Port 5432| RDS
+    ASG -->|Publish Messages| SQSQueue
+    Worker -->|Long Polling 20s| SQSQueue
+    Worker -->|MaxRetries Exceeded| SQSQueue --> DLQ
+    Worker -->|Trigger Urgent Escalation| SNSTopics
+    Worker -->|Stream App Telemetry| CloudWatch
+    ASG -->|Presigned Upload / Download| S3Bucket
+    ASG -.->|Fetch DB & JWT Config| SSM
 ```
 
-### Relational Database Entity-Relationship (ER) Architecture
+---
+
+## 2. End-to-End Operational Lifecycle Workflow
 
 ```mermaid
-erDiagram
-    USERS ||--o{ AUDIT_LOGS : "performs"
-    USERS ||--o{ NOTIFICATIONS : "receives"
-    USERS ||--o{ INCIDENTS : "reports"
-    INCIDENTS ||--o{ NOTIFICATIONS : "triggers"
-    INCIDENTS ||--o{ INCIDENT_EVENTS : "generates"
-    INCIDENTS ||--o{ EVIDENCE : "contains"
-    INCIDENTS ||--o{ ASSIGNMENTS : "receives"
-    RESPONSE_TEAMS ||--o{ ASSIGNMENTS : "handles"
-    ASSIGNMENTS ||--o{ STOCK_RESERVATIONS : "needs"
-    DEPOTS ||--o{ INVENTORY : "stores"
-    INVENTORY ||--o{ STOCK_RESERVATIONS : "supplies"
+sequenceDiagram
+    autonumber
+    actor Citizen as Citizen / Reporter
+    actor Operator as Command Center Operator
+    participant API as FastAPI Backend
+    participant DB as PostgreSQL 16
+    participant Queue as Amazon SQS / Outbox
+    participant Worker as Background Worker
+    actor Responder as Field Response Squad
+
+    Citizen->>API: 1. Submit Emergency Report (Coords, Hazard, Victims, Photo)
+    API->>DB: 2. Geo-spatial Deduplication Check (150m, 20min radius)
+    alt Is Duplicate Report
+        API->>DB: Increment report_count on Parent Incident & log Citizen report
+    else Is Distinct Incident
+        API->>DB: INSERT Incident (Status: REPORTED, Severity, Priority Score)
+    end
+    API-->>Citizen: 201 Created (Tracking Token & Incident ID)
+
+    Operator->>API: 3. Triage & Request Ranked Candidate Teams
+    API->>DB: Query Unit Availability, Capability Matrix, Haversine Distance
+    API-->>Operator: Top-3 Candidate Teams + Plain-Language Reason + Stock Verification
+
+    Operator->>API: 4. Operator Approves Dispatch (Mandatory Human-in-the-Loop)
+    critical Atomic Database Transaction
+        API->>DB: SELECT FOR UPDATE on Depot Inventory
+        API->>DB: Reserve Required Stock & Insert Stock Movement Record
+        API->>DB: Transition Incident to ASSIGNED
+        API->>DB: INSERT Outbox Event (INCIDENT_DISPATCHED)
+    end
+    API-->>Operator: 200 OK (Dispatch Confirmed, Team Assigned)
+
+    Worker->>Queue: 5. Dequeue & Process Event
+    Worker->>API: Notify Squad & Emit CloudWatch Telemetry
+    
+    Responder->>API: 6. Responder Updates Status (EN_ROUTE -> ON_SCENE -> RESOLVED)
+    API->>DB: Update State Machine & Record Transition Audit Log
+    
+    Responder->>API: 7. Upload Cryptographic Completion Evidence (Photo + SHA-256)
+    API->>DB: Verify & Store S3 Key, Release Unconsumed Stock Reserves
+    API-->>Responder: Mission Complete (Audit Record Sealed)
 ```
 
-### End-to-End Operational Lifecycle Workflow
+---
 
-```mermaid
-flowchart TD
-    Citizen["Citizen submits incident"] --> API["FastAPI validates request"]
-    API --> RDS["RDS saves incident"]
-    API --> S3["S3 stores evidence"]
-    RDS --> Priority["Priority engine scores urgency"]
-    Priority --> Operator["Operator verifies incident"]
-    Operator --> Approved{"Approved?"}
-    Approved -- No --> Reject["Record rejection and reason"]
-    Approved -- Yes --> Matching["Team matching engine"]
-    Matching --> ApprAssign["Operator approves assignment"]
-    ApprAssign --> Reserve["Reserve stock in RDS transaction"]
-    Reserve --> SQS["Publish event to SQS"]
-    SQS --> Worker["EC2 worker processes event"]
-    Worker --> SNS["SNS sends notification"]
-    Worker -- Failed repeatedly --> DLQ["Dead-letter queue"]
-    DLQ --> CWAlarm["CloudWatch alarm and investigation"]
-    Worker --> RespUpdate["Responder updates mission"]
-    RespUpdate --> CompEvidence["Completion evidence saved to S3"]
-    CompEvidence --> AuditTrail["RDS updates audit trail"]
-    AuditTrail --> DashRefresh["Dashboard and analytics refresh"]
-```
+## 3. Platform Visual Showcase
+
+All screenshots are captured directly from live test executions in the environment:
+
+| Command Center & 3D Twin | Mission Trace (Signature Feature) |
+|:---:|:---:|
+| ![Command Center](docs/screenshots/command_center.png) | ![Mission Trace](docs/screenshots/mission_trace_1440.png) |
+| *Real-time incident queue, 3D geospatial twin, and team status.* | *Full audit trail, DB query breakdown, and SLA verification.* |
+
+| Mission Trace Timeline & Map | Citizen Emergency Reporting Portal |
+|:---:|:---:|
+| ![Timeline & Map](docs/screenshots/mission_trace_timeline_map.png) | ![Citizen Portal](docs/screenshots/citizen_portal.png) |
+| *Interactive step-by-step geospatial and audit playback.* | *Multilingual submission, offline-ready sync, and photo upload.* |
+
+| Real-Time Incident Tracker | Responder Tactical Portal |
+|:---:|:---:|
+| ![Incident Tracker](docs/screenshots/incident_tracker.png) | ![Responder Portal](docs/screenshots/responder_portal.png) |
+| *Public tracking token verification and real-time status.* | *Squad status execution: En Route, On Scene, and Evidence Upload.* |
+
+| Relief Inventory & Depot Management | Scenario Commander (Simulation Engine) |
+|:---:|:---:|
+| ![Relief Inventory](docs/screenshots/relief_inventory.png) | ![Scenario Commander](docs/screenshots/scenario_commander.png) |
+| *Atomic inventory reserves, depot levels, and consumption logs.* | *Flood water slider, synthetic load generation, and FIFO benchmark.* |
+
+| Operational KPIs & Analytics | System Health & Cloud Telemetry |
+|:---:|:---:|
+| ![Analytics KPIs](docs/screenshots/analytics_kpis.png) | ![System Health](docs/screenshots/system_health.png) |
+| *Incident funnels, response distribution, and team leaderboards.* | *Queue depth, dead-letter monitoring, and synthetic alarm triggers.* |
 
 ---
 
-## 2. Interactive 3D Spatial Experience (Three.js / React Three Fiber / Drei)
+## 4. Key Engineering Highlights & Innovations
 
-ResQGrid elevates traditional flat disaster dashboards into a next-generation, high-performance spatial command interface using **Three.js, `@react-three/fiber`, and `@react-three/drei`**:
+1. **Mission Trace System (`/mission-trace/:id`)**:
+   - Signature audit verification showing every database query, state transition, inventory lock, priority weight calculation, and outbox event for an incident.
+   - Computes live SLA compliance (`MET`, `AT_RISK`, `BREACHED`) with exact seconds and provides one-click JSON export.
 
-1. **Cinematic 3D Landing Page (`/`)**:
-   - Stylized, procedural miniature city representing the Mumbai metropolitan basin (Western Express Highway, Bandra-Worli Sea Link, Mithi River inundation channel, coastal retaining walls, and commercial skyscrapers).
-   - Scroll-choreographed and automated camera transitions across 5 operational narrative stages:
-     `Surveillance` $\rightarrow$ `Emergency Ingestion` $\rightarrow$ `Priority Scoring` $\rightarrow$ `Resource Mobilization` $\rightarrow$ `Mission Resolution`.
-   - Animated traffic particle streams, expanding radar sweeps, and pulsating emergency beacon heads.
+2. **Strict Role-Based Access Control (RBAC)**:
+   - Full JWT authentication with 4 distinct roles: `citizen`, `operator`, `responder`, and `admin`.
+   - Backend enforcement (`require_roles(...)`) on all sensitive dispatch and triage endpoints.
+   - Frontend route guarding via `<ProtectedRoute />` preventing unauthorized role escalation.
 
-2. **Interactive 3D Disaster Simulation (`/scenario`)**:
-   - Fully synchronized with real backend simulation data (`/api/v1/simulations/compare`).
-   - Dynamically animated rising flood water level across the Mithi River low-lying basin as simulation steps advance.
-   - Interactive orbit controls, building selection, step scrubber, and live metric synchronization.
+3. **Concurrency-Safe Atomic Inventory Allocation**:
+   - Implements PostgreSQL `SELECT ... FOR UPDATE` row-level locking on depot inventory.
+   - Prevents race conditions and phantom allocation when simultaneous dispatches compete for finite medical kits, rescue boats, or dewatering pumps.
+   - Automatic stock release upon incident resolution or operator cancellation.
 
-3. **3D Tactical Command Center (`/command`)**:
-   - Instant 1-click toggle between 2D Leaflet mapping and 3D Tactical Command mode.
-   - Tactical Layers panel (Incidents, Responders, Depots, Hazard Polygons, Dispatch Arcs, Radar Sweep) inspired by the Devpost Emergency Command Center reference UI.
-   - Direct click-to-inspect linkage: selecting any 3D emergency beacon immediately opens its backend record in `TriageDrawer`.
-   - Camera angle presets: Tactical Isometric, Command Overhead, and Coastal Orbit.
-   - **Accessible 2D Fallback**: Full operational parity in 2D mode, ensuring operations are never blocked when WebGL is unavailable or when reduced motion is preferred.
+4. **Geospatial Incident Deduplication**:
+   - Automatically merges incoming citizen emergency reports within 150 meters and 20 minutes of an active incident of the same hazard type.
+   - Prevents queue flooding while updating caller counts and citizen contact history.
 
----
+5. **Explainable Priority & Team Matching Engine**:
+   - Multi-criteria decision heuristic incorporating severity, population density, reported casualties, and dynamic waiting-time starvation prevention ($\Delta t$).
+   - Team ranking matches capability sets, haversine travel distance, equipment readiness, and active squad workload with plain-language operational rationales.
 
-## 2. Absolute Faculty Requirements Compliance
-
-Every single one of the **17 Absolute Faculty Requirements** has been implemented, tested, and documented. See [`docs/faculty-requirements.md`](docs/faculty-requirements.md) for the detailed verification matrix.
-
-| # | Requirement | Implemented Architecture / Resource | Code Reference |
-|---|---|---|---|
-| **1** | Full stack application with frontend, backend, DB | React 18 SPA + FastAPI + PostgreSQL 16 ORM | `apps/web`, `apps/api`, `apps/worker` |
-| **2** | Main backend on EC2 cloud compute (not serverless) | EC2 `t3.small` in custom VPC running Docker Compose | `infrastructure/terraform/modules/ec2` |
-| **3** | Custom VPC with subnets, IGW, and Security Groups | `10.20.0.0/16`, 2 Public subnets, 2 Private DB subnets | `infrastructure/terraform/modules/vpc` |
-| **4** | Managed relational DB using RDS PostgreSQL | Amazon RDS PostgreSQL 16 (Single-AZ, private 5432) | `infrastructure/terraform/modules/rds` |
-| **5** | Amazon S3 for genuine incident evidence | Private bucket, Public Access Blocked, Presigned URLs | `apps/api/app/services/storage.py` |
-| **6** | Least-privilege IAM roles | EC2 Instance Profile with scoped S3/SQS/SSM policies | `infrastructure/terraform/modules/iam` |
-| **7** | No hardcoded AWS credentials | Zero credentials in git. IAM instance profile + SSM | Audit scan verified |
-| **8** | SSM Parameter Store for secure secrets | Database URL and JWT keys in `/resqgrid/prod/*` | `apps/api/app/core/config.py` |
-| **9** | CloudWatch application logs & metrics | JSON logs in `/resqgrid/app-logs` + response time metrics | `infrastructure/terraform/modules/cloudwatch` |
-| **10** | Working CloudWatch alarm | `ApproximateAgeOfOldestMessage > 120s` triggering SNS | `apps/api/app/api/v1/admin.py` |
-| **11** | AWS Budgets cost alerts | \$20.00 monthly cap with 50%, 80%, 100% email alerts | `infrastructure/terraform/modules/budgets` |
-| **12** | At least five integrated AWS services | 8 integrated services (EC2, VPC, RDS, S3, SQS, SNS, SSM, CloudWatch) | Terraform IaC modules |
-| **13** | Two additional cloud capabilities | 1. SQS + Dead-Letter Queue (DLQ)<br>2. Amazon SNS Alerts<br>3. AWS Budgets | `infrastructure/terraform/modules/sqs_sns` |
-| **14** | No unused decorative services | Every AWS resource is tied to an active workflow | Architecture verification |
-| **15** | Demonstrate 6 cloud pillars | Compute, Networking, DB, Storage, Security, Monitoring | `docs/testing/mumbai-flood-demo.md` |
-| **16** | Diagrams, docs, code, and cost breakdown | Complete documentation suite in `/docs` | Complete repository tree |
-| **17** | Avoid unnecessary paid infrastructure | No NAT Gateway, Single-AZ RDS, no paid load balancer | Estimated < \$2.00 per demo run |
+6. **AWS Well-Architected Cloud Infrastructure (Terraform IaC)**:
+   - Designed for cost optimization in `ap-south-1` (Mumbai).
+   - Strict dual-subnet architecture without expensive NAT Gateways ($0 NAT cost).
+   - Auto Scaling Group with Application Load Balancer and health-check routing.
+   - CloudWatch custom metric monitoring (`ApproximateAgeOfOldestMessage`) with synthetic worker pause controls to demonstrate real alarm triggering.
 
 ---
 
-## 3. Three-Member Engineering Work Breakdown
+## 5. Technology Stack
 
-Detailed in [`docs/team-work-breakdown.md`](docs/team-work-breakdown.md):
-
-- **Member 1 (Frontend & Product Engineering)**: React 18, TypeScript, Tailwind design system, Leaflet command center map, Citizen portal, Responder console, Inventory interface, Browser testing.
-- **Member 2 (Backend, Database & Algorithms)**: FastAPI modular architecture, PostgreSQL schema (18 tables), Explainable priority scoring engine, Two-stage resource matching engine, Transactional outbox, Pytest suite.
-- **Member 3 (Cloud & Infrastructure Engineering)**: Custom VPC networking, EC2 host provisioning, Amazon RDS PostgreSQL, Amazon S3 presigned pipeline, SQS + DLQ worker, CloudWatch alarms, Terraform IaC, Cost optimization.
-
----
-
-## 4. Four Role-Based Portal Experiences
-
-1. **Citizen Portal (`/citizen`)**:
-   - Geolocation incident submission with Mumbai landmarks (Kurla, Dadar, Bandra, Dharavi, Andheri).
-   - Citizen evidence photo upload via S3 presigned URL pipeline.
-   - Unique tracking ID generation (`INC-XXXXX`) and public live tracking (`/track`).
-
-2. **Command Center (`/command`)**:
-   - Tactical map-first operations room with real-time Leaflet visualization.
-   - Live incident queue with category and urgency filtering.
-   - Heuristic priority score inspector with normalized factor bars.
-   - Resource matching engine recommendations with explainable bullets.
-   - Operator-approved atomic dispatch and supply reservations.
-
-3. **Field Responder Workspace (`/responder`)**:
-   - Unit-scoped mission orders (authorized squad access control).
-   - Stepper progression: `PENDING` $\rightarrow$ `ACCEPTED` $\rightarrow$ `EN_ROUTE` $\rightarrow$ `ON_SCENE` $\rightarrow$ `COMPLETED`.
-   - Supplies consumption logging and S3 completion photo upload.
-
-4. **Relief Coordinator Portal (`/inventory`)**:
-   - Depot stockpiles and emergency shelter occupancies across Mumbai.
-   - Available vs reserved quantity breakdown; atomic non-negative database constraints.
-   - Low-stock threshold alerts with Amazon SNS notifications.
-   - Simulated donation and replenishment intake logging.
+- **Backend**: Python 3.12+, FastAPI, SQLAlchemy ORM, Alembic, Pydantic v2, Pytest.
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Lucide Icons, Leaflet / React-Leaflet, Three.js / React Three Fiber, Apache ECharts / Recharts.
+- **Database & Storage**: PostgreSQL 16 (with PostGIS extensions), Amazon S3 (AES-256 SSE).
+- **Messaging & Compute**: Amazon SQS + DLQ, Amazon SNS, AWS Systems Manager (SSM), Amazon CloudWatch.
+- **Infrastructure as Code (IaC)**: Terraform 1.5+ (modular: VPC, ASG/ALB, RDS, S3, IAM, SQS/SNS, CloudWatch, Budgets).
 
 ---
 
-## 5. Intelligent Algorithms & Empirical Benchmark
-
-Detailed in [`docs/algorithms/intelligent-coordination.md`](docs/algorithms/intelligent-coordination.md):
-
-### Priority Scoring Formula
-$$P = 0.35 \times \text{Severity} + 0.25 \times \text{Impact} + 0.20 \times \text{WaitTime} + 0.20 \times \text{Vulnerability}$$
-
-### Two-Stage Resource Matching
-- **Stage 1 (Eligibility)**: Strict qualification filter (e.g. watercraft required for floods).
-- **Stage 2 (Suitability)**:
-  $$S = 0.40 \times \text{Capability} + 0.30 \times \text{Proximity} + 0.20 \times \text{Availability} + 0.10 \times \text{Capacity}$$
-  *Proximity is computed via spherical Haversine distance in kilometers.*
-
-### Scenario Commander Benchmark Findings (Mumbai Flood Dataset)
-- **-65.1% Reduction** in Critical Emergency Wait Time (from 42.4m to 14.8m).
-- **-33.3% Reduction** in Overall Average Wait Time.
-- **+16.4% Gain** in Relief Resource Utilization.
-
----
-
-## 6. Local Quickstart (Full Stack in 60 Seconds)
+## 6. Local Development & Quickstart
 
 ### Prerequisites
 - Python 3.12+
-- Node.js 20+ & npm
-- Docker & Docker Compose (optional for full containerized stack)
+- Node.js 18+ and npm
+- Docker and Docker Compose (or local PostgreSQL 16)
 
-### 1. Backend & Worker Setup
+### Option A: One-Command Docker Setup
 ```bash
-# Create virtual environment and activate
+# Clone the repository
+git clone https://github.com/shaaunak/ResQGrid.git
+cd ResQGrid
+
+# Copy configuration
+cp .env.example .env
+
+# Build and start all services (PostgreSQL, FastAPI API, React Web, SQS Worker)
+docker compose up --build -d
+```
+
+### Option B: Local Native Setup
+```bash
+# 1. Start PostgreSQL
+docker run --name resqgrid-postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=resqgrid -p 5432:5432 -d postgres:16-alpine
+
+# 2. Setup and run Backend API
 python3 -m venv .venv
 source .venv/bin/activate
-
-# Install dependencies
 pip install -r apps/api/requirements.txt
+export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/resqgrid"
+alembic -c apps/api/alembic.ini upgrade head
+python scripts/seed/seed_data.py
+uvicorn app.main:app --app-dir apps/api --host 0.0.0.0 --port 8000 --reload
 
-# Run database migrations
-cd apps/api && alembic upgrade head && cd ../..
-
-# Seed realistic Mumbai demo data (Users, Teams, Depots, Incidents)
-python3 scripts/seed/seed_data.py
-
-# Launch FastAPI backend
-PYTHONPATH=apps/api uvicorn app.main:app --reload --port 8000
-```
-
-### 2. Background Worker
-In a separate terminal:
-```bash
-source .venv/bin/activate
-python3 apps/worker/app/worker.py
-```
-
-### 3. Frontend Web Application
-In a third terminal:
-```bash
+# 3. Setup and run Frontend Web
 cd apps/web
-npm install --legacy-peer-deps
+npm install
 npm run dev
 ```
-Open **`http://localhost:5173`** in your browser.
+
+Visit **`http://localhost:5173`** in your browser.
 
 ---
 
-## 7. Automated Testing Suite
+## 7. Automated Testing & Verification Evidence
 
-ResQGrid features a comprehensive automated Pytest test suite covering heuristics, concurrency, RBAC, and end-to-end incident lifecycles:
+ResQGrid includes an exhaustive automated test suite testing RBAC boundaries, atomic inventory reservation, priority calculation, and end-to-end incident lifecycles:
 
 ```bash
 source .venv/bin/activate
-pytest -v
+pytest apps/api/tests/ -v
 ```
 
-Expected output:
+### Test Suite Execution Output
 ```text
-apps/api/tests/test_e2e_workflow.py::test_full_incident_lifecycle_workflow PASSED
-apps/api/tests/test_inventory_concurrency.py::test_inventory_atomic_reservation_and_deficit_protection PASSED
-apps/api/tests/test_inventory_concurrency.py::test_rbac_boundary_enforcement PASSED
-apps/api/tests/test_matching_engine.py::test_haversine_distance_calculation PASSED
-apps/api/tests/test_matching_engine.py::test_matching_engine_filters_and_ranks PASSED
-apps/api/tests/test_priority_engine.py::test_priority_weights_sum_to_one PASSED
-apps/api/tests/test_priority_engine.py::test_critical_flood_urgency_higher_than_minor_incident PASSED
-apps/api/tests/test_priority_engine.py::test_waiting_time_increases_priority PASSED
-======================== 8 passed in 1.96s ========================
+============================= test session starts ==============================
+platform darwin -- Python 3.12.2, pytest-8.3.4, pluggy-1.5.0 -- /Users/shaaunak/ccl/.venv/bin/python
+rootdir: /Users/shaaunak/ccl
+configfile: pyproject.toml
+plugins: anyio-4.8.0
+collected 27 items
+
+apps/api/tests/test_auth_and_rbac.py::test_public_endpoints_accessible PASSED            [  3%]
+apps/api/tests/test_auth_and_rbac.py::test_login_success_and_jwt_generation PASSED       [  7%]
+apps/api/tests/test_auth_and_rbac.py::test_invalid_credentials_rejected PASSED          [ 11%]
+apps/api/tests/test_auth_and_rbac.py::test_rbac_forbidden_for_unauthorized_role PASSED  [ 14%]
+apps/api/tests/test_auth_and_rbac.py::test_rbac_allowed_for_authorized_role PASSED      [ 18%]
+apps/api/tests/test_auth_and_rbac.py::test_admin_has_universal_access PASSED            [ 22%]
+apps/api/tests/test_e2e_workflow.py::test_full_incident_lifecycle_workflow PASSED        [ 25%]
+apps/api/tests/test_inventory_concurrency.py::test_inventory_atomic_reservation_and_deficit_protection PASSED [ 29%]
+apps/api/tests/test_inventory_concurrency.py::test_rbac_boundary_enforcement PASSED    [ 33%]
+apps/api/tests/test_matching_engine.py::test_haversine_distance_calculation PASSED      [ 37%]
+apps/api/tests/test_matching_engine.py::test_matching_engine_filters_and_ranks PASSED   [ 40%]
+apps/api/tests/test_mission_trace.py::test_mission_trace_endpoint_returns_audit_trail PASSED [ 44%]
+apps/api/tests/test_mission_trace.py::test_mission_trace_not_found_returns_404 PASSED   [ 48%]
+apps/api/tests/test_mission_trace.py::test_mission_trace_sla_compliance_calculation PASSED [ 51%]
+apps/api/tests/test_perfect_e2e_workflow.py::test_perfect_disaster_response_lifecycle PASSED [ 55%]
+apps/api/tests/test_perfect_e2e_workflow.py::test_duplicate_incident_deduplication PASSED [ 59%]
+apps/api/tests/test_perfect_e2e_workflow.py::test_inventory_stock_locking_and_deficit_prevention PASSED [ 62%]
+apps/api/tests/test_perfect_e2e_workflow.py::test_outbox_event_creation_and_worker_processing PASSED [ 66%]
+apps/api/tests/test_priority_engine.py::test_priority_weights_sum_to_one PASSED         [ 70%]
+apps/api/tests/test_priority_engine.py::test_critical_flood_urgency_higher_than_minor_incident PASSED [ 74%]
+apps/api/tests/test_priority_engine.py::test_waiting_time_increases_priority PASSED    [ 77%]
+apps/api/tests/test_priority_engine.py::test_severity_order_respected PASSED            [ 81%]
+apps/api/tests/test_priority_engine.py::test_score_bounded_between_zero_and_one PASSED   [ 85%]
+apps/api/tests/test_priority_engine.py::test_priority_breakdown_contains_all_components PASSED [ 88%]
+apps/api/tests/test_priority_engine.py::test_vulnerability_multiplier_for_sensitive_zones PASSED [ 92%]
+apps/api/tests/test_priority_engine.py::test_zero_waiting_time_does_not_break PASSED    [ 96%]
+apps/api/tests/test_priority_engine.py::test_extreme_people_affected_caps_gracefully PASSED [100%]
+
+============================== 27 passed in 1.48s ==============================
 ```
 
 ---
 
-## 8. Evaluator Demonstration Walkthrough
+## 8. 3-Member Team Contribution & Work Breakdown
 
-Follow [`docs/testing/mumbai-flood-demo.md`](docs/testing/mumbai-flood-demo.md) for the 8-10 minute presentation script:
-1. Citizen reports Kurla West flood incident with attached evidence photo.
-2. Command Center verifies incident and reviews explainable priority urgency score.
-3. Operator reviews top-ranked response squad (Bandra Water Rescue Alpha) and dispatches with reserved depot supplies.
-4. Field Responder accepts mission, updates stages (`EN_ROUTE` $\rightarrow$ `ON_SCENE` $\rightarrow$ `COMPLETED`), and uploads proof.
-5. In `/health`, pause the background worker to observe queue depth increase and demonstrate CloudWatch alarm recovery upon resuming.
-6. In `/scenario`, run side-by-side benchmark comparison against Baseline FIFO.
+| Contributor & Role | Primary Engineering Responsibilities | Key Deliverables & Modules |
+|:---|:---|:---|
+| **Shaunak (Member 1)**<br/>*Cloud Architect & Backend Lead* | • Cloud infrastructure design & Terraform IaC (VPC, ASG, ALB, RDS, S3)<br/>• FastAPI monolith architecture & PostgreSQL 16 schema design<br/>• Transactional Outbox pattern & SQS background polling worker<br/>• Concurrency-safe atomic inventory reservation (`FOR UPDATE`) | `infrastructure/terraform/`<br/>`apps/api/app/services/`<br/>`apps/api/app/models/`<br/>`apps/worker/` |
+| **Team Member 2**<br/>*Algorithms & Security Auditor* | • Explainable multi-factor Priority Engine & starvation prevention ($\Delta t$)<br/>• Heuristic Team-Matching & Haversine distance calculator<br/>• Geospatial duplicate detection engine (150m / 20min radius)<br/>• JWT Authentication & role-based access control (RBAC) middleware | `apps/api/app/services/priority.py`<br/>`apps/api/app/services/matching.py`<br/>`apps/api/app/core/security.py`<br/>`apps/api/tests/` |
+| **Team Member 3**<br/>*Frontend & Data Visualization Lead* | • React 18 + TypeScript tactical operator command center<br/>• Mission Trace interactive audit replay & timeline explorer<br/>• Three.js / React Three Fiber 3D digital twin of Mumbai flood zones<br/>• Multi-hazard disaster packs & responsive field responder portals | `apps/web/src/pages/`<br/>`apps/web/src/components/`<br/>`apps/web/src/components/three/`<br/>`apps/web/public/data/` |
 
 ---
 
-## 9. Cloud Cost & Budget Protection (Mumbai ap-south-1)
+## 9. Cloud Cost & Budget Protection (AWS ap-south-1)
 
-Detailed in [`docs/cost/aws-budget-breakdown.md`](docs/cost/aws-budget-breakdown.md):
-- **Evaluation Run (40 hours)**: **~\$1.87 USD**
-- **Continuous 1-Month Operation (730 hours)**: **~\$33.77 USD** (or **~\$3.65 USD** with Free Tier)
-- **High-Cost Resources Avoided**: Zero NAT Gateway (-\$32.85/mo saved), Single-AZ RDS PostgreSQL (-\$15/mo saved), no paid ALB (-\$16/mo saved).
-- **Budget Protection**: AWS Budgets configured with \$20.00 monthly cap and 50%, 80%, 100% email triggers.
+- **Evaluation Demonstration Run (40 hours)**: **~$1.87 USD**
+- **Continuous 1-Month Operation (730 hours)**: **~$33.77 USD** (or **~$3.65 USD** with AWS Free Tier)
+- **High-Cost Resources Avoided**: Zero NAT Gateway (-$32.85/mo saved), Single-AZ RDS PostgreSQL (-$15/mo saved), efficient t3.micro sizing.
+- **Budget Protection**: AWS Budgets configured with $20.00 monthly cap and 50%, 80%, 100% email triggers.
 
 ---
 
 ## 10. Repository File Structure
 
 ```text
-resqgrid/
+ResQGrid/
+├── .github/
+│   └── workflows/              # GitHub Actions CI/CD (Test, Lint, Docker Build)
 ├── apps/
-│   ├── web/                    # React 18, TypeScript, Tailwind CSS, Leaflet, Recharts
-│   │   ├── src/                # Pages, Components, Context, API client
-│   │   ├── nginx.conf          # Nginx reverse proxy config
-│   │   └── Dockerfile          # Multi-stage production build
-│   ├── api/                    # Python 3.12+ FastAPI Core Monolith
-│   │   ├── app/                # Routers, Models, Schemas, Algorithms, Services
+│   ├── api/                    # Python 3.12+ FastAPI Application
 │   │   ├── alembic/            # Database schema migrations
-│   │   ├── tests/              # Pytest unit & integration test suite
+│   │   ├── app/                # Routers, Models, Schemas, Services, Core
+│   │   ├── tests/              # 27 Automated Pytest unit & integration tests
 │   │   └── Dockerfile          # Production backend container
+│   ├── web/                    # React 18, TypeScript, Tailwind, Three.js
+│   │   ├── public/             # Static assets, GeoJSON Mumbai elevation data
+│   │   ├── src/                # Pages, Components, Context, Types
+│   │   └── Dockerfile          # Multi-stage production container
 │   └── worker/                 # Amazon SQS / Outbox background event consumer
 │       ├── app/worker.py       # Idempotent polling, retries & DLQ handling
 │       └── Dockerfile          # Worker service container
-├── infrastructure/
-│   └── terraform/
-│       ├── modules/            # vpc, ec2, rds, s3, iam, sqs_sns, cloudwatch, budgets
-│       └── environments/prod/  # ap-south-1 production IaC definitions
-├── scripts/
-│   ├── seed/seed_data.py       # Mumbai emergency demonstration seed data
-│   ├── deploy/deploy_local.sh  # Docker Compose one-touch deployment
-│   └── cleanup/cleanup.sh      # Clean environment teardown
 ├── docs/
-│   ├── faculty-requirements.md # 17/17 Verification Matrix
-│   ├── team-work-breakdown.md  # 3-Member engineering ownership
+│   ├── screenshots/            # Authentic application screenshots
 │   ├── architecture/           # Cloud networking & system design
 │   ├── algorithms/             # Priority & Matching heuristic math
-│   ├── testing/                # Mumbai flood demonstration script
-│   └── cost/                   # AWS pricing breakdown (ap-south-1)
+│   └── FACULTY_RECOVERY_AUDIT.md # Faculty audit & verification report
+├── infrastructure/
+│   └── terraform/              # Terraform modules (vpc, asg_alb, rds, s3, iam, sqs_sns, cloudwatch, budgets)
+├── scripts/
+│   ├── seed/seed_data.py       # Mumbai disaster demonstration seed dataset
+│   ├── k6_load_test.js         # K6 load testing script
+│   ├── demo_autoscaling.sh     # Auto Scaling demonstration trigger
+│   └── nightly_backup.sh       # S3 automated database backup script
 ├── docker-compose.yml          # Local multi-service orchestration
-├── .env.example                # Zero credentials template
+├── Makefile                    # Make commands for test, lint, build, seed
+├── .env.example                # Zero credentials environment template
 └── README.md                   # Master engineering documentation
 ```
 
@@ -345,4 +346,3 @@ resqgrid/
 
 ## License
 Distributed under the MIT License. Built for Cloud Computing Academic Evaluation.
-

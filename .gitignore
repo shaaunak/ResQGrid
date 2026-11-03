@@ -1,3 +1,22 @@
+# Environment & Secrets (NEVER commit credentials)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+crash.log
+
+# Node / Frontend
+node_modules/
+dist/
+build/
+coverage/
+.pnp
+.pnp.js
+*.local
+
 # Python
 __pycache__/
 *.py[cod]
@@ -8,18 +27,6 @@ env/
 venv/
 .venv/
 ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -27,42 +34,32 @@ wheels/
 .coverage
 htmlcov/
 
-# Node / Frontend
-node_modules/
-.pnp
-.pnp.js
-coverage/
-dist/
-build/
-*.local
-
-# Environment variables & secrets (NEVER commit real credentials)
-.env
-.env.local
-.env.production
-*.pem
-*.key
-
 # Terraform
+.terraform/
 *.tfstate
 *.tfstate.*
-.terraform/
-.terraform.lock.hcl
+*.tfplan
 *.tfvars
 *.tfvars.json
+!*.tfvars.example
+.terraform.lock.hcl
 
 # IDE / OS
 .DS_Store
 .idea/
-.vscode/
+.vscode/settings.json
 *.swp
 *~
 thumbs.db
 
-# Storage / Uploads (local testing)
+# Storage / Uploads / Databases (local testing)
 uploads/
 storage/
 *.db
 *.sqlite
 *.sqlite3
-
+*.log
+logs/
+backups/
+screenshots/private/
+data/private/

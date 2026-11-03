@@ -141,7 +141,7 @@ export const CommandPalette: React.FC = () => {
                 {filteredIncidents.map((inc) => (
                   <button
                     key={inc.id}
-                    onClick={() => handleSelect('/command')}
+                    onClick={() => handleSelect(`/track?code=${inc.tracking_id}`)}
                     className="w-full flex items-center justify-between px-3 py-2 rounded-md hover:bg-rq-surface-2 transition text-rq-ink group text-left"
                   >
                     <div className="flex items-center space-x-2.5 truncate">

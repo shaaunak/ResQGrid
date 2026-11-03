@@ -24,7 +24,7 @@ import { Incident, ResponseTeam, Depot } from '../types';
 
 export const CommandCenter: React.FC = () => {
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
-  const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [statusFilter, setStatusFilter] = useState<string>('ACTIVE_ONLY'); // OPEN incidents first by default
   const [severityFilter, setSeverityFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [mapMode, setMapMode] = useState<'2D' | '3D'>('3D');
@@ -42,10 +42,15 @@ export const CommandCenter: React.FC = () => {
     queryKey: ['incidents', statusFilter, severityFilter],
     queryFn: async () => {
       let queryParams = [];
-      if (statusFilter !== 'ALL') queryParams.push(`status=${statusFilter}`);
-      if (severityFilter !== 'ALL') queryParams.push(`severity=${severityFilter}`);
+      if (statusFilter !== 'ALL' && statusFilter !== 'ACTIVE_ONLY') {
+        queryParams.push(`status=${statusFilter}`);
+      }
+      if (severityFilter !== 'ALL') {
+        queryParams.push(`severity=${severityFilter}`);
+      }
       const qs = queryParams.length ? `?${queryParams.join('&')}` : '';
-      return apiRequest<Incident[]>(`/incidents${qs}`);
+      const data = await apiRequest<Incident[]>(`/incidents${qs}`);
+      return data;
     },
     refetchInterval: 4000,
   });
@@ -76,24 +81,47 @@ export const CommandCenter: React.FC = () => {
     refetchInterval: 4000,
   });
 
-  // Filtered incidents for queue
-  const filteredIncidents = incidents.filter((inc) => {
-    // Saved view filter
-    if (savedView === 'UNASSIGNED' && inc.status !== 'REPORTED') return false;
-    if (savedView === 'CRITICAL_ONLY' && inc.severity !== 'CRITICAL') return false;
+  // Filtered and sorted incidents for queue:
+  // Show OPEN incidents first, sorted by priority and then waiting time (created_at asc).
+  // Resolved incidents are hidden when statusFilter === 'ACTIVE_ONLY'.
+  const filteredIncidents = incidents
+    .filter((inc) => {
+      // Hide resolved if in active queue view
+      if (statusFilter === 'ACTIVE_ONLY' && inc.status === 'RESOLVED') return false;
 
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      inc.title.toLowerCase().includes(q) ||
-      inc.tracking_id.toLowerCase().includes(q) ||
-      inc.address.toLowerCase().includes(q)
-    );
-  });
+      // Saved view filter
+      if (savedView === 'UNASSIGNED' && inc.status !== 'REPORTED') return false;
+      if (savedView === 'CRITICAL_ONLY' && inc.severity !== 'CRITICAL') return false;
 
-  const criticalCount = summaryMetrics?.critical_count ?? 2;
-  const activeCount = summaryMetrics?.active_dispatches ?? 4;
-  const squadsReadyCount = summaryMetrics?.squads_ready ?? 5;
+      if (!searchQuery) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        inc.title.toLowerCase().includes(q) ||
+        inc.tracking_id.toLowerCase().includes(q) ||
+        inc.address.toLowerCase().includes(q)
+      );
+    })
+    .sort((a, b) => {
+      // 1. Status priority: Open/Active first, Resolved last
+      const isAResolved = a.status === 'RESOLVED';
+      const isBResolved = b.status === 'RESOLVED';
+      if (isAResolved !== isBResolved) return isAResolved ? 1 : -1;
+
+      // 2. Score priority (higher score first)
+      if (Math.abs(b.priority_score - a.priority_score) > 0.05) {
+        return b.priority_score - a.priority_score;
+      }
+
+      // 3. Waiting time (older created_at has waited longer, so earlier date first)
+      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+    });
+
+  // Header counts matching filtered view criteria dynamically:
+  const criticalCount = filteredIncidents.filter((i) => i.severity === 'CRITICAL').length;
+  const activeCount = filteredIncidents.filter((i) =>
+    ['ASSIGNED', 'ACCEPTED', 'IN_PROGRESS'].includes(i.status)
+  ).length;
+  const squadsReadyCount = teams.filter((t) => t.status === 'AVAILABLE').length;
 
   return (
     <div className="h-[calc(100vh-3.5rem)] flex flex-col bg-rq-bg text-rq-ink overflow-hidden font-sans">
@@ -166,18 +194,26 @@ export const CommandCenter: React.FC = () => {
         <div className="w-80 md:w-96 bg-rq-surface border-r border-rq-border flex flex-col h-full z-10 flex-shrink-0">
           {/* Controls & Saved Views */}
           <div className="p-3 border-b border-rq-border bg-rq-surface-2 space-y-2.5">
-            {/* Saved View Tabs */}
+            {/* Saved View Tabs & Resolved Filter Chip */}
             <div className="flex items-center space-x-1 bg-rq-surface p-0.5 rounded-md border border-rq-border text-xs">
               <button
-                onClick={() => setSavedView('ALL')}
+                onClick={() => {
+                  setSavedView('ALL');
+                  if (statusFilter === 'RESOLVED') setStatusFilter('ACTIVE_ONLY');
+                }}
                 className={`flex-1 py-1 rounded transition text-center font-medium ${
-                  savedView === 'ALL' ? 'bg-rq-surface-2 text-rq-navy font-semibold' : 'text-rq-muted'
+                  savedView === 'ALL' && statusFilter !== 'RESOLVED'
+                    ? 'bg-rq-surface-2 text-rq-navy font-semibold'
+                    : 'text-rq-muted'
                 }`}
               >
-                All ({incidents.length})
+                Open ({incidents.filter((i) => i.status !== 'RESOLVED').length})
               </button>
               <button
-                onClick={() => setSavedView('UNASSIGNED')}
+                onClick={() => {
+                  setSavedView('UNASSIGNED');
+                  if (statusFilter === 'RESOLVED') setStatusFilter('ACTIVE_ONLY');
+                }}
                 className={`flex-1 py-1 rounded transition text-center font-medium ${
                   savedView === 'UNASSIGNED' ? 'bg-rq-surface-2 text-rq-navy font-semibold' : 'text-rq-muted'
                 }`}
@@ -185,12 +221,33 @@ export const CommandCenter: React.FC = () => {
                 Unassigned
               </button>
               <button
-                onClick={() => setSavedView('CRITICAL_ONLY')}
+                onClick={() => {
+                  setSavedView('CRITICAL_ONLY');
+                  if (statusFilter === 'RESOLVED') setStatusFilter('ACTIVE_ONLY');
+                }}
                 className={`flex-1 py-1 rounded transition text-center font-medium ${
                   savedView === 'CRITICAL_ONLY' ? 'bg-rq-surface-2 text-red-600 font-semibold' : 'text-rq-muted'
                 }`}
               >
                 Critical
+              </button>
+              <button
+                onClick={() => {
+                  if (statusFilter === 'RESOLVED') {
+                    setStatusFilter('ACTIVE_ONLY');
+                  } else {
+                    setStatusFilter('RESOLVED');
+                    setSavedView('ALL');
+                  }
+                }}
+                className={`flex-1 py-1 rounded transition text-center font-medium ${
+                  statusFilter === 'RESOLVED'
+                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-semibold'
+                    : 'text-rq-muted hover:text-rq-ink'
+                }`}
+                title="Toggle viewing archived resolved incidents"
+              >
+                Resolved ({incidents.filter((i) => i.status === 'RESOLVED').length})
               </button>
             </div>
 
@@ -213,12 +270,13 @@ export const CommandCenter: React.FC = () => {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-2 py-1 bg-rq-surface border border-rq-border rounded text-rq-ink focus:outline-none focus:border-rq-navy text-xs"
               >
-                <option value="ALL">All Statuses</option>
-                <option value="REPORTED">Reported</option>
-                <option value="VERIFIED">Verified</option>
-                <option value="ASSIGNED">Assigned</option>
-                <option value="IN_PROGRESS">In Progress</option>
-                <option value="RESOLVED">Resolved</option>
+                <option value="ACTIVE_ONLY">Active Queue (Open)</option>
+                <option value="ALL">All (Including Resolved)</option>
+                <option value="RESOLVED">Resolved Only</option>
+                <option value="REPORTED">Reported Only</option>
+                <option value="VERIFIED">Verified Only</option>
+                <option value="ASSIGNED">Assigned Only</option>
+                <option value="IN_PROGRESS">In Progress Only</option>
               </select>
 
               <select

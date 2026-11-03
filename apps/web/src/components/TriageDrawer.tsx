@@ -159,6 +159,38 @@ export const TriageDrawer: React.FC<TriageDrawerProps> = ({
                   <span>{incident.affected_people} Persons At Risk</span>
                 </div>
               </div>
+
+              {/* Merged Reports Box if report_count > 1 */}
+              {(incident.report_count > 1 || (incident.merged_reports && incident.merged_reports.length > 0)) && (
+                <div className="mt-3 p-3 bg-amber-50/70 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800 rounded-card space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-xs text-amber-900 dark:text-amber-200 flex items-center space-x-1.5">
+                      <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                      <span>{incident.report_count} Citizen Reports Merged</span>
+                    </span>
+                    <span className="text-[11px] font-mono text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/60 px-1.5 py-0.5 rounded">
+                      Spatial &lt;150m, 20m window
+                    </span>
+                  </div>
+                  <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+                    Corroborating eyewitness emergency calls within 150m merged into this parent operational incident to prevent duplicate dispatches.
+                  </p>
+                  {incident.merged_reports && incident.merged_reports.length > 0 && (
+                    <div className="space-y-1.5 pt-1.5 border-t border-amber-200 dark:border-amber-800/80">
+                      {incident.merged_reports.map((mr: any) => (
+                        <div key={mr.id || mr.tracking_id} className="p-2 bg-white/80 dark:bg-slate-900/80 rounded border border-amber-200 dark:border-amber-800 text-xs space-y-0.5">
+                          <div className="flex justify-between items-center font-mono">
+                            <span className="font-bold text-amber-900 dark:text-amber-200">{mr.tracking_id}</span>
+                            <span className="text-[10px] text-rq-muted">{new Date(mr.created_at).toLocaleTimeString()}</span>
+                          </div>
+                          <div className="font-medium text-rq-ink">{mr.title}</div>
+                          <div className="text-rq-muted text-[11px] truncate">{mr.description}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Quick Priority Glance */}

@@ -169,7 +169,11 @@ async def create_incident(
         # Return the root incident to caller with updated report_count
         result = await db.execute(
             select(Incident)
-            .options(selectinload(Incident.events), selectinload(Incident.evidence))
+            .options(
+                selectinload(Incident.events),
+                selectinload(Incident.evidence),
+                selectinload(Incident.merged_reports),
+            )
             .where(Incident.id == matched_parent.id)
         )
         return result.scalar_one()
@@ -226,7 +230,11 @@ async def create_incident(
     # Re-fetch with relationships loaded
     result = await db.execute(
         select(Incident)
-        .options(selectinload(Incident.events), selectinload(Incident.evidence))
+        .options(
+            selectinload(Incident.events),
+            selectinload(Incident.evidence),
+            selectinload(Incident.merged_reports),
+        )
         .where(Incident.id == incident.id)
     )
     return result.scalar_one()
@@ -252,7 +260,11 @@ async def list_incidents(
     """
     stmt = (
         select(Incident)
-        .options(selectinload(Incident.events), selectinload(Incident.evidence))
+        .options(
+            selectinload(Incident.events),
+            selectinload(Incident.evidence),
+            selectinload(Incident.merged_reports),
+        )
         .where(Incident.parent_incident_id.is_(None))
         .order_by(Incident.priority_score.desc(), Incident.created_at.desc())
     )
@@ -311,8 +323,14 @@ async def get_operational_summary(db: AsyncSession = Depends(get_db)):
     )
     crit_count = (await db.execute(crit_stmt)).scalar() or 0
 
+    # Active dispatches are incidents currently mobilized or on scene (ASSIGNED, ACCEPTED, IN_PROGRESS)
+    dispatch_statuses = [
+        IncidentStatus.ASSIGNED,
+        IncidentStatus.ACCEPTED,
+        IncidentStatus.IN_PROGRESS,
+    ]
     active_stmt = select(func.count(Incident.id)).where(
-        Incident.status.in_(active_statuses),
+        Incident.status.in_(dispatch_statuses),
         Incident.parent_incident_id.is_(None),
     )
     active_count = (await db.execute(active_stmt)).scalar() or 0
@@ -345,7 +363,11 @@ async def get_incident_by_tracking(tracking_id: str, db: AsyncSession = Depends(
     """Public tracking lookup for citizens using unique tracking ID (e.g. INC-48192)."""
     stmt = (
         select(Incident)
-        .options(selectinload(Incident.events), selectinload(Incident.evidence))
+        .options(
+            selectinload(Incident.events),
+            selectinload(Incident.evidence),
+            selectinload(Incident.merged_reports),
+        )
         .where(Incident.tracking_id == tracking_id.upper())
     )
     result = await db.execute(stmt)
@@ -355,7 +377,42 @@ async def get_incident_by_tracking(tracking_id: str, db: AsyncSession = Depends(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Incident with tracking code '{tracking_id}' not found.",
         )
-    return incident
+
+    # Attach active assignment and team coordinates if assigned
+    active_asg_stmt = (
+        select(Assignment)
+        .options(selectinload(Assignment.team))
+        .where(
+            Assignment.incident_id == incident.id,
+            Assignment.status.in_([
+                AssignmentStatus.OFFERED,
+                AssignmentStatus.PENDING,
+                AssignmentStatus.ACCEPTED,
+                AssignmentStatus.EN_ROUTE,
+                AssignmentStatus.ON_SCENE,
+            ]),
+        )
+        .order_by(Assignment.created_at.desc())
+    )
+    active_asg_res = await db.execute(active_asg_stmt)
+    active_asg = active_asg_res.scalars().first()
+
+    # Convert to response dict
+    resp = IncidentResponse.model_validate(incident)
+    if active_asg and active_asg.team:
+        resp.active_assignment = {
+            "assignment_id": active_asg.id,
+            "status": active_asg.status.value,
+            "team_id": active_asg.team.id,
+            "team_name": active_asg.team.name,
+            "team_type": active_asg.team.team_type.value,
+            "current_latitude": active_asg.team.current_latitude,
+            "current_longitude": active_asg.team.current_longitude,
+            "assigned_at": active_asg.assigned_at,
+            "en_route_at": active_asg.en_route_at,
+            "on_scene_at": active_asg.on_scene_at,
+        }
+    return resp
 
 
 @router.get("/{incident_id}", response_model=IncidentResponse)
@@ -363,7 +420,11 @@ async def get_incident(incident_id: str, db: AsyncSession = Depends(get_db)):
     """Retrieve full incident details including events timeline and evidence metadata."""
     stmt = (
         select(Incident)
-        .options(selectinload(Incident.events), selectinload(Incident.evidence))
+        .options(
+            selectinload(Incident.events),
+            selectinload(Incident.evidence),
+            selectinload(Incident.merged_reports),
+        )
         .where(Incident.id == incident_id)
     )
     result = await db.execute(stmt)
@@ -389,7 +450,11 @@ async def verify_incident(
     """
     stmt = (
         select(Incident)
-        .options(selectinload(Incident.events), selectinload(Incident.evidence))
+        .options(
+            selectinload(Incident.events),
+            selectinload(Incident.evidence),
+            selectinload(Incident.merged_reports),
+        )
         .where(Incident.id == incident_id)
     )
     result = await db.execute(stmt)
@@ -703,13 +768,14 @@ async def _assign_incident_impl(
 
     # 6. Update Incident & Team status via State Machine
     previous_status = incident.status
-    IncidentStateMachine.transition(
+    inc_assign_event = IncidentStateMachine.transition(
         incident,
         IncidentStatus.ASSIGNED,
         actor_id=operator.id,
         comment=f"Assigned to {team.name} by Operator {operator.full_name}."
         + (f" Override: {assign_in.override_reason}" if assign_in.override_reason else ""),
     )
+    db.add(inc_assign_event)
     team.status = TeamStatus.DISPATCHED
     team.active_assignments_count += 1
     team.version += 1
@@ -784,7 +850,11 @@ async def escalate_incident(
     """
     stmt = (
         select(Incident)
-        .options(selectinload(Incident.events), selectinload(Incident.evidence))
+        .options(
+            selectinload(Incident.events),
+            selectinload(Incident.evidence),
+            selectinload(Incident.merged_reports),
+        )
         .where(Incident.id == incident_id)
         .with_for_update()
     )
@@ -850,7 +920,11 @@ async def deescalate_incident(
     """De-escalate an incident once risk has been mitigated."""
     stmt = (
         select(Incident)
-        .options(selectinload(Incident.events), selectinload(Incident.evidence))
+        .options(
+            selectinload(Incident.events),
+            selectinload(Incident.evidence),
+            selectinload(Incident.merged_reports),
+        )
         .where(Incident.id == incident_id)
         .with_for_update()
     )

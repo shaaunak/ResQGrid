@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build-and-deploy:
-    name: Build Containers, Push to ECR & Deploy to EC2
+    name: Build Containers, Push to ECR, Deploy to ASG & Smoke Test /health
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -57,69 +57,30 @@ jobs:
           docker push ${{ steps.meta.outputs.ECR_REGISTRY }}/resqgrid-worker-prod:${{ steps.meta.outputs.IMAGE_TAG }}
           docker push ${{ steps.meta.outputs.ECR_REGISTRY }}/resqgrid-worker-prod:latest
 
-      - name: Deploy to EC2 Host via AWS SSM Run-Command
+      - name: Deploy to Auto Scaling Group via Instance Refresh
         env:
-          INSTANCE_ID: ${{ secrets.EC2_INSTANCE_ID }}
-          REGISTRY: ${{ steps.meta.outputs.ECR_REGISTRY }}
-          TAG: ${{ steps.meta.outputs.IMAGE_TAG }}
+          ASG_NAME: ${{ secrets.AWS_ASG_NAME }}
         run: |
-          echo "Deploying release ${TAG} to EC2 instance ${INSTANCE_ID}..."
-          DEPLOY_COMMANDS=$(cat <<EOF
-            set -e
-            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${REGISTRY}
-            docker pull ${REGISTRY}/resqgrid-api-prod:${TAG}
-            docker pull ${REGISTRY}/resqgrid-worker-prod:${TAG}
-            
-            # Backup previous container IDs for automated rollback
-            PREV_API=\$(docker ps -q -f name=resqgrid-api || true)
-            
-            # Run database migrations
-            docker run --rm \
-              --env-file /etc/resqgrid/prod.env \
-              ${REGISTRY}/resqgrid-api-prod:${TAG} \
-              alembic upgrade head
-            
-            # Restart API container with new image
-            docker stop resqgrid-api || true
-            docker rm resqgrid-api || true
-            docker run -d \
-              --name resqgrid-api \
-              --restart unless-stopped \
-              -p 8000:8000 \
-              --env-file /etc/resqgrid/prod.env \
-              ${REGISTRY}/resqgrid-api-prod:${TAG}
-            
-            # Restart Worker container
-            docker stop resqgrid-worker || true
-            docker rm resqgrid-worker || true
-            docker run -d \
-              --name resqgrid-worker \
-              --restart unless-stopped \
-              --env-file /etc/resqgrid/prod.env \
-              ${REGISTRY}/resqgrid-worker-prod:${TAG}
-            
-            # Post-Deployment Health Check (10 retries with 3s backoff)
-            for i in {1..10}; do
-              if curl -s -f http://127.0.0.1:8000/api/v1/health | grep '"status":"healthy"'; then
-                echo "Health check PASSED on attempt \$i."
-                exit 0
-              fi
-              echo "Waiting for API readiness (attempt \$i)..."
-              sleep 3
-            done
-            
-            echo "ERROR: Health check FAILED. Initiating rollback..."
-            exit 1
-          EOF
-          )
-          
-          # Trigger AWS Systems Manager run command
-          COMMAND_ID=\$(aws ssm send-command \
-            --instance-ids "\${INSTANCE_ID}" \
-            --document-name "AWS-RunShellScript" \
-            --parameters "commands=[\"\${DEPLOY_COMMANDS}\"]" \
-            --output text --query "Command.CommandId")
-          
-          echo "SSM Command dispatched: \${COMMAND_ID}"
-          aws ssm wait command-executed --command-id "\${COMMAND_ID}" --instance-id "\${INSTANCE_ID}"
+          echo "Triggering Auto Scaling Group instance refresh for ${ASG_NAME}..."
+          aws autoscaling start-instance-refresh \
+            --auto-scaling-group-name "${ASG_NAME}" \
+            --preferences '{"MinHealthyPercentage": 50, "InstanceWarmup": 180}'
 
+      - name: Smoke Test Live Application via ALB Endpoint (/api/v1/health)
+        env:
+          ALB_ENDPOINT: ${{ secrets.ALB_DNS_NAME }}
+        run: |
+          echo "Running automated smoke test against ALB endpoint: http://${ALB_ENDPOINT}/api/v1/health"
+          # Retry up to 10 times with 10s intervals for target group health propagation
+          for i in {1..10}; do
+            HEALTH_JSON=$(curl -s -f "http://${ALB_ENDPOINT}/api/v1/health" || echo "")
+            if echo "$HEALTH_JSON" | grep '"status":"healthy"'; then
+              echo "Smoke test PASSED on attempt $i!"
+              echo "Health payload: $HEALTH_JSON"
+              exit 0
+            fi
+            echo "Waiting for ALB target health (attempt $i)..."
+            sleep 10
+          done
+          echo "ERROR: Smoke test failed after 10 attempts."
+          exit 1

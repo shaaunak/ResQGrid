@@ -655,6 +655,67 @@ async def seed_all():
             if s["status"] == IncidentStatus.RESOLVED:
                 db.add(IncidentEvent(incident_id=inc.id, new_status=IncidentStatus.RESOLVED, created_at=updated_at + timedelta(minutes=30)))
 
+            # If incident is INC-1042, simulate 2 corroborating citizen reports merged in
+            if s["tracking_id"] == "INC-1042":
+                inc.report_count = 3
+                # Add child report 1
+                child1 = Incident(
+                    tracking_id="INC-1042-R2",
+                    title="[Merged Report #2] Ground floor water ingress near Kranti Nagar",
+                    description="Flood water rose to 3ft. Neighbors shouting for assistance.",
+                    category=inc.category,
+                    severity=inc.severity,
+                    status=inc.status,
+                    affected_people=4,
+                    latitude=inc.latitude + 0.0004,
+                    longitude=inc.longitude + 0.0003,
+                    address=inc.address,
+                    priority_score=78.5,
+                    priority_breakdown={"total_score": 78.5},
+                    parent_incident_id=inc.id,
+                    report_count=1,
+                    is_simulated=False,
+                    created_at=created_at + timedelta(minutes=8),
+                    updated_at=created_at + timedelta(minutes=8),
+                )
+                db.add(child1)
+                db.add(IncidentEvent(
+                    incident_id=inc.id,
+                    previous_status=inc.status,
+                    new_status=inc.status,
+                    comment="Corroborating citizen report merged into this incident (Report #2, tracking INC-1042-R2, +4 affected).",
+                    created_at=created_at + timedelta(minutes=8),
+                ))
+
+                # Add child report 2
+                child2 = Incident(
+                    tracking_id="INC-1042-R3",
+                    title="[Merged Report #3] Family of 3 stranded on terrace",
+                    description="Watercraft required immediately at Kranti Nagar bridge approach.",
+                    category=inc.category,
+                    severity=inc.severity,
+                    status=inc.status,
+                    affected_people=3,
+                    latitude=inc.latitude - 0.0003,
+                    longitude=inc.longitude + 0.0004,
+                    address=inc.address,
+                    priority_score=79.2,
+                    priority_breakdown={"total_score": 79.2},
+                    parent_incident_id=inc.id,
+                    report_count=1,
+                    is_simulated=False,
+                    created_at=created_at + timedelta(minutes=15),
+                    updated_at=created_at + timedelta(minutes=15),
+                )
+                db.add(child2)
+                db.add(IncidentEvent(
+                    incident_id=inc.id,
+                    previous_status=inc.status,
+                    new_status=inc.status,
+                    comment="Corroborating citizen report merged into this incident (Report #3, tracking INC-1042-R3, +3 affected).",
+                    created_at=created_at + timedelta(minutes=15),
+                ))
+
             # Assignments
             team_obj = team_map.get(s.get("team"))
             if team_obj and dispatcher_id:

@@ -37,3 +37,4 @@ class DisasterPackTemplate(BaseModel):
     required_equipment: List[str]
     default_templates: List[Dict[str, str]]
     priority_weight_adjustments: Dict[str, float]
+

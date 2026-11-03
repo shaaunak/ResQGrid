@@ -26,7 +26,7 @@ variable "db_password" {
   sensitive = true
 }
 
-# 1. DB Subnet Group across at least two AZs
+# 1. DB Subnet Group across dual private subnets
 resource "aws_db_subnet_group" "main" {
   name       = "resqgrid-db-subnet-group-${var.environment}"
   subnet_ids = var.db_subnet_ids
@@ -36,12 +36,12 @@ resource "aws_db_subnet_group" "main" {
   }
 }
 
-# 2. Managed Amazon RDS PostgreSQL (Single-AZ for Cost Optimization)
+# 2. Amazon RDS PostgreSQL Single-AZ db.t3.micro (Strict Cost Control)
 resource "aws_db_instance" "postgres" {
   identifier        = "resqgrid-postgres-${var.environment}"
   engine            = "postgres"
   engine_version    = "16.1"
-  instance_class    = "db.t4g.micro"
+  instance_class    = "db.t3.micro"
   allocated_storage = 20
   max_allocated_storage = 50
   storage_type      = "gp3"
@@ -54,12 +54,15 @@ resource "aws_db_instance" "postgres" {
   db_subnet_group_name   = aws_db_subnet_group.main.name
   vpc_security_group_ids = [var.db_security_group_id]
 
-  multi_az            = false  # Single-AZ strictly required by budget constraints
-  publicly_accessible = false  # Zero public accessibility
+  multi_az            = false  # Single-AZ strictly required for cost optimization
+  publicly_accessible = false  # Zero public accessibility: reachable only from App SG
   skip_final_snapshot = true
 
-  backup_retention_period = 7
+  backup_retention_period   = 7
+  backup_window             = "02:00-03:00" # Automated nightly RDS snapshot
+  maintenance_window        = "sun:04:00-sun:05:00"
   auto_minor_version_upgrade = true
+  copy_tags_to_snapshot     = true
 
   tags = {
     Name        = "resqgrid-rds-postgres"
@@ -80,3 +83,6 @@ output "port" {
   value = aws_db_instance.postgres.port
 }
 
+output "instance_id" {
+  value = aws_db_instance.postgres.id
+}

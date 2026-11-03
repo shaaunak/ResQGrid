@@ -196,12 +196,13 @@ class AssignmentStateMachine:
         elif to_status == AssignmentStatus.EN_ROUTE:
             assignment.en_route_at = now
             if incident.status == IncidentStatus.ASSIGNED:
-                IncidentStateMachine.transition(
+                inc_ev = IncidentStateMachine.transition(
                     incident,
                     IncidentStatus.IN_PROGRESS,
                     actor_id=actor_id,
                     comment=f"Team {team.name} en route to scene.",
                 )
+                db.add(inc_ev)
 
         elif to_status == AssignmentStatus.ON_SCENE:
             assignment.on_scene_at = now
@@ -274,12 +275,13 @@ class AssignmentStateMachine:
             has_other_active = active_check.scalars().first() is not None
 
             if not has_other_active and incident.status in [IncidentStatus.ASSIGNED, IncidentStatus.IN_PROGRESS]:
-                IncidentStateMachine.transition(
+                inc_ev = IncidentStateMachine.transition(
                     incident,
                     IncidentStatus.RESOLVED,
                     actor_id=actor_id,
                     comment=f"All teams completed missions. Incident {incident.tracking_id} marked resolved.",
                 )
+                db.add(inc_ev)
 
         elif to_status in {
             AssignmentStatus.DECLINED,

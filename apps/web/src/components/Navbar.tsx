@@ -197,71 +197,75 @@ export const Navbar: React.FC = () => {
           )}
         </div>
 
-        {/* Profile / Persona Switcher */}
+        {/* Authenticated User Profile & Logout */}
         <div className="relative">
-          <button
-            onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-            className="flex items-center space-x-2 px-2.5 py-1.5 rounded-md hover:bg-rq-surface-2 border border-rq-border transition text-left"
-          >
-            <div className="w-5 h-5 rounded-full bg-rq-navy text-white flex items-center justify-center text-xs font-bold">
-              {user ? user.full_name[0] : 'G'}
-            </div>
-            <div className="hidden sm:block">
-              <div className="font-semibold text-xs leading-none text-rq-ink">
-                {user ? user.full_name.split(' ')[0] : 'Guest'}
+          {user ? (
+            <button
+              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+              className="flex items-center space-x-2 px-2.5 py-1.5 rounded-md hover:bg-rq-surface-2 border border-rq-border transition text-left"
+            >
+              <div className="w-6 h-6 rounded-full bg-[#14284B] text-white flex items-center justify-center text-xs font-bold font-mono">
+                {user.full_name[0]}
               </div>
-              <div className="text-xs text-rq-muted leading-tight">
-                {user ? user.role : 'Observer'}
+              <div className="hidden sm:block">
+                <div className="font-semibold text-xs leading-none text-rq-ink">
+                  {user.full_name}
+                </div>
+                <div className="text-[11px] font-mono text-rq-brand font-semibold leading-tight mt-0.5">
+                  {user.role}
+                </div>
               </div>
-            </div>
-            <ChevronDown className="w-3 h-3 text-rq-muted" />
-          </button>
+              <ChevronDown className="w-3 h-3 text-rq-muted" />
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="flex items-center space-x-1.5 px-3 py-1.5 bg-[#14284B] hover:bg-[#1E3A8A] text-white rounded-md text-xs font-mono font-bold shadow-subtle transition"
+            >
+              <span>Sign In</span>
+            </Link>
+          )}
 
-          {profileDropdownOpen && (
+          {profileDropdownOpen && user && (
             <div className="absolute right-0 mt-2 w-64 bg-rq-surface border border-rq-border rounded-card shadow-floating py-2 z-50 animate-fade-in">
-              <div className="px-3 py-1.5 border-b border-rq-border mb-1">
-                <p className="text-xs font-semibold text-rq-muted uppercase tracking-wider">
-                  Switch Operational Persona
+              <div className="px-3 py-2 border-b border-rq-border mb-1">
+                <p className="text-xs font-bold text-rq-ink">
+                  {user.full_name}
                 </p>
-                <p className="text-xs text-rq-muted">Instant live RBAC evaluation role</p>
+                <p className="text-[11px] font-mono text-rq-muted">{user.email}</p>
+                <div className="mt-1">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                    ROLE: {user.role}
+                  </span>
+                </div>
               </div>
 
-              <div className="space-y-0.5 px-1">
-                {roles.map((r) => {
-                  const creds = PERSONA_CREDENTIALS[r];
-                  const isActive = user?.role === r;
-                  return (
-                    <button
-                      key={r}
-                      onClick={async () => {
-                        await loginAsPersona(r);
-                        setProfileDropdownOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded text-xs transition ${
-                        isActive
-                          ? 'bg-rq-surface-2 font-semibold text-rq-navy'
-                          : 'hover:bg-rq-surface-2 text-rq-ink'
-                      }`}
-                    >
-                      <div className="text-left">
-                        <div className="font-medium text-xs">{creds.title}</div>
-                        <div className="text-xs font-mono text-rq-muted">{creds.email}</div>
-                      </div>
-                      {isActive && <Check className="w-3.5 h-3.5 text-rq-navy flex-shrink-0" />}
-                    </button>
-                  );
-                })}
+              <div className="px-1 py-1">
+                <Link
+                  to="/docs"
+                  onClick={() => setProfileDropdownOpen(false)}
+                  className="w-full flex items-center space-x-2 px-2.5 py-1.5 rounded text-xs text-rq-ink hover:bg-rq-surface-2 transition"
+                >
+                  <span>System Architecture Specs</span>
+                </Link>
+                <Link
+                  to="/evidence"
+                  onClick={() => setProfileDropdownOpen(false)}
+                  className="w-full flex items-center space-x-2 px-2.5 py-1.5 rounded text-xs text-rq-ink hover:bg-rq-surface-2 transition"
+                >
+                  <span>Faculty Compliance Dossier</span>
+                </Link>
               </div>
 
-              <div className="mt-2 pt-1 border-t border-rq-border px-1">
+              <div className="mt-1 pt-1 border-t border-rq-border px-1">
                 <button
                   onClick={() => {
                     logout();
                     setProfileDropdownOpen(false);
                   }}
-                  className="w-full text-left px-2.5 py-1.5 text-xs text-rq-muted hover:text-rq-ink hover:bg-rq-surface-2 rounded transition"
+                  className="w-full text-left px-2.5 py-1.5 text-xs font-mono font-bold text-[#C8201B] hover:bg-red-50 rounded transition"
                 >
-                  Sign Out to Guest Observer
+                  Sign Out of Session
                 </button>
               </div>
             </div>

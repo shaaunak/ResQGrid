@@ -1,45 +1,74 @@
-output "ec2_public_ip" {
-  description = "Public IPv4 address of the EC2 application host"
-  value       = module.ec2.public_ip
+output "vpc_id" {
+  description = "Custom VPC ID (10.0.0.0/16)"
+  value       = module.vpc.vpc_id
+}
+
+output "public_subnet_ids" {
+  description = "Public Subnet IDs (dual AZ)"
+  value       = module.vpc.public_subnet_ids
+}
+
+output "private_db_subnet_ids" {
+  description = "Private Subnet IDs for RDS PostgreSQL"
+  value       = module.vpc.db_subnet_ids
+}
+
+output "alb_dns_name" {
+  description = "Application Load Balancer Public DNS"
+  value       = module.asg_alb.alb_dns_name
+}
+
+output "asg_name" {
+  description = "Auto Scaling Group Name"
+  value       = module.asg_alb.asg_name
 }
 
 output "rds_endpoint" {
-  description = "Private RDS PostgreSQL endpoint inside private DB subnets"
+  description = "RDS PostgreSQL Endpoint"
   value       = module.rds.endpoint
 }
 
-output "s3_bucket_name" {
-  description = "Private S3 evidence storage bucket"
-  value       = module.s3.bucket_name
+output "s3_evidence_bucket" {
+  description = "S3 Evidence Storage Bucket"
+  value       = module.s3.evidence_bucket_name
+}
+
+output "s3_reports_bucket" {
+  description = "S3 Reports & Briefs Bucket"
+  value       = module.s3.reports_bucket_name
+}
+
+output "s3_backups_bucket" {
+  description = "S3 Backups Bucket (Nightly pg_dump)"
+  value       = module.s3.backups_bucket_name
 }
 
 output "sqs_queue_url" {
-  description = "Amazon SQS main processing queue URL"
+  description = "SQS Main Event Processing Queue URL"
   value       = module.sqs_sns.queue_url
 }
 
 output "sqs_dlq_url" {
-  description = "Amazon SQS Dead-Letter Queue URL"
+  description = "SQS Dead Letter Queue URL"
   value       = module.sqs_sns.dlq_url
 }
 
-output "cloudwatch_alarm_arn" {
-  description = "CloudWatch Alarm monitoring SQS backlog and oldest message age"
-  value       = module.cloudwatch.alarm_arn
+output "sns_escalation_arn" {
+  description = "Emergency Escalation SNS Topic ARN"
+  value       = module.sqs_sns.escalation_topic_arn
 }
 
-output "budget_name" {
-  description = "AWS Budgets cost cap tracker"
-  value       = module.budgets.budget_name
+output "cloudwatch_sqs_alarm_arn" {
+  description = "CloudWatch SQS Oldest Message Age Alarm ARN"
+  value       = module.cloudwatch.sqs_alarm_arn
 }
 
-output "ecr_api_repository_url" {
-  description = "URL of the Amazon ECR repository for the ResQGrid API"
-  value       = module.ecr.api_repository_url
+output "cloudwatch_alb_5xx_alarm_arn" {
+  description = "CloudWatch ALB 5xx Alarm ARN"
+  value       = module.cloudwatch.alb_5xx_alarm_arn
 }
 
-output "ecr_worker_repository_url" {
-  description = "URL of the Amazon ECR repository for the ResQGrid Worker"
-  value       = module.ecr.worker_repository_url
+output "cloudwatch_low_stock_alarm_arn" {
+  description = "CloudWatch Low Stock Alarm ARN"
+  value       = module.cloudwatch.low_stock_alarm_arn
 }
-

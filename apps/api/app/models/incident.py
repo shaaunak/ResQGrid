@@ -70,6 +70,12 @@ class Incident(Base):
     events = relationship("IncidentEvent", back_populates="incident", cascade="all, delete-orphan", order_by="IncidentEvent.created_at")
     evidence = relationship("IncidentEvidence", back_populates="incident", cascade="all, delete-orphan")
     assignments = relationship("Assignment", back_populates="incident", cascade="all, delete-orphan")
+    merged_reports = relationship(
+        "Incident",
+        cascade="all, delete-orphan",
+        primaryjoin="Incident.id==Incident.parent_incident_id",
+        remote_side="Incident.parent_incident_id",
+    )
 
 
 class IncidentEvent(Base):
