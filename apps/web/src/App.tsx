@@ -57,16 +57,10 @@ export const App: React.FC = () => {
           <WebSocketProvider>
             <BrowserRouter>
               <Routes>
-                {/* Landing & Overview */}
-                <Route
-                  path="/"
-                  element={
-                    <AppLayout>
-                      <OverviewPage />
-                    </AppLayout>
-                  }
-                />
+                {/* Public Landing & Marketing */}
+                <Route path="/" element={<LandingPage />} />
                 <Route path="/landing" element={<LandingPage />} />
+                <Route path="/overview" element={<AppLayout><OverviewPage /></AppLayout>} />
                 <Route path="/features" element={<FeaturesPage />} />
                 <Route path="/login" element={<LoginPage />} />
 
