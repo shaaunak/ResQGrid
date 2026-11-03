@@ -1,42 +1,54 @@
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   color-scheme: light;
-  --color-bg: #F6F4EF;
+  --color-bg: #FAFAF7;
+  --color-bg-subtle: #F3F6F5;
   --color-surface: #FFFFFF;
-  --color-surface-2: #FAF8F4;
-  --color-ink: #12161C;
-  --color-muted: #5A6472;
-  --color-border: #E3DFD6;
-  --color-brand-navy: #14284B;
-  --color-signal: #E4572E;
-  --color-critical: #C8201B;
-  --color-high: #E27D14;
-  --color-medium: #C9A100;
-  --color-low: #2E7D5B;
+  --color-surface-2: #F6F8F7;
+  --color-ink: #142638;
+  --color-muted: #62727E;
+  --color-border: #E2E9E7;
+  --color-border-light: #EEF3F1;
+  --color-brand-navy: #142638;
+  --color-brand-teal: #087F7A;
+  --color-signal: #D17C3D;
+  --color-critical: #C84646;
+  --color-high: #D17C3D;
+  --color-medium: #BC9638;
+  --color-low: #34866C;
 }
 
 .dark {
   color-scheme: dark;
-  --color-bg: #0C1118;
-  --color-surface: #131A23;
-  --color-surface-2: #18212D;
-  --color-ink: #E8ECF2;
-  --color-muted: #8A96A8;
-  --color-border: #243040;
-  --color-brand-navy: #2A4878;
-  --color-signal: #F06A43;
-  --color-critical: #E03530;
-  --color-high: #F28C24;
-  --color-medium: #DEC02F;
-  --color-low: #3E9E76;
+  --color-bg: #0C131D;
+  --color-bg-subtle: #101924;
+  --color-surface: #14202E;
+  --color-surface-2: #1A2838;
+  --color-ink: #EAF0F6;
+  --color-muted: #8FA2B2;
+  --color-border: #233345;
+  --color-border-light: #1C2B3C;
+  --color-brand-navy: #4B78A4;
+  --color-brand-teal: #1FB3AC;
+  --color-signal: #E28C4B;
+  --color-critical: #E65A5A;
+  --color-high: #E28C4B;
+  --color-medium: #D8B246;
+  --color-low: #42A988;
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--color-bg);
   color: var(--color-ink);
   overflow-x: hidden;

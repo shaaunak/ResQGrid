@@ -11,6 +11,7 @@ import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { OverviewPage } from './pages/OverviewPage';
 import { LandingPage } from './pages/LandingPage';
+import { FeaturesPage } from './pages/FeaturesPage';
 import { LoginPage } from './pages/LoginPage';
 import { CommandCenter } from './pages/CommandCenter';
 import { CitizenPortal } from './pages/CitizenPortal';
@@ -66,6 +67,7 @@ export const App: React.FC = () => {
                   }
                 />
                 <Route path="/landing" element={<LandingPage />} />
+                <Route path="/features" element={<FeaturesPage />} />
                 <Route path="/login" element={<LoginPage />} />
 
                 {/* Operational Core Routes - Protected by Real RBAC */}
